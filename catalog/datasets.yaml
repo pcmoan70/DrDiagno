@@ -1,0 +1,835 @@
+# Catalog of open diagnosis datasets. One entry per dataset.
+#   id        : directory name under <data_root>/<category>/
+#   category  : top-level folder on the drive
+#   source    : url | hf | kaggle | manual
+#   files     : (url) list of {url, name}
+#   repo      : (hf) dataset repo id            slug: (kaggle) owner/dataset
+#   license   : licence as stated by the publisher
+#   coverage  : what diseases/symptoms it covers (for the README)
+#   note      : (manual) how to obtain
+
+# ---------------------------------------------------------------- 01_ontologies_terminologies
+- id: hpo
+  category: 01_ontologies_terminologies
+  source: url
+  name: Human Phenotype Ontology + disease annotations
+  url: https://hpo.jax.org
+  license: HPO licence (free use with attribution)
+  coverage: ~18k phenotypic-abnormality terms; phenotype.hpoa ~270k disease–phenotype annotations with frequency for ~12k diseases (OMIM, Orphanet, DECIPHER)
+  files:
+  - url: https://github.com/obophenotype/human-phenotype-ontology/releases/latest/download/hp.obo
+    name: hp.obo
+  - url: https://github.com/obophenotype/human-phenotype-ontology/releases/latest/download/hp.json
+    name: hp.json
+  - url: https://github.com/obophenotype/human-phenotype-ontology/releases/latest/download/phenotype.hpoa
+    name: phenotype.hpoa
+  - url: https://github.com/obophenotype/human-phenotype-ontology/releases/latest/download/genes_to_phenotype.txt
+    name: genes_to_phenotype.txt
+  - url: https://github.com/obophenotype/human-phenotype-ontology/releases/latest/download/phenotype_to_genes.txt
+    name: phenotype_to_genes.txt
+
+- id: mondo
+  category: 01_ontologies_terminologies
+  source: url
+  name: Mondo Disease Ontology
+  url: https://mondo.monarchinitiative.org
+  license: CC BY 4.0
+  coverage: ~25k+ disease classes unifying OMIM, Orphanet, DOID, ICD, MeSH, NCIt, SNOMED cross-references
+  files:
+  - url: http://purl.obolibrary.org/obo/mondo.obo
+    name: mondo.obo
+  - url: http://purl.obolibrary.org/obo/mondo.json
+    name: mondo.json
+
+- id: doid
+  category: 01_ontologies_terminologies
+  source: url
+  name: Human Disease Ontology
+  url: https://disease-ontology.org
+  license: CC0 1.0
+  coverage: ~11k human disease terms with definitions, synonyms and xrefs (ICD, MeSH, OMIM, SNOMED, UMLS)
+  files:
+  - url: http://purl.obolibrary.org/obo/doid.obo
+    name: doid.obo
+  - url: http://purl.obolibrary.org/obo/doid.json
+    name: doid.json
+
+- id: symp
+  category: 01_ontologies_terminologies
+  source: url
+  name: Symptom Ontology (SYMP)
+  url: https://github.com/DiseaseOntology/SymptomOntology
+  license: CC0 1.0
+  coverage: ~940 symptom terms, hierarchical
+  files:
+  - url: http://purl.obolibrary.org/obo/symp.obo
+    name: symp.obo
+  - url: http://purl.obolibrary.org/obo/symp.json
+    name: symp.json
+
+- id: mesh_2026
+  category: 01_ontologies_terminologies
+  source: url
+  name: MeSH 2026 (descriptors, qualifiers, supplementary concept records)
+  url: https://www.nlm.nih.gov/databases/download/mesh.html
+  license: NLM terms (free, public domain in the US; cite NLM)
+  coverage: ~30k descriptors incl. Diseases [C] tree and Signs and Symptoms [C23]; ~330k supplementary concepts incl. many rare diseases
+  files:
+  - url: https://nlmpubs.nlm.nih.gov/projects/mesh/MESH_FILES/xmlmesh/desc2026.xml
+    name: desc2026.xml
+  - url: https://nlmpubs.nlm.nih.gov/projects/mesh/MESH_FILES/xmlmesh/qual2026.xml
+    name: qual2026.xml
+  - url: https://nlmpubs.nlm.nih.gov/projects/mesh/MESH_FILES/xmlmesh/supp2026.xml
+    name: supp2026.xml
+
+- id: icd10cm_fy2026
+  category: 01_ontologies_terminologies
+  source: url
+  name: ICD-10-CM FY2026 code descriptions, tables and index (CMS)
+  url: https://www.cms.gov/medicare/coding-billing/icd-10-codes
+  license: US public domain
+  coverage: ~74k diagnosis codes incl. R-chapter symptoms/signs; alphabetic index
+  files:
+  - url: https://www.cms.gov/files/zip/2026-code-descriptions-tabular-order.zip
+    name: 2026-code-descriptions-tabular-order.zip
+  - url: https://www.cms.gov/files/zip/2026-code-tables-tabular-and-index.zip
+    name: 2026-code-tables-tabular-and-index.zip
+
+- id: orphanet_orphadata
+  category: 01_ontologies_terminologies
+  source: url
+  name: Orphanet / Orphadata rare disease products
+  url: https://www.orphadata.com/orphanet-scientific-knowledge-files/
+  license: CC BY 4.0
+  coverage: '~6k rare diseases: nomenclature (product1), HPO phenotype associations with frequency (product4), genes (product6), linearisation (product7), epidemiology (product9_prev); natural history (product9_ages);
+    36 clinical classifications (product3_*)'
+  files:
+  - url: https://www.orphadata.com/data/xml/en_product1.xml
+    name: en_product1_nomenclature.xml
+  - url: https://www.orphadata.com/data/xml/en_product4.xml
+    name: en_product4_hpo_phenotypes.xml
+  - url: https://www.orphadata.com/data/xml/en_product6.xml
+    name: en_product6_genes.xml
+  - url: https://www.orphadata.com/data/xml/en_product7.xml
+    name: en_product7_linearisation.xml
+  - url: https://www.orphadata.com/data/xml/en_product9_prev.xml
+    name: en_product9_prev_epidemiology.xml
+  - url: https://www.orphadata.com/data/xml/en_product9_ages.xml
+    name: en_product9_ages_natural_history.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_146.xml
+    name: classifications/en_product3_146.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_147.xml
+    name: classifications/en_product3_147.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_148.xml
+    name: classifications/en_product3_148.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_150.xml
+    name: classifications/en_product3_150.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_152.xml
+    name: classifications/en_product3_152.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_156.xml
+    name: classifications/en_product3_156.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_181.xml
+    name: classifications/en_product3_181.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_182.xml
+    name: classifications/en_product3_182.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_183.xml
+    name: classifications/en_product3_183.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_184.xml
+    name: classifications/en_product3_184.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_185.xml
+    name: classifications/en_product3_185.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_186.xml
+    name: classifications/en_product3_186.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_187.xml
+    name: classifications/en_product3_187.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_188.xml
+    name: classifications/en_product3_188.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_189.xml
+    name: classifications/en_product3_189.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_193.xml
+    name: classifications/en_product3_193.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_194.xml
+    name: classifications/en_product3_194.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_195.xml
+    name: classifications/en_product3_195.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_196.xml
+    name: classifications/en_product3_196.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_197.xml
+    name: classifications/en_product3_197.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_198.xml
+    name: classifications/en_product3_198.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_199.xml
+    name: classifications/en_product3_199.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_200.xml
+    name: classifications/en_product3_200.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_201.xml
+    name: classifications/en_product3_201.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_202.xml
+    name: classifications/en_product3_202.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_203.xml
+    name: classifications/en_product3_203.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_204.xml
+    name: classifications/en_product3_204.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_205.xml
+    name: classifications/en_product3_205.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_209.xml
+    name: classifications/en_product3_209.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_212.xml
+    name: classifications/en_product3_212.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_216.xml
+    name: classifications/en_product3_216.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_231.xml
+    name: classifications/en_product3_231.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_233.xml
+    name: classifications/en_product3_233.xml
+  - url: https://www.orphadata.com/data/xml/en_product3_235.xml
+    name: classifications/en_product3_235.xml
+
+- id: ctd_medic
+  category: 01_ontologies_terminologies
+  source: url
+  name: CTD MEDIC disease vocabulary
+  url: https://ctdbase.org/downloads/
+  license: CTD terms (free for research, cite)
+  coverage: ~13k disease terms merging MeSH and OMIM with synonyms and tree numbers
+  files:
+  - url: https://ctdbase.org/reports/CTD_diseases.csv.gz
+    name: CTD_diseases.csv.gz
+
+# ---------------------------------------------------------------- 02_disease_symptom_knowledge
+- id: monarch_kg
+  category: 02_disease_symptom_knowledge
+  source: url
+  name: Monarch Knowledge Graph (latest release)
+  url: https://monarchinitiative.org
+  license: CC BY 4.0 (component sources keep their own licences)
+  coverage: Disease–phenotype, gene–disease, gene–phenotype edges integrating HPO, Mondo, Orphanet, OMIM, ClinVar etc.; >10M edges
+  files:
+  - url: https://data.monarchinitiative.org/monarch-kg/latest/monarch-kg.tar.gz
+    name: monarch-kg.tar.gz
+
+- id: hetionet
+  category: 02_disease_symptom_knowledge
+  source: url
+  name: Hetionet v1.0
+  url: https://het.io
+  license: 'CC0 1.0 (edges: CC BY 4.0)'
+  coverage: 137 diseases, 438 symptoms (MeSH), Disease–presents–Symptom edges from Zhou et al. 2014 plus genes, drugs, anatomy
+  files:
+  - url: https://github.com/hetio/hetionet/raw/main/hetnet/json/hetionet-v1.0.json.bz2
+    name: hetionet-v1.0.json.bz2
+  - url: https://github.com/hetio/hetionet/raw/main/hetnet/tsv/hetionet-v1.0-edges.sif.gz
+    name: hetionet-v1.0-edges.sif.gz
+  - url: https://github.com/hetio/hetionet/raw/main/hetnet/tsv/hetionet-v1.0-nodes.tsv
+    name: hetionet-v1.0-nodes.tsv
+
+- id: columbia_disease_symptom_kb
+  category: 02_disease_symptom_knowledge
+  source: url
+  name: Columbia Disease-Symptom Knowledge Database (Wang & Friedman 2008)
+  url: https://people.dbmi.columbia.edu/~friedma/Projects/DiseaseSymptomKB/index.html
+  license: Academic use (see page)
+  coverage: ~150 common diseases → UMLS symptom concepts with association strength, mined from NYP discharge summaries
+  files:
+  - url: https://people.dbmi.columbia.edu/~friedma/Projects/DiseaseSymptomKB/index.html
+    name: DiseaseSymptomKB_index.html
+  - url: https://raw.githubusercontent.com/anujdutt9/Disease-Prediction-from-Symptoms/master/notebook/dataset/raw_data.xlsx
+    name: raw_data_anujdutt9.xlsx
+  - url: https://raw.githubusercontent.com/ParthaPRay/Disease-Symptom-Knowledge-Database_Flattening/main/raw_data.xlsx
+    name: raw_data_ParthaPRay.xlsx
+  - url: https://raw.githubusercontent.com/ParthaPRay/Disease-Symptom-Knowledge-Database_Flattening/main/flattened_url.csv
+    name: flattened_ParthaPRay.csv
+
+- id: primekg
+  category: 02_disease_symptom_knowledge
+  source: url
+  name: PrimeKG v2.1 (Chandak et al. 2023)
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM
+  license: CC0 1.0
+  coverage: 129k nodes / 4M edges incl. 17k diseases (MONDO-grouped) with disease–phenotype, disease–gene, drug–disease edges; disease_features has textual descriptions and symptoms from Mayo Clinic/Orphanet/UMLS
+  files:
+  - url: https://dataverse.harvard.edu/api/access/datafile/6191270
+    name: README.txt
+  - url: https://dataverse.harvard.edu/api/access/datafile/6180620
+    name: kg.csv
+  - url: https://dataverse.harvard.edu/api/access/datafile/6180616
+    name: edges.csv
+  - url: https://dataverse.harvard.edu/api/access/datafile/6180617?format=original
+    name: nodes.csv
+  - url: https://dataverse.harvard.edu/api/access/datafile/6180618?format=original
+    name: disease_features.csv
+  - url: https://dataverse.harvard.edu/api/access/datafile/6180619?format=original
+    name: drug_features.csv
+  - url: https://dataverse.harvard.edu/api/access/datafile/6180624?format=original
+    name: kg_grouped_diseases.csv
+  - url: https://dataverse.harvard.edu/api/access/datafile/6180623?format=original
+    name: kg_grouped_diseases_bert_map.csv
+
+- id: hsdn_zhou2014
+  category: 02_disease_symptom_knowledge
+  source: url
+  name: Human Symptoms–Disease Network (Zhou, Menche, Barabási, Sharma 2014) supplementary data
+  url: https://www.nature.com/articles/ncomms5212
+  license: CC BY 4.0 (Nature Communications open access)
+  coverage: 322 MeSH symptoms × 4,219 MeSH diseases, 147k symptom–disease associations with TF-IDF weights from PubMed co-occurrence
+  files:
+  - url: https://static-content.springer.com/esm/art%3A10.1038%2Fncomms5212/MediaObjects/41467_2014_BFncomms5212_MOESM1043_ESM.txt
+    name: SupplementaryData1.txt
+  - url: https://static-content.springer.com/esm/art%3A10.1038%2Fncomms5212/MediaObjects/41467_2014_BFncomms5212_MOESM1044_ESM.txt
+    name: SupplementaryData2.txt
+  - url: https://static-content.springer.com/esm/art%3A10.1038%2Fncomms5212/MediaObjects/41467_2014_BFncomms5212_MOESM1045_ESM.txt
+    name: SupplementaryData3.txt
+  - url: https://static-content.springer.com/esm/art%3A10.1038%2Fncomms5212/MediaObjects/41467_2014_BFncomms5212_MOESM1046_ESM.txt
+    name: SupplementaryData4.txt
+  - url: https://static-content.springer.com/esm/art%3A10.1038%2Fncomms5212/MediaObjects/41467_2014_BFncomms5212_MOESM1047_ESM.xls
+    name: SupplementaryData5.xls
+  - url: https://static-content.springer.com/esm/art%3A10.1038%2Fncomms5212/MediaObjects/41467_2014_BFncomms5212_MOESM1048_ESM.xls
+    name: SupplementaryData6.xls
+  - url: https://static-content.springer.com/esm/art%3A10.1038%2Fncomms5212/MediaObjects/41467_2014_BFncomms5212_MOESM1049_ESM.xls
+    name: SupplementaryData7.xls
+  - url: https://static-content.springer.com/esm/art%3A10.1038%2Fncomms5212/MediaObjects/41467_2014_BFncomms5212_MOESM1042_ESM.pdf
+    name: SupplementaryInformation.pdf
+
+- id: symcat
+  category: 02_disease_symptom_knowledge
+  source: url
+  name: SymCat scraped tables (teliov/symcat-to-synthea)
+  url: https://github.com/teliov/symcat-to-synthea
+  license: No licence declared; SymCat data (symcat.com, now offline) copyright unclear — research use only
+  coverage: 801 conditions × 474 symptoms with symptom probabilities and age/sex/race risk factors (derived from NHAMCS)
+  files:
+  - url: https://raw.githubusercontent.com/teliov/symcat-to-synthea/master/symcat/symcat-801-diseases.csv
+    name: symcat-801-diseases.csv
+  - url: https://raw.githubusercontent.com/teliov/symcat-to-synthea/master/symcat/symcat-474-symptoms.csv
+    name: symcat-474-symptoms.csv
+
+# ---------------------------------------------------------------- 03_symptom_disease_tabular
+- id: ddxplus
+  category: 03_symptom_disease_tabular
+  source: hf
+  name: DDXPlus (Fansi Tchango et al. 2022)
+  url: https://huggingface.co/datasets/aai530-group6/ddxplus
+  license: CC BY 4.0
+  coverage: 1.3M synthetic patients, 49 pathologies, 223 symptoms/antecedents with differential diagnosis
+  repo: aai530-group6/ddxplus
+
+- id: gretel_symptom_to_diagnosis
+  category: 03_symptom_disease_tabular
+  source: hf
+  name: Gretel symptom_to_diagnosis
+  url: https://huggingface.co/datasets/gretelai/symptom_to_diagnosis
+  license: Apache 2.0
+  coverage: 1,065 natural-language symptom descriptions → 22 diagnoses
+  repo: gretelai/symptom_to_diagnosis
+
+- id: quyenanhde_diseases_symptoms
+  category: 03_symptom_disease_tabular
+  source: hf
+  name: Diseases_Symptoms (QuyenAnhDE)
+  url: https://huggingface.co/datasets/QuyenAnhDE/Diseases_Symptoms
+  license: unspecified (public HF dataset)
+  coverage: ~400 diseases with symptom lists and treatments
+  repo: QuyenAnhDE/Diseases_Symptoms
+
+- id: duxprajapati_symptom_disease
+  category: 03_symptom_disease_tabular
+  source: hf
+  name: symptom-disease-dataset (duxprajapati)
+  url: https://huggingface.co/datasets/duxprajapati/symptom-disease-dataset
+  license: unspecified; partly scraped Mayo Clinic text — research use only
+  coverage: ~7k rows (5.6k train / 1.4k test), 1,082 disease labels (mapping.json), mixed natural-language and comma-list symptom text; Mayo Clinic + 41-disease data
+  repo: duxprajapati/symptom-disease-dataset
+
+- id: kaggle_41_diseases_132_symptoms
+  category: 03_symptom_disease_tabular
+  source: url
+  name: 'Kaggle classics: Disease Prediction (kaushil268) + Disease Symptom Prediction (itachi9604), via author GitHub'
+  url: https://github.com/itachi9604/healthcare-chatbot
+  license: Kaggle originals CC0 / unspecified; no licence in repo
+  coverage: 41 diseases × 132 binary symptoms (Training/Testing.csv, 4,920 rows); dataset.csv 41 diseases × 17 symptom slots; symptom severity (133), disease descriptions and precautions (41)
+  files:
+  - url: https://raw.githubusercontent.com/itachi9604/healthcare-chatbot/master/Data/Training.csv
+    name: Training.csv
+  - url: https://raw.githubusercontent.com/itachi9604/healthcare-chatbot/master/Data/Testing.csv
+    name: Testing.csv
+  - url: https://raw.githubusercontent.com/itachi9604/healthcare-chatbot/master/Data/dataset.csv
+    name: dataset.csv
+  - url: https://raw.githubusercontent.com/itachi9604/healthcare-chatbot/master/MasterData/Symptom_severity.csv
+    name: Symptom_severity.csv
+  - url: https://raw.githubusercontent.com/itachi9604/healthcare-chatbot/master/MasterData/symptom_Description.csv
+    name: symptom_Description.csv
+  - url: https://raw.githubusercontent.com/itachi9604/healthcare-chatbot/master/MasterData/symptom_precaution.csv
+    name: symptom_precaution.csv
+
+- id: symptom2disease
+  category: 03_symptom_disease_tabular
+  source: hf
+  name: Symptom2Disease (Kaggle niyarrbarman mirror)
+  url: https://huggingface.co/datasets/NeuronZero/Symptom2Disease
+  license: Apache 2.0 (mirror)
+  coverage: 1,200 natural-language symptom descriptions → 24 diseases
+  repo: NeuronZero/Symptom2Disease
+
+- id: disease_symptom_extensive_773
+  category: 03_symptom_disease_tabular
+  source: hf
+  name: Disease-Symptom-Extensive-Clean (dhivyeshrk, Kaggle author upload)
+  url: https://huggingface.co/datasets/dhivyeshrk/Disease-Symptom-Extensive-Clean
+  license: MIT
+  coverage: 246,945 rows, 773 diseases × 377 binary symptoms (augmented from SymCat-style data)
+  repo: dhivyeshrk/Disease-Symptom-Extensive-Clean
+
+- id: medlineplus_encyclopedia_symptoms_1713
+  category: 03_symptom_disease_tabular
+  source: hf
+  name: Disease-Symptoms from MedlinePlus Medical Encyclopedia (Mohamed-Ahmed161)
+  url: https://huggingface.co/datasets/Mohamed-Ahmed161/Disease-Symptoms
+  license: unspecified; source MedlinePlus (US public domain)
+  coverage: 1,713 diseases incl. rare syndromes, pipe-separated symptom lists + JSON + source URL
+  repo: Mohamed-Ahmed161/Disease-Symptoms
+
+- id: mayo_disease_symptoms_scrape
+  category: 03_symptom_disease_tabular
+  source: hf
+  name: Disease_Symptoms_Dataset (Shaheer14326, Mayo Clinic scrape)
+  url: https://huggingface.co/datasets/Shaheer14326/Disease_Symptoms_Dataset
+  license: MIT tag, but scraped Mayo Clinic content — copyright caveat, research use only
+  coverage: '~1,130 diseases: overview, symptoms (one row per symptom line, 253k rows), when to see a doctor, causes, risk factors, complications, prevention'
+  repo: Shaheer14326/Disease_Symptoms_Dataset
+
+- id: cod_patient_sym_disease
+  category: 03_symptom_disease_tabular
+  source: hf
+  name: CoD-PatientSymDisease (DiagnosisGPT chain-of-diagnosis)
+  url: https://huggingface.co/datasets/FreedomIntelligence/CoD-PatientSymDisease
+  license: Apache 2.0
+  coverage: '39k English + 37k Chinese synthetic cases: explicit/implicit symptoms → target disease with chain-of-diagnosis dialogue; large disease vocabulary'
+  repo: FreedomIntelligence/CoD-PatientSymDisease
+
+- id: icd10_synthetic_ehr_snippets
+  category: 03_symptom_disease_tabular
+  source: hf
+  name: icd-10 synthetic EHR snippets → ICD-10 code (mariana-coelho-9)
+  url: https://huggingface.co/datasets/mariana-coelho-9/icd-10
+  license: Apache 2.0
+  coverage: 753k synthetic clinical snippets labelled with ICD-10 codes, per-chapter configs (thousands of codes)
+  repo: mariana-coelho-9/icd-10
+
+# ---------------------------------------------------------------- 04_clinical_cases_notes
+- id: pmc_patients
+  category: 04_clinical_cases_notes
+  source: hf
+  name: PMC-Patients
+  url: https://huggingface.co/datasets/zhengyun21/PMC-Patients
+  license: CC BY-NC-SA 4.0
+  coverage: 167k patient summaries extracted from PubMed Central case reports, with age/sex and relations
+  repo: zhengyun21/PMC-Patients
+
+- id: maccrobat
+  category: 04_clinical_cases_notes
+  source: hf
+  name: MACCROBAT 2018/2020 annotated case reports
+  url: https://huggingface.co/datasets/singh-aditya/MACCROBAT_biomedical_ner
+  license: CC BY 4.0
+  coverage: 200 clinical case reports annotated with Sign_symptom, Disease_disorder, Diagnostic_procedure etc.
+  repo: singh-aditya/MACCROBAT_biomedical_ner
+
+- id: asclepius_synthetic_notes
+  category: 04_clinical_cases_notes
+  source: hf
+  name: Asclepius synthetic clinical notes
+  url: https://huggingface.co/datasets/starmpcc/Asclepius-Synthetic-Clinical-Notes
+  license: CC BY-NC-SA 4.0
+  coverage: 158k synthetic discharge summaries generated from PMC-Patients, with QA pairs
+  repo: starmpcc/Asclepius-Synthetic-Clinical-Notes
+
+- id: augmented_clinical_notes
+  category: 04_clinical_cases_notes
+  source: hf
+  name: Augmented clinical notes (MediNote)
+  url: https://huggingface.co/datasets/AGBonnet/augmented-clinical-notes
+  license: CC BY-NC-SA 4.0
+  coverage: 30k clinical notes from PMC-Patients with structured patient summaries and dialogues
+  repo: AGBonnet/augmented-clinical-notes
+
+- id: phenopacket_store
+  category: 04_clinical_cases_notes
+  source: url
+  name: Phenopacket Store (Monarch Initiative)
+  url: https://github.com/monarch-initiative/phenopacket-store
+  license: BSD-3 / CC0 data
+  coverage: Thousands of published rare-disease case reports as GA4GH phenopackets (HPO terms + diagnosis)
+  files:
+  - url: https://github.com/monarch-initiative/phenopacket-store/releases/latest/download/all_phenopackets.zip
+    name: all_phenopackets.zip
+
+- id: rarebench
+  category: 04_clinical_cases_notes
+  source: hf
+  name: RareBench
+  url: https://huggingface.co/datasets/chenxz/RareBench
+  license: see repo
+  coverage: 'Rare-disease diagnosis benchmark: patient phenotype sets (HPO) → disease, several public case collections'
+  repo: chenxz/RareBench
+
+- id: synthea_sample
+  category: 04_clinical_cases_notes
+  source: url
+  name: Synthea synthetic patient records (sample CSV)
+  url: https://synthetichealth.github.io/synthea-sample-data/
+  license: Apache 2.0
+  coverage: '~1k synthetic patients: conditions (SNOMED), encounters, observations, medications'
+  files:
+  - url: https://synthetichealth.github.io/synthea-sample-data/downloads/latest/synthea_sample_data_csv_latest.zip
+    name: synthea_sample_data_csv_latest.zip
+
+- id: mtsamples
+  category: 04_clinical_cases_notes
+  source: hf
+  name: MTSamples medical transcriptions (full, ~5k)
+  url: https://huggingface.co/datasets/harishnair04/mtsamples
+  license: CC0 (Kaggle listing); mtsamples.com content
+  coverage: ~5,000 transcribed clinical notes across 40 specialties with keywords (mirror of Kaggle tboyle10)
+  repo: harishnair04/mtsamples
+
+- id: open_patients
+  category: 04_clinical_cases_notes
+  source: hf
+  name: Open-Patients (NCBI)
+  url: https://huggingface.co/datasets/ncbi/Open-Patients
+  license: CC BY-SA 4.0
+  coverage: 180k patient case descriptions aggregated from TREC-CDS, PMC-Patients, MedQA and others
+  repo: ncbi/Open-Patients
+
+- id: case_report_collective
+  category: 04_clinical_cases_notes
+  source: hf
+  name: CaseReportCollective v1.0
+  url: https://huggingface.co/datasets/cxyzhang/CaseReportCollective_V1.0
+  license: CC BY 4.0
+  coverage: 86k PMC case reports with age, sex, diagnosis topic, case text and system-level findings
+  repo: cxyzhang/CaseReportCollective_V1.0
+
+- id: pmc_casereport_qa
+  category: 04_clinical_cases_notes
+  source: hf
+  name: PMC-CaseReport QA
+  url: https://huggingface.co/datasets/chaoyi-wu/PMC-CaseReport
+  license: see repo
+  coverage: 438k context/question/answer rows generated from PMC case reports
+  repo: chaoyi-wu/PMC-CaseReport
+
+- id: findzebra_case_reports
+  category: 04_clinical_cases_notes
+  source: hf
+  name: FindZebra rare-disease case reports
+  url: https://huggingface.co/datasets/findzebra/case-reports
+  license: CC BY 4.0
+  coverage: 3,344 rare-disease case reports with diagnosis, symptoms, genetics, medication and negative findings
+  repo: findzebra/case-reports
+
+- id: clinical_case_icd10_diagnosis
+  category: 04_clinical_cases_notes
+  source: hf
+  name: clinical-case-icd10-diagnosis (mkurman)
+  url: https://huggingface.co/datasets/mkurman/clinical-case-icd10-diagnosis
+  license: per-row CC licences (commercial / non-commercial configs)
+  coverage: 1,798 PMC case presentations → diagnosis + ICD-10 code
+  repo: mkurman/clinical-case-icd10-diagnosis
+
+- id: diagnosis_arena
+  category: 04_clinical_cases_notes
+  source: hf
+  name: DiagnosisArena
+  url: https://huggingface.co/datasets/shzyk/DiagnosisArena
+  license: MIT
+  coverage: '915 real cases: case information, physical exam, diagnostic tests → final diagnosis (4 options)'
+  repo: shzyk/DiagnosisArena
+
+- id: rare_disease_diagnosis_benchmark
+  category: 04_clinical_cases_notes
+  source: hf
+  name: rare-disease-diagnosis benchmark (zifeng-ai)
+  url: https://huggingface.co/datasets/zifeng-ai/rare-disease-diagnosis
+  license: other (see repo)
+  coverage: 740 rare-disease cases (RAMEDIS, LIRICAL, HMS, MME, MyGene2) with OMIM/ORPHA labels; bundled HPO/Orphanet references
+  repo: zifeng-ai/rare-disease-diagnosis
+
+- id: nejm_medqa_diagnostic_reasoning
+  category: 04_clinical_cases_notes
+  source: hf
+  name: NEJM + MedQA diagnostic reasoning dataset
+  url: https://huggingface.co/datasets/katielink/nejm-medqa-diagnostic-reasoning-dataset
+  license: CC BY 4.0
+  coverage: 301 NEJM clinicopathological-conference cases + 609 MedQA cases with graded differential-diagnosis reasoning
+  repo: katielink/nejm-medqa-diagnostic-reasoning-dataset
+
+# ---------------------------------------------------------------- 05_dialogue_qa
+- id: chatdoctor_healthcaremagic_100k
+  category: 05_dialogue_qa
+  source: hf
+  name: ChatDoctor HealthCareMagic-100k
+  url: https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k
+  license: Apache 2.0 (ChatDoctor)
+  coverage: 112k real patient questions (symptom descriptions) with doctor answers
+  repo: lavita/ChatDoctor-HealthCareMagic-100k
+
+- id: chatdoctor_icliniq
+  category: 05_dialogue_qa
+  source: hf
+  name: ChatDoctor iCliniq
+  url: https://huggingface.co/datasets/lavita/ChatDoctor-iCliniq
+  license: Apache 2.0 (ChatDoctor)
+  coverage: 7k patient–doctor QA pairs
+  repo: lavita/ChatDoctor-iCliniq
+
+- id: ai_medical_chatbot
+  category: 05_dialogue_qa
+  source: hf
+  name: ai-medical-chatbot (ruslanmv)
+  url: https://huggingface.co/datasets/ruslanmv/ai-medical-chatbot
+  license: Apache 2.0
+  coverage: 257k patient question / doctor answer pairs
+  repo: ruslanmv/ai-medical-chatbot
+
+- id: medquad
+  category: 05_dialogue_qa
+  source: hf
+  name: MedQuAD
+  url: https://huggingface.co/datasets/lavita/MedQuAD
+  license: CC BY 4.0
+  coverage: 47k QA pairs from 12 NIH sites covering symptoms, causes, treatment of thousands of diseases
+  repo: lavita/MedQuAD
+
+- id: medqa_usmle_4options
+  category: 05_dialogue_qa
+  source: hf
+  name: MedQA USMLE (4 options)
+  url: https://huggingface.co/datasets/GBaker/MedQA-USMLE-4-options
+  license: MIT
+  coverage: 12.7k USMLE-style clinical vignettes, many asking for the most likely diagnosis
+  repo: GBaker/MedQA-USMLE-4-options
+
+- id: bigbio_med_qa
+  category: 05_dialogue_qa
+  source: hf
+  name: MedQA (bigbio, all configs incl. 5-option and zh/tw)
+  url: https://huggingface.co/datasets/bigbio/med_qa
+  license: MIT
+  coverage: 61k multiple-choice questions from US, Mainland China and Taiwan medical exams
+  repo: bigbio/med_qa
+
+- id: medmcqa
+  category: 05_dialogue_qa
+  source: hf
+  name: MedMCQA
+  url: https://huggingface.co/datasets/openlifescienceai/medmcqa
+  license: MIT
+  coverage: 194k AIIMS/NEET-PG questions across 21 subjects with explanations
+  repo: openlifescienceai/medmcqa
+
+- id: pubmedqa
+  category: 05_dialogue_qa
+  source: hf
+  name: PubMedQA
+  url: https://huggingface.co/datasets/qiaojin/PubMedQA
+  license: MIT
+  coverage: 1k expert + 211k artificially labelled biomedical yes/no/maybe questions
+  repo: qiaojin/PubMedQA
+
+- id: medical_o1_reasoning_sft
+  category: 05_dialogue_qa
+  source: hf
+  name: medical-o1-reasoning-SFT (HuatuoGPT-o1)
+  url: https://huggingface.co/datasets/FreedomIntelligence/medical-o1-reasoning-SFT
+  license: Apache 2.0
+  coverage: 25k+ verifiable medical problems with chain-of-thought diagnostic reasoning (en, zh)
+  repo: FreedomIntelligence/medical-o1-reasoning-SFT
+
+- id: medical_o1_verifiable_problem
+  category: 05_dialogue_qa
+  source: hf
+  name: medical-o1-verifiable-problem
+  url: https://huggingface.co/datasets/FreedomIntelligence/medical-o1-verifiable-problem
+  license: Apache 2.0
+  coverage: 40k open-ended medical problems with verifiable answers
+  repo: FreedomIntelligence/medical-o1-verifiable-problem
+
+- id: medqa_cot
+  category: 05_dialogue_qa
+  source: hf
+  name: MedQA with chain-of-thought (HPAI-BSC)
+  url: https://huggingface.co/datasets/HPAI-BSC/medqa-cot
+  license: see repo
+  coverage: MedQA train questions with reasoning chains
+  repo: HPAI-BSC/medqa-cot
+
+- id: medical_meadow
+  category: 05_dialogue_qa
+  source: hf_multi
+  name: medAlpaca medical_meadow collection
+  url: https://huggingface.co/medalpaca
+  license: CC / see each repo
+  coverage: WikiDoc disease articles and patient information, 34k medical flashcards, health advice, MEDIQA, USMLE self-assessment, MMLU medical, PubMed causal
+  repos:
+  - medalpaca/medical_meadow_wikidoc
+  - medalpaca/medical_meadow_wikidoc_patient_information
+  - medalpaca/medical_meadow_medical_flashcards
+  - medalpaca/medical_meadow_health_advice
+  - medalpaca/medical_meadow_mediqa
+  - medalpaca/medical_meadow_usmle_self_assessment
+  - medalpaca/medical_meadow_mmmlu
+  - medalpaca/medical_meadow_pubmed_causal
+
+- id: lavita_medical_qa_datasets
+  category: 05_dialogue_qa
+  source: hf
+  name: lavita medical-qa-datasets (aggregate)
+  url: https://huggingface.co/datasets/lavita/medical-qa-datasets
+  license: see each sub-dataset
+  coverage: Aggregate of ~20 medical QA sets (MedQA, MedMCQA, PubMedQA, HealthCareMagic, iCliniq, MedQuAD, LiveQA, MedicationQA, MMLU clinical...) in one schema
+  repo: lavita/medical-qa-datasets
+
+- id: meddialog_en
+  category: 05_dialogue_qa
+  source: hf
+  name: 'MedDialog English (lighteval mirror: HealthCareMagic + iCliniq)'
+  url: https://huggingface.co/datasets/lighteval/med_dialog
+  license: Unknown; content copyright healthcaremagic.com / icliniq.com — research use only
+  coverage: ~257k patient–doctor dialogues (226k HealthCareMagic, 31k iCliniq) as in Zeng et al. 2020
+  repo: lighteval/med_dialog
+
+- id: medbullets
+  category: 05_dialogue_qa
+  source: hf
+  name: Medbullets
+  url: https://huggingface.co/datasets/mkieffer/Medbullets
+  license: see repo
+  coverage: 616 USMLE-style clinical vignette MCQs with explanations
+  repo: mkieffer/Medbullets
+
+- id: dialogue_to_soap
+  category: 05_dialogue_qa
+  source: hf
+  name: medical-dialogue-to-soap-summary (omi-health)
+  url: https://huggingface.co/datasets/omi-health/medical-dialogue-to-soap-summary
+  license: see repo
+  coverage: 10k doctor–patient dialogues with SOAP notes, derived from PMC case reports
+  repo: omi-health/medical-dialogue-to-soap-summary
+
+- id: all_human_diseases_synthetic_encounters
+  category: 05_dialogue_qa
+  source: hf_multi
+  name: all-human-diseases seed list + synthetic doctor–patient encounters (nisten)
+  url: https://huggingface.co/datasets/nisten/opus5-5-doctor-patient-conversations-all-human-diseases
+  license: Apache 2.0 (conversations), AGPL-3.0 (seed list)
+  coverage: 2,194 diseases with aliases, ICD-10, prevalence, body systems, drugs, PubMed refs and one SYNTHETIC (LLM-generated) multi-turn encounter each
+  repos:
+  - nisten/all-human-diseases
+  - nisten/opus5-5-doctor-patient-conversations-all-human-diseases
+
+# ---------------------------------------------------------------- 06_reference_text
+- id: medlineplus_health_topics
+  category: 06_reference_text
+  source: url
+  name: MedlinePlus Health Topics XML (2026-11-05)
+  url: https://medlineplus.gov/xml.html
+  license: US public domain (MedlinePlus summaries; see medlineplus.gov/about/using/usingcontent)
+  coverage: ~1,000 health topics (diseases, symptoms) with summaries, synonyms, MeSH mappings and links
+  files:
+  - url: https://medlineplus.gov/xml/mplus_topics_compressed_2026-11-05.zip
+    name: mplus_topics_compressed_2026-11-05.zip
+  - url: https://medlineplus.gov/xml/mplus_topic_groups_2026-11-05.xml
+    name: mplus_topic_groups_2026-11-05.xml
+
+- id: wiki_medical_terms
+  category: 06_reference_text
+  source: hf
+  name: Wikipedia medical terms
+  url: https://huggingface.co/datasets/gamino/wiki_medical_terms
+  license: CC BY-SA 3.0 (Wikipedia)
+  coverage: ~6.8k Wikipedia articles on diseases/conditions with full text incl. Signs and symptoms sections
+  repo: gamino/wiki_medical_terms
+
+- id: epfl_clinical_guidelines
+  category: 06_reference_text
+  source: hf
+  name: EPFL clinical guidelines (open subset)
+  url: https://huggingface.co/datasets/epfl-llm/guidelines
+  license: see repo (per-source)
+  coverage: ~37k clinical practice guideline articles from CDC, WHO, NICE, WikiDoc etc.
+  repo: epfl-llm/guidelines
+
+- id: medrag_textbooks
+  category: 06_reference_text
+  source: hf
+  name: MedRAG textbooks corpus
+  url: https://huggingface.co/datasets/MedRAG/textbooks
+  license: see repo
+  coverage: 125k snippets from 18 medical textbooks (MedQA textbook set)
+  repo: MedRAG/textbooks
+
+# ---------------------------------------------------------------- _manual
+- id: mimic_iv
+  category: _manual
+  source: manual
+  name: MIMIC-IV + MIMIC-IV-Note (PhysioNet)
+  url: https://physionet.org/content/mimiciv/
+  license: PhysioNet Credentialed Health Data License
+  coverage: ~300k ICU/ED patients with ICD diagnoses, chief complaints, notes
+  note: Requires PhysioNet account, CITI training and signed DUA. Then `wget -r -N -c -np --user <user> --ask-password https://physionet.org/files/mimiciv/3.1/`.
+
+- id: eicu
+  category: _manual
+  source: manual
+  name: eICU Collaborative Research Database
+  url: https://physionet.org/content/eicu-crd/
+  license: PhysioNet Credentialed Health Data License
+  coverage: 200k ICU admissions with diagnoses
+  note: Same credentialing as MIMIC.
+
+- id: umls_snomed
+  category: _manual
+  source: manual
+  name: UMLS Metathesaurus / SNOMED CT
+  url: https://uts.nlm.nih.gov/uts/signup-login
+  license: UMLS Metathesaurus License (free, annual report)
+  coverage: Unified disease/symptom concepts across 200+ vocabularies; needed to resolve Columbia KB UMLS CUIs
+  note: Request a UMLS licence, then download the Metathesaurus full release via UTS.
+
+- id: omim
+  category: _manual
+  source: manual
+  name: OMIM
+  url: https://www.omim.org/downloads
+  license: OMIM registration (academic)
+  coverage: ~10k Mendelian disorders with clinical synopses
+  note: Register for download access; mim2gene.txt, genemap2.txt, morbidmap.txt.
+
+- id: icd11_who
+  category: _manual
+  source: manual
+  name: WHO ICD-11 MMS linearisation
+  url: https://icd.who.int/icdapi
+  license: WHO ICD-11 licence (free with account)
+  coverage: ~17k ICD-11 categories with definitions
+  note: Create ICD API account for client credentials, or download spreadsheet release after login.
+
+- id: disgenet
+  category: _manual
+  source: manual
+  name: DisGeNET
+  url: https://www.disgenet.org
+  license: Academic licence
+  coverage: Gene–disease associations, ~30k diseases
+  note: Requires account since 2023.
+
+- id: kaggle_originals
+  category: _manual
+  source: manual
+  name: Kaggle originals (itachi9604, kaushil268, niyarrbarman/symptom2disease, dhivyeshrk, tboyle10/medicaltranscriptions)
+  url: https://www.kaggle.com/docs/api
+  license: per dataset (mostly CC0 / CC BY)
+  coverage: Classic small symptom→disease tables; mirrors are used where found
+  note: Put kaggle.json in ~/.kaggle and `pip install kaggle`, then entries with source kaggle in this catalog are fetched automatically.
+

@@ -1,0 +1,122 @@
+// Structure of the diagnosis data collection: six layers, the datasets in each,
+// and the identifier systems that join them. Render: dot -Tsvg -o dataset_structure.svg dataset_structure.dot
+digraph diagnosis_data {
+  graph [rankdir=LR, newrank=true, compound=true, splines=true,
+         nodesep=0.18, ranksep=1.4, fontname="Helvetica", fontsize=12,
+         label="Diagnosis data collection: 62 datasets, 13 GB, 6 layers. Columns = layers; centre column = identifier hubs. Arrow colour = identifier used to join a dataset to a hub. Grey dashed = xref / string-only / not downloaded.",
+         labelloc=t, pad=0.3]
+  node  [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10, color="#555555", penwidth=0.8]
+  edge  [fontname="Helvetica", fontsize=8, arrowsize=0.6, penwidth=1.1]
+
+  // ---------- Layer 01: vocabularies (the hubs) ----------
+  subgraph cluster_01 {
+    label="01  Ontologies & terminologies (the identifier hubs)"; style="rounded,filled"; fillcolor="#f1f3f8"; color="#8a93a8"
+    node [fillcolor="#ffffff", penwidth=1.6]
+    HPO   [label="HPO\nphenotypes / symptoms\n20,482 terms",       color="#1f77b4"]
+    MONDO [label="Mondo\ndiseases\n36,096 ids + xrefs",            color="#7b3fa0"]
+    DOID  [label="Disease Ontology\n14,939 terms",                 color="#7b3fa0"]
+    ORPHA [label="Orphanet (Orphadata)\n4,357 rare disorders\n40 XML products", color="#7b3fa0"]
+    MESH  [label="MeSH 2026\ndescriptors + SCRs\n1.1 GB",          color="#2ca02c"]
+    ICD   [label="ICD-10-CM FY2026\n74,719 codes",                 color="#e6811c"]
+    SYMP  [label="Symptom Ontology\n1,020 lay terms",              color="#1f77b4"]
+    MEDIC [label="CTD MEDIC\nMeSH ↔ OMIM map",                     color="#2ca02c"]
+    node [style="rounded,filled,dashed", fillcolor="#f7f7f7", fontcolor="#777777", color="#999999", penwidth=1.0]
+    OMIM  [label="OMIM\n(licence: manual entry)"]
+    UMLS  [label="UMLS / SNOMED CT\n(licence: manual entry)"]
+    NAMES [shape=ellipse, label="disease / symptom\nname strings only\n(synonym matching needed)"]
+    PMID  [shape=ellipse, label="PMID / PMCID\nliterature reference"]
+  }
+  // cross-references inside the hub layer
+  edge [color="#999999", style=dashed, arrowhead=none]
+  MONDO -> DOID; MONDO -> ORPHA; MONDO -> MESH; MONDO -> ICD; MONDO -> OMIM; MONDO -> UMLS
+  MEDIC -> MESH; MEDIC -> OMIM
+  NAMES -> MONDO; NAMES -> HPO; SYMP -> HPO
+  edge [arrowhead=normal, style=solid]
+
+  // ---------- Layer 02: disease <-> symptom knowledge ----------
+  subgraph cluster_02 {
+    label="02  Disease ↔ symptom knowledge (pairs, with frequency / weight)"; style="rounded,filled"; fillcolor="#eaf2fb"; color="#6b9fd1"
+    node [fillcolor="#ffffff"]
+    HPOA  [label="hpo / phenotype.hpoa\n12,880 diseases\n286,651 annotations"]
+    ORPH4 [label="orphanet / product4\n4,357 disorders\n≈110k HPO annotations"]
+    MKG   [label="Monarch KG\n1.67M nodes, 16.4M edges\n344 MB"]
+    PKG   [label="PrimeKG\n129k nodes, 8.1M edges\n+ disease text  1.5 GB"]
+    HET   [label="Hetionet\n137 diseases × 438 symptoms"]
+    HSDN  [label="HSDN (Zhou 2014)\n4,219 diseases × 322 symptoms\nTF-IDF from PubMed"]
+    SYMC  [label="SymCat\n801 diseases × 474 symptoms\nprobabilities"]
+    COL   [label="Columbia EHR KB\n≈150 diseases"]
+  }
+  // ---------- Layer 03: symptom -> disease tables ----------
+  subgraph cluster_03 {
+    label="03  Symptom → disease tables (one row = one patient / case)"; style="rounded,filled"; fillcolor="#fdf1e6"; color="#e0a070"
+    node [fillcolor="#ffffff"]
+    DDX   [label="DDXPlus\n1.29M synthetic patients\n49 conditions, 223 evidences  847 MB"]
+    ICDSYN[label="ICD-10 synthetic EHR snippets\n753k rows  528 MB"]
+    COD   [label="CoD patient cases\n76k cases, 8,222 diseases  436 MB"]
+    T773  [label="773-disease table\n247k rows, 377 symptoms"]
+    MLP   [label="MedlinePlus encyclopedia\n1,713 diseases, symptom lists"]
+    MAYO  [label="Mayo Clinic scrape\n≈1,130 diseases, prose"]
+    CLASS [label="5 classic ML tables\nKaggle-41 · Symptom2Disease · Gretel\nquyenanhde-400 · dux-1,082"]
+  }
+  // ---------- Layer 04: clinical cases ----------
+  subgraph cluster_04 {
+    label="04  Clinical cases & notes (one record = one patient)"; style="rounded,filled"; fillcolor="#eef7ea"; color="#7cb86a"
+    node [fillcolor="#ffffff"]
+    PMCP  [label="PMC-Patients\n167k case reports  1.4 GB"]
+    OPEN  [label="Open-Patients\n180k cases  482 MB"]
+    CRC   [label="CaseReportCollective\n86k cases  244 MB"]
+    PMCQA [label="PMC-CaseReport QA\n279k Q/A  140 MB"]
+    FZ    [label="FindZebra case reports\nrare diseases"]
+    PPS   [label="Phenopacket Store\n10,377 rare-disease cases"]
+    RB    [label="RareBench +\nrare-dx benchmark\n≈1.7k cases"]
+    CICD  [label="clinical_case_icd10\nDiagnosisArena · NEJM\nsmall curated case sets"]
+    NOTES [label="Asclepius · augmented notes\nMTSamples · MACCROBAT\nsynthetic / de-identified notes  800 MB"]
+    SYN   [label="Synthea sample\nsynthetic EHR"]
+  }
+  // ---------- Layer 05: dialogue / QA ----------
+  subgraph cluster_05 {
+    label="05  Dialogue & QA (patient question → doctor answer; exam items)"; style="rounded,filled"; fillcolor="#f7ecf5"; color="#b97fb0"
+    node [fillcolor="#ffffff"]
+    CHAT  [label="ChatDoctor (HCM 112k + iCliniq)\nai_medical_chatbot 257k\nMedDialog 257k · dialogue→SOAP"]
+    LAV   [label="lavita collection  1.35 GB\nmedical_meadow (8 sets)"]
+    MEDQA [label="MedQA family (4 variants)\nMedMCQA · MedBullets\nexam MCQs"]
+    O1    [label="medical-o1 reasoning\nSFT + verifiable problems  260 MB"]
+    PQA   [label="PubMedQA\n300 MB"]
+    MQUAD [label="MedQuAD\n47k NIH Q/A, 31k with CUI"]
+    AHD   [label="all_human_diseases\n2,194 diseases, synthetic encounters"]
+  }
+  // ---------- Layer 06: reference text ----------
+  subgraph cluster_06 {
+    label="06  Reference text (for retrieval / grounding)"; style="rounded,filled"; fillcolor="#f3f3f3"; color="#9a9a9a"
+    node [fillcolor="#ffffff"]
+    MLPT  [label="MedlinePlus health topics\n2,033 topics, 88 groups"]
+    WIKI  [label="Wikipedia medical terms\n6,861 articles"]
+    EPFL  [label="EPFL clinical guidelines\n38k documents  878 MB"]
+    MRAG  [label="MedRAG textbooks\n18 textbooks, 126k snippets  212 MB"]
+  }
+
+  // ---------- joins: dataset -> identifier hub ----------
+  edge [color="#1f77b4"]                       // HPO
+  HPOA -> HPO; ORPH4 -> HPO; MKG -> HPO; PKG -> HPO; HPO -> PPS [dir=back]; HPO -> RB [dir=back]
+  edge [color="#7b3fa0"]                       // Mondo / DOID / Orphanet
+  MKG -> MONDO; PKG -> MONDO; HET -> DOID; HPOA -> ORPHA; ORPH4 -> ORPHA; ORPHA -> RB [dir=back]
+  edge [color="#2ca02c"]                       // MeSH
+  HET -> MESH; HSDN -> MESH; MESH -> PQA [dir=back]; MESH -> MLPT [dir=back]
+  edge [color="#e6811c"]                       // ICD-10
+  DDX -> ICD; ICDSYN -> ICD; ICD -> CICD [dir=back]; ICD -> AHD [dir=back]
+  edge [color="#8c564b"]                       // literature refs
+  PMID -> PMCP [dir=back]; PMID -> OPEN [dir=back]; PMID -> CRC [dir=back]; PMID -> PMCQA [dir=back]; PMID -> FZ [dir=back]; PMID -> PPS [dir=back]; HPOA -> PMID
+  edge [color="#999999", style=dashed]         // not downloaded / strings only
+  HPOA -> OMIM; OMIM -> PPS [dir=back]; OMIM -> RB [dir=back]; COL -> UMLS; UMLS -> MQUAD [dir=back]; UMLS -> SYN [dir=back]
+  SYMC -> NAMES; COD -> NAMES; T773 -> NAMES; MLP -> NAMES; MAYO -> NAMES; CLASS -> NAMES; NAMES -> CICD [dir=back]; NAMES -> WIKI [dir=back]
+
+  // columns, left to right
+  { rank=same; DDX; ICDSYN; COD; T773; MLP; MAYO; CLASS }
+  { rank=same; HPOA; ORPH4; MKG; PKG; HET; HSDN; SYMC; COL }
+  { rank=same; HPO; MONDO; DOID; ORPHA; MESH; ICD; SYMP; MEDIC; OMIM; UMLS; NAMES; PMID }
+  { rank=same; PMCP; OPEN; CRC; PMCQA; FZ; PPS; RB; CICD; NOTES; SYN }
+  { rank=same; CHAT; LAV; MEDQA; O1; PQA; MQUAD; AHD }
+  { rank=same; MLPT; WIKI; EPFL; MRAG }
+  edge [style=invis]
+  MLP -> SYMC; NOTES -> CHAT; MEDQA -> EPFL
+}

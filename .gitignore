@@ -1,0 +1,10 @@
+# downloaded datasets live on the external drive, never in the repo
+/data/
+# built game bundles are derived from the drive data (rebuild with game/build/*.py)
+/game/web/data/
+/game/data_report.md
+__pycache__/
+*.pyc
+.cache/
+_logs/
+node_modules/

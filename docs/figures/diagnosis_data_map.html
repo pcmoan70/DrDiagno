@@ -1,0 +1,754 @@
+<title>Diagnosis Data Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono&display=swap">
+<style>
+/* layout: one wide scrollable figure, then two narrow bar panels side by side */
+:root{--bg:#fbfbf9;--fg:#20242c;--muted:#5f6675;--rule:#d9dce3;--panel:#ffffff;--accent:#1f77b4;
+ --font:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15171c;--fg:#e6e8ee;--muted:#a0a6b4;--rule:#2f333c;--panel:#1d2026;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15171c;--fg:#e6e8ee;--muted:#a0a6b4;--rule:#2f333c;--panel:#1d2026;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));font-size:15px;line-height:1.45}
+h1{font-size:1.6rem;font-weight:600;margin:0 0 4px;text-wrap:balance}
+h2{font-size:1.05rem;font-weight:600;margin:0 0 10px}
+p{max-width:68ch;margin:0 0 10px} .muted{color:var(--muted)}
+.meta{font-family:var(--mono);font-size:.8rem;color:var(--muted);margin-bottom:22px}
+figure{margin:0 0 28px}
+.scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:#ffffff}
+.scroll svg{display:block}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.85rem;margin:10px 0 0}
+.legend span::before{content:"";display:inline-block;width:22px;height:0;border-top:3px solid var(--c);margin-right:6px;vertical-align:middle}
+.legend .dash::before{border-top-style:dashed}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:22px}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:16px 18px;min-width:0}
+.row{display:grid;grid-template-columns:minmax(120px,1.4fr) 2fr auto;gap:10px;align-items:center;font-size:.84rem;padding:5px 0;border-bottom:1px solid var(--rule)}
+.row:last-child{border-bottom:0}
+.lab{min-width:0} .track{display:block;height:12px;background:var(--rule);border-radius:2px;overflow:hidden} .bar{display:block;height:100%}
+.val{font-family:var(--mono);font-size:.78rem;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.note{font-size:.8rem;color:var(--muted);margin-top:10px}
+.dark-note{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .dark-note{display:block}}
+:root[data-theme="dark"] .dark-note{display:block}
+</style>
+<h1>Diagnosis Data Map</h1>
+<p class="muted">How the 62 downloaded datasets are organised into six layers and which identifier systems tie them together. Each box is a dataset (or a group of near-identical ones), not a record.</p>
+<div class="meta">generated 2026-11-05 · source: catalog/datasets.yaml, MANIFEST.json, docs/DATA_OVERVIEW.md · /media/pc/ext4TB/diagnosis_data</div>
+
+<figure>
+<h2>Layers and joins</h2>
+<p>Read it from the centre outwards. The centre column holds the vocabularies that act as hubs: Mondo for diseases, HPO for symptoms, plus ICD-10-CM, MeSH, Orphanet and the Disease Ontology. Every other dataset is joined to a hub by the identifier it carries. Datasets with no arrow carry only free text and must be linked by name matching or by a model.</p>
+<div class="scroll"><svg id="structure" style="width:100%;height:auto;min-width:1600px"
+ viewBox="0.00 0.00 2617.23 884.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 862.6)">
+<title>diagnosis_data</title>
+<polygon fill="white" stroke="transparent" points="-21.6,21.6 -21.6,-862.6 2595.63,-862.6 2595.63,21.6 -21.6,21.6"/>
+<text text-anchor="middle" x="1287.02" y="-827.4" font-family="Helvetica,sans-Serif" font-size="12.00">Diagnosis data collection: 62 datasets, 13 GB, 6 layers. Columns = layers; centre column = identifier hubs. Arrow colour = identifier used to join a dataset to a hub. Grey dashed = xref / string&#45;only / not downloaded.</text>
+<g id="clust1" class="cluster">
+<title>cluster_01</title>
+<path fill="#f1f3f8" stroke="#8a93a8" d="M982,-99C982,-99 1279.03,-99 1279.03,-99 1285.03,-99 1291.03,-105 1291.03,-111 1291.03,-111 1291.03,-750 1291.03,-750 1291.03,-756 1285.03,-762 1279.03,-762 1279.03,-762 982,-762 982,-762 976,-762 970,-756 970,-750 970,-750 970,-111 970,-111 970,-105 976,-99 982,-99"/>
+<text text-anchor="middle" x="1130.52" y="-748.4" font-family="Helvetica,sans-Serif" font-size="12.00">01 &#160;Ontologies &amp; terminologies (the identifier hubs)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_02</title>
+<path fill="#eaf2fb" stroke="#6b9fd1" d="M481,-165C481,-165 873,-165 873,-165 879,-165 885,-171 885,-177 885,-177 885,-601 885,-601 885,-607 879,-613 873,-613 873,-613 481,-613 481,-613 475,-613 469,-607 469,-601 469,-601 469,-177 469,-177 469,-171 475,-165 481,-165"/>
+<text text-anchor="middle" x="677" y="-599.4" font-family="Helvetica,sans-Serif" font-size="12.00">02 &#160;Disease ↔ symptom knowledge (pairs, with frequency / weight)</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_03</title>
+<path fill="#fdf1e6" stroke="#e0a070" d="M12,-433C12,-433 372,-433 372,-433 378,-433 384,-439 384,-445 384,-445 384,-800 384,-800 384,-806 378,-812 372,-812 372,-812 12,-812 12,-812 6,-812 0,-806 0,-800 0,-800 0,-445 0,-445 0,-439 6,-433 12,-433"/>
+<text text-anchor="middle" x="192" y="-798.4" font-family="Helvetica,sans-Serif" font-size="12.00">03 &#160;Symptom → disease tables (one row = one patient / case)</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_04</title>
+<path fill="#eef7ea" stroke="#7cb86a" d="M1387.03,-206C1387.03,-206 1694.03,-206 1694.03,-206 1700.03,-206 1706.03,-212 1706.03,-218 1706.03,-218 1706.03,-725 1706.03,-725 1706.03,-731 1700.03,-737 1694.03,-737 1694.03,-737 1387.03,-737 1387.03,-737 1381.03,-737 1375.03,-731 1375.03,-725 1375.03,-725 1375.03,-218 1375.03,-218 1375.03,-212 1381.03,-206 1387.03,-206"/>
+<text text-anchor="middle" x="1540.53" y="-723.4" font-family="Helvetica,sans-Serif" font-size="12.00">04 &#160;Clinical cases &amp; notes (one record = one patient)</text>
+</g>
+<g id="clust5" class="cluster">
+<title>cluster_05</title>
+<path fill="#f7ecf5" stroke="#b97fb0" d="M1803.03,-136C1803.03,-136 2196.03,-136 2196.03,-136 2202.03,-136 2208.03,-142 2208.03,-148 2208.03,-148 2208.03,-503 2208.03,-503 2208.03,-509 2202.03,-515 2196.03,-515 2196.03,-515 1803.03,-515 1803.03,-515 1797.03,-515 1791.03,-509 1791.03,-503 1791.03,-503 1791.03,-148 1791.03,-148 1791.03,-142 1797.03,-136 1803.03,-136"/>
+<text text-anchor="middle" x="1999.53" y="-501.4" font-family="Helvetica,sans-Serif" font-size="12.00">05 &#160;Dialogue &amp; QA (patient question → doctor answer; exam items)</text>
+</g>
+<g id="clust6" class="cluster">
+<title>cluster_06</title>
+<path fill="#f3f3f3" stroke="#9a9a9a" d="M2305.03,-8C2305.03,-8 2562.03,-8 2562.03,-8 2568.03,-8 2574.03,-14 2574.03,-20 2574.03,-20 2574.03,-216 2574.03,-216 2574.03,-222 2568.03,-228 2562.03,-228 2562.03,-228 2305.03,-228 2305.03,-228 2299.03,-228 2293.03,-222 2293.03,-216 2293.03,-216 2293.03,-20 2293.03,-20 2293.03,-14 2299.03,-8 2305.03,-8"/>
+<text text-anchor="middle" x="2433.53" y="-214.4" font-family="Helvetica,sans-Serif" font-size="12.00">06 &#160;Reference text (for retrieval / grounding)</text>
+</g>
+<!-- HPO -->
+<g id="node1" class="node">
+<title>HPO</title>
+<path fill="#ffffff" stroke="#1f77b4" stroke-width="1.6" d="M1185.02,-509.5C1185.02,-509.5 1075.02,-509.5 1075.02,-509.5 1069.02,-509.5 1063.02,-503.5 1063.02,-497.5 1063.02,-497.5 1063.02,-480.5 1063.02,-480.5 1063.02,-474.5 1069.02,-468.5 1075.02,-468.5 1075.02,-468.5 1185.02,-468.5 1185.02,-468.5 1191.02,-468.5 1197.02,-474.5 1197.02,-480.5 1197.02,-480.5 1197.02,-497.5 1197.02,-497.5 1197.02,-503.5 1191.02,-509.5 1185.02,-509.5"/>
+<text text-anchor="middle" x="1130.02" y="-497.5" font-family="Helvetica,sans-Serif" font-size="10.00">HPO</text>
+<text text-anchor="middle" x="1130.02" y="-486.5" font-family="Helvetica,sans-Serif" font-size="10.00">phenotypes / symptoms</text>
+<text text-anchor="middle" x="1130.02" y="-475.5" font-family="Helvetica,sans-Serif" font-size="10.00">20,482 terms</text>
+</g>
+<!-- PPS -->
+<g id="node33" class="node">
+<title>PPS</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M1600.53,-599C1600.53,-599 1480.53,-599 1480.53,-599 1474.53,-599 1468.53,-593 1468.53,-587 1468.53,-587 1468.53,-575 1468.53,-575 1468.53,-569 1474.53,-563 1480.53,-563 1480.53,-563 1600.53,-563 1600.53,-563 1606.53,-563 1612.53,-569 1612.53,-575 1612.53,-575 1612.53,-587 1612.53,-587 1612.53,-593 1606.53,-599 1600.53,-599"/>
+<text text-anchor="middle" x="1540.53" y="-584" font-family="Helvetica,sans-Serif" font-size="10.00">Phenopacket Store</text>
+<text text-anchor="middle" x="1540.53" y="-573" font-family="Helvetica,sans-Serif" font-size="10.00">10,377 rare&#45;disease cases</text>
+</g>
+<!-- HPO&#45;&gt;PPS -->
+<g id="edge16" class="edge">
+<title>HPO&#45;&gt;PPS</title>
+<path fill="none" stroke="#1f77b4" stroke-width="1.1" d="M1203.61,-496.91C1231.37,-501.05 1263.06,-507.17 1291.03,-516 1330.46,-528.45 1335.5,-543.87 1375.03,-556 1405,-565.19 1439.11,-571.08 1468.47,-574.82"/>
+<polygon fill="#1f77b4" stroke="#1f77b4" stroke-width="1.1" points="1203.62,-494.79 1197.38,-496 1203.02,-498.94 1203.62,-494.79"/>
+</g>
+<!-- RB -->
+<g id="node34" class="node">
+<title>RB</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M1583.53,-653.5C1583.53,-653.5 1497.53,-653.5 1497.53,-653.5 1491.53,-653.5 1485.53,-647.5 1485.53,-641.5 1485.53,-641.5 1485.53,-624.5 1485.53,-624.5 1485.53,-618.5 1491.53,-612.5 1497.53,-612.5 1497.53,-612.5 1583.53,-612.5 1583.53,-612.5 1589.53,-612.5 1595.53,-618.5 1595.53,-624.5 1595.53,-624.5 1595.53,-641.5 1595.53,-641.5 1595.53,-647.5 1589.53,-653.5 1583.53,-653.5"/>
+<text text-anchor="middle" x="1540.53" y="-641.5" font-family="Helvetica,sans-Serif" font-size="10.00">RareBench +</text>
+<text text-anchor="middle" x="1540.53" y="-630.5" font-family="Helvetica,sans-Serif" font-size="10.00">rare&#45;dx benchmark</text>
+<text text-anchor="middle" x="1540.53" y="-619.5" font-family="Helvetica,sans-Serif" font-size="10.00">≈1.7k cases</text>
+</g>
+<!-- HPO&#45;&gt;RB -->
+<g id="edge17" class="edge">
+<title>HPO&#45;&gt;RB</title>
+<path fill="none" stroke="#1f77b4" stroke-width="1.1" d="M1203.22,-491.32C1231.91,-494.7 1264.35,-501.75 1291.03,-516 1339,-541.63 1327.08,-579.33 1375.03,-605 1408.87,-623.11 1451.75,-629.98 1485.25,-632.38"/>
+<polygon fill="#1f77b4" stroke="#1f77b4" stroke-width="1.1" points="1203.36,-489.22 1197.16,-490.65 1202.9,-493.4 1203.36,-489.22"/>
+</g>
+<!-- MONDO -->
+<g id="node2" class="node">
+<title>MONDO</title>
+<path fill="#ffffff" stroke="#7b3fa0" stroke-width="1.6" d="M1171.02,-350.5C1171.02,-350.5 1089.02,-350.5 1089.02,-350.5 1083.02,-350.5 1077.02,-344.5 1077.02,-338.5 1077.02,-338.5 1077.02,-321.5 1077.02,-321.5 1077.02,-315.5 1083.02,-309.5 1089.02,-309.5 1089.02,-309.5 1171.02,-309.5 1171.02,-309.5 1177.02,-309.5 1183.02,-315.5 1183.02,-321.5 1183.02,-321.5 1183.02,-338.5 1183.02,-338.5 1183.02,-344.5 1177.02,-350.5 1171.02,-350.5"/>
+<text text-anchor="middle" x="1130.02" y="-338.5" font-family="Helvetica,sans-Serif" font-size="10.00">Mondo</text>
+<text text-anchor="middle" x="1130.02" y="-327.5" font-family="Helvetica,sans-Serif" font-size="10.00">diseases</text>
+<text text-anchor="middle" x="1130.02" y="-316.5" font-family="Helvetica,sans-Serif" font-size="10.00">36,096 ids + xrefs</text>
+</g>
+<!-- DOID -->
+<g id="node3" class="node">
+<title>DOID</title>
+<path fill="#ffffff" stroke="#7b3fa0" stroke-width="1.6" d="M1169.52,-247C1169.52,-247 1090.52,-247 1090.52,-247 1084.52,-247 1078.52,-241 1078.52,-235 1078.52,-235 1078.52,-223 1078.52,-223 1078.52,-217 1084.52,-211 1090.52,-211 1090.52,-211 1169.52,-211 1169.52,-211 1175.52,-211 1181.52,-217 1181.52,-223 1181.52,-223 1181.52,-235 1181.52,-235 1181.52,-241 1175.52,-247 1169.52,-247"/>
+<text text-anchor="middle" x="1130.02" y="-232" font-family="Helvetica,sans-Serif" font-size="10.00">Disease Ontology</text>
+<text text-anchor="middle" x="1130.02" y="-221" font-family="Helvetica,sans-Serif" font-size="10.00">14,939 terms</text>
+</g>
+<!-- MONDO&#45;&gt;DOID -->
+<g id="edge1" class="edge">
+<title>MONDO&#45;&gt;DOID</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1076.75,-328.56C1003.01,-324.7 883.6,-310.62 927.5,-259.5 963.75,-217.28 1031.36,-215.29 1078.45,-220.11"/>
+</g>
+<!-- ORPHA -->
+<g id="node4" class="node">
+<title>ORPHA</title>
+<path fill="#ffffff" stroke="#7b3fa0" stroke-width="1.6" d="M1179.52,-613.5C1179.52,-613.5 1080.52,-613.5 1080.52,-613.5 1074.52,-613.5 1068.52,-607.5 1068.52,-601.5 1068.52,-601.5 1068.52,-584.5 1068.52,-584.5 1068.52,-578.5 1074.52,-572.5 1080.52,-572.5 1080.52,-572.5 1179.52,-572.5 1179.52,-572.5 1185.52,-572.5 1191.52,-578.5 1191.52,-584.5 1191.52,-584.5 1191.52,-601.5 1191.52,-601.5 1191.52,-607.5 1185.52,-613.5 1179.52,-613.5"/>
+<text text-anchor="middle" x="1130.02" y="-601.5" font-family="Helvetica,sans-Serif" font-size="10.00">Orphanet (Orphadata)</text>
+<text text-anchor="middle" x="1130.02" y="-590.5" font-family="Helvetica,sans-Serif" font-size="10.00">4,357 rare disorders</text>
+<text text-anchor="middle" x="1130.02" y="-579.5" font-family="Helvetica,sans-Serif" font-size="10.00">40 XML products</text>
+</g>
+<!-- MONDO&#45;&gt;ORPHA -->
+<g id="edge2" class="edge">
+<title>MONDO&#45;&gt;ORPHA</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1077.01,-321.86C1029.93,-317.98 963.23,-321.37 927.5,-363.5 871.44,-429.59 871.6,-492.27 927.5,-558.5 960.97,-598.16 1021.81,-603.88 1068.1,-601.43"/>
+</g>
+<!-- MESH -->
+<g id="node5" class="node">
+<title>MESH</title>
+<path fill="#ffffff" stroke="#2ca02c" stroke-width="1.6" d="M1173.02,-197.5C1173.02,-197.5 1087.02,-197.5 1087.02,-197.5 1081.02,-197.5 1075.02,-191.5 1075.02,-185.5 1075.02,-185.5 1075.02,-168.5 1075.02,-168.5 1075.02,-162.5 1081.02,-156.5 1087.02,-156.5 1087.02,-156.5 1173.02,-156.5 1173.02,-156.5 1179.02,-156.5 1185.02,-162.5 1185.02,-168.5 1185.02,-168.5 1185.02,-185.5 1185.02,-185.5 1185.02,-191.5 1179.02,-197.5 1173.02,-197.5"/>
+<text text-anchor="middle" x="1130.02" y="-185.5" font-family="Helvetica,sans-Serif" font-size="10.00">MeSH 2026</text>
+<text text-anchor="middle" x="1130.02" y="-174.5" font-family="Helvetica,sans-Serif" font-size="10.00">descriptors + SCRs</text>
+<text text-anchor="middle" x="1130.02" y="-163.5" font-family="Helvetica,sans-Serif" font-size="10.00">1.1 GB</text>
+</g>
+<!-- MONDO&#45;&gt;MESH -->
+<g id="edge3" class="edge">
+<title>MONDO&#45;&gt;MESH</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1076.97,-337.85C1029.88,-341.48 963.16,-337.74 927.5,-295.5 903.13,-266.63 903.06,-239.31 927.5,-210.5 962.65,-169.05 1027.79,-165.1 1074.71,-168.68"/>
+</g>
+<!-- ICD -->
+<g id="node6" class="node">
+<title>ICD</title>
+<path fill="#ffffff" stroke="#e6811c" stroke-width="1.6" d="M1172.02,-733C1172.02,-733 1088.02,-733 1088.02,-733 1082.02,-733 1076.02,-727 1076.02,-721 1076.02,-721 1076.02,-709 1076.02,-709 1076.02,-703 1082.02,-697 1088.02,-697 1088.02,-697 1172.02,-697 1172.02,-697 1178.02,-697 1184.02,-703 1184.02,-709 1184.02,-709 1184.02,-721 1184.02,-721 1184.02,-727 1178.02,-733 1172.02,-733"/>
+<text text-anchor="middle" x="1130.02" y="-718" font-family="Helvetica,sans-Serif" font-size="10.00">ICD&#45;10&#45;CM FY2026</text>
+<text text-anchor="middle" x="1130.02" y="-707" font-family="Helvetica,sans-Serif" font-size="10.00">74,719 codes</text>
+</g>
+<!-- MONDO&#45;&gt;ICD -->
+<g id="edge4" class="edge">
+<title>MONDO&#45;&gt;ICD</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1077.01,-321.86C1029.93,-317.98 963.23,-321.37 927.5,-363.5 881.5,-417.73 881.24,-629.49 927.5,-683.5 963.03,-724.98 1028.76,-728.04 1075.7,-723.84"/>
+</g>
+<!-- OMIM -->
+<g id="node9" class="node">
+<title>OMIM</title>
+<path fill="#f7f7f7" stroke="#999999" stroke-dasharray="5,2" d="M1183.02,-559C1183.02,-559 1077.02,-559 1077.02,-559 1071.02,-559 1065.02,-553 1065.02,-547 1065.02,-547 1065.02,-535 1065.02,-535 1065.02,-529 1071.02,-523 1077.02,-523 1077.02,-523 1183.02,-523 1183.02,-523 1189.02,-523 1195.02,-529 1195.02,-535 1195.02,-535 1195.02,-547 1195.02,-547 1195.02,-553 1189.02,-559 1183.02,-559"/>
+<text text-anchor="middle" x="1130.02" y="-544" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#777777">OMIM</text>
+<text text-anchor="middle" x="1130.02" y="-533" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#777777">(licence: manual entry)</text>
+</g>
+<!-- MONDO&#45;&gt;OMIM -->
+<g id="edge5" class="edge">
+<title>MONDO&#45;&gt;OMIM</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1077.01,-321.86C1029.93,-317.98 963.23,-321.37 927.5,-363.5 885.53,-412.99 885.29,-460.22 927.5,-509.5 960.37,-547.87 1019.08,-553.37 1064.86,-550.65"/>
+</g>
+<!-- UMLS -->
+<g id="node10" class="node">
+<title>UMLS</title>
+<path fill="#f7f7f7" stroke="#999999" stroke-dasharray="5,2" d="M1183.02,-296C1183.02,-296 1077.02,-296 1077.02,-296 1071.02,-296 1065.02,-290 1065.02,-284 1065.02,-284 1065.02,-272 1065.02,-272 1065.02,-266 1071.02,-260 1077.02,-260 1077.02,-260 1183.02,-260 1183.02,-260 1189.02,-260 1195.02,-266 1195.02,-272 1195.02,-272 1195.02,-284 1195.02,-284 1195.02,-290 1189.02,-296 1183.02,-296"/>
+<text text-anchor="middle" x="1130.02" y="-281" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#777777">UMLS / SNOMED CT</text>
+<text text-anchor="middle" x="1130.02" y="-270" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#777777">(licence: manual entry)</text>
+</g>
+<!-- MONDO&#45;&gt;UMLS -->
+<g id="edge6" class="edge">
+<title>MONDO&#45;&gt;UMLS</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1130.02,-309.45C1130.02,-305.06 1130.02,-300.67 1130.02,-296.28"/>
+</g>
+<!-- ORPHA&#45;&gt;RB -->
+<g id="edge23" class="edge">
+<title>ORPHA&#45;&gt;RB</title>
+<path fill="none" stroke="#7b3fa0" stroke-width="1.1" d="M1197.9,-599.55C1278.16,-607.41 1411.19,-620.43 1485.34,-627.69"/>
+<polygon fill="#7b3fa0" stroke="#7b3fa0" stroke-width="1.1" points="1197.91,-597.44 1191.73,-598.95 1197.5,-601.62 1197.91,-597.44"/>
+</g>
+<!-- PQA -->
+<g id="node42" class="node">
+<title>PQA</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M2022.53,-180C2022.53,-180 1976.53,-180 1976.53,-180 1970.53,-180 1964.53,-174 1964.53,-168 1964.53,-168 1964.53,-156 1964.53,-156 1964.53,-150 1970.53,-144 1976.53,-144 1976.53,-144 2022.53,-144 2022.53,-144 2028.53,-144 2034.53,-150 2034.53,-156 2034.53,-156 2034.53,-168 2034.53,-168 2034.53,-174 2028.53,-180 2022.53,-180"/>
+<text text-anchor="middle" x="1999.53" y="-165" font-family="Helvetica,sans-Serif" font-size="10.00">PubMedQA</text>
+<text text-anchor="middle" x="1999.53" y="-154" font-family="Helvetica,sans-Serif" font-size="10.00">300 MB</text>
+</g>
+<!-- MESH&#45;&gt;PQA -->
+<g id="edge26" class="edge">
+<title>MESH&#45;&gt;PQA</title>
+<path fill="none" stroke="#2ca02c" stroke-width="1.1" d="M1191.23,-167.68C1221.32,-162.71 1258.22,-156.15 1291.03,-149 1328.74,-140.78 1336.76,-131.93 1375.03,-127 1598.42,-98.23 1869.86,-139.21 1964.24,-155.67"/>
+<polygon fill="#2ca02c" stroke="#2ca02c" stroke-width="1.1" points="1190.88,-165.61 1185.3,-168.65 1191.56,-169.75 1190.88,-165.61"/>
+</g>
+<!-- MLPT -->
+<g id="node45" class="node">
+<title>MLPT</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M2492.53,-101C2492.53,-101 2374.53,-101 2374.53,-101 2368.53,-101 2362.53,-95 2362.53,-89 2362.53,-89 2362.53,-77 2362.53,-77 2362.53,-71 2368.53,-65 2374.53,-65 2374.53,-65 2492.53,-65 2492.53,-65 2498.53,-65 2504.53,-71 2504.53,-77 2504.53,-77 2504.53,-89 2504.53,-89 2504.53,-95 2498.53,-101 2492.53,-101"/>
+<text text-anchor="middle" x="2433.53" y="-86" font-family="Helvetica,sans-Serif" font-size="10.00">MedlinePlus health topics</text>
+<text text-anchor="middle" x="2433.53" y="-75" font-family="Helvetica,sans-Serif" font-size="10.00">2,033 topics, 88 groups</text>
+</g>
+<!-- MESH&#45;&gt;MLPT -->
+<g id="edge27" class="edge">
+<title>MESH&#45;&gt;MLPT</title>
+<path fill="none" stroke="#2ca02c" stroke-width="1.1" d="M1191.32,-169.53C1221.59,-165 1258.62,-158.28 1291.03,-149 1329.75,-137.91 1335.62,-123.29 1375.03,-115 1739.9,-38.21 2191.07,-63.08 2362.24,-76.67"/>
+<polygon fill="#2ca02c" stroke="#2ca02c" stroke-width="1.1" points="1190.99,-167.45 1185.36,-170.4 1191.6,-171.61 1190.99,-167.45"/>
+</g>
+<!-- CICD -->
+<g id="node35" class="node">
+<title>CICD</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M1594.53,-707.5C1594.53,-707.5 1486.53,-707.5 1486.53,-707.5 1480.53,-707.5 1474.53,-701.5 1474.53,-695.5 1474.53,-695.5 1474.53,-678.5 1474.53,-678.5 1474.53,-672.5 1480.53,-666.5 1486.53,-666.5 1486.53,-666.5 1594.53,-666.5 1594.53,-666.5 1600.53,-666.5 1606.53,-672.5 1606.53,-678.5 1606.53,-678.5 1606.53,-695.5 1606.53,-695.5 1606.53,-701.5 1600.53,-707.5 1594.53,-707.5"/>
+<text text-anchor="middle" x="1540.53" y="-695.5" font-family="Helvetica,sans-Serif" font-size="10.00">clinical_case_icd10</text>
+<text text-anchor="middle" x="1540.53" y="-684.5" font-family="Helvetica,sans-Serif" font-size="10.00">DiagnosisArena · NEJM</text>
+<text text-anchor="middle" x="1540.53" y="-673.5" font-family="Helvetica,sans-Serif" font-size="10.00">small curated case sets</text>
+</g>
+<!-- ICD&#45;&gt;CICD -->
+<g id="edge30" class="edge">
+<title>ICD&#45;&gt;CICD</title>
+<path fill="none" stroke="#e6811c" stroke-width="1.1" d="M1190.67,-710.91C1266.27,-705.73 1396.14,-696.83 1474.3,-691.47"/>
+<polygon fill="#e6811c" stroke="#e6811c" stroke-width="1.1" points="1190.26,-708.83 1184.42,-711.34 1190.55,-713.02 1190.26,-708.83"/>
+</g>
+<!-- AHD -->
+<g id="node44" class="node">
+<title>AHD</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M2086.03,-278C2086.03,-278 1913.03,-278 1913.03,-278 1907.03,-278 1901.03,-272 1901.03,-266 1901.03,-266 1901.03,-254 1901.03,-254 1901.03,-248 1907.03,-242 1913.03,-242 1913.03,-242 2086.03,-242 2086.03,-242 2092.03,-242 2098.03,-248 2098.03,-254 2098.03,-254 2098.03,-266 2098.03,-266 2098.03,-272 2092.03,-278 2086.03,-278"/>
+<text text-anchor="middle" x="1999.53" y="-263" font-family="Helvetica,sans-Serif" font-size="10.00">all_human_diseases</text>
+<text text-anchor="middle" x="1999.53" y="-252" font-family="Helvetica,sans-Serif" font-size="10.00">2,194 diseases, synthetic encounters</text>
+</g>
+<!-- ICD&#45;&gt;AHD -->
+<g id="edge31" class="edge">
+<title>ICD&#45;&gt;AHD</title>
+<path fill="none" stroke="#e6811c" stroke-width="1.1" d="M1190.28,-721.43C1224.18,-721.68 1265,-715.62 1291.03,-690 1447.56,-535.92 1207.04,-344.5 1375.03,-203 1431.29,-155.61 1633.66,-189.83 1706.03,-203 1745.75,-210.23 1751.82,-225.41 1791.03,-235 1826.36,-243.65 1865.85,-249.35 1900.81,-253.1"/>
+<polygon fill="#e6811c" stroke="#e6811c" stroke-width="1.1" points="1190.08,-719.32 1184.04,-721.31 1190,-723.52 1190.08,-719.32"/>
+</g>
+<!-- SYMP -->
+<g id="node7" class="node">
+<title>SYMP</title>
+<path fill="#ffffff" stroke="#1f77b4" stroke-width="1.6" d="M1173.52,-400C1173.52,-400 1086.52,-400 1086.52,-400 1080.52,-400 1074.52,-394 1074.52,-388 1074.52,-388 1074.52,-376 1074.52,-376 1074.52,-370 1080.52,-364 1086.52,-364 1086.52,-364 1173.52,-364 1173.52,-364 1179.52,-364 1185.52,-370 1185.52,-376 1185.52,-376 1185.52,-388 1185.52,-388 1185.52,-394 1179.52,-400 1173.52,-400"/>
+<text text-anchor="middle" x="1130.02" y="-385" font-family="Helvetica,sans-Serif" font-size="10.00">Symptom Ontology</text>
+<text text-anchor="middle" x="1130.02" y="-374" font-family="Helvetica,sans-Serif" font-size="10.00">1,020 lay terms</text>
+</g>
+<!-- SYMP&#45;&gt;HPO -->
+<g id="edge11" class="edge">
+<title>SYMP&#45;&gt;HPO</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1074.34,-372.71C1027.5,-368.43 962.71,-371.5 927.5,-412.5 915.05,-427 915.14,-440.93 927.5,-455.5 959.77,-493.55 1017.31,-500 1062.83,-498.04"/>
+</g>
+<!-- MEDIC -->
+<g id="node8" class="node">
+<title>MEDIC</title>
+<path fill="#ffffff" stroke="#2ca02c" stroke-width="1.6" d="M1174.52,-143C1174.52,-143 1085.52,-143 1085.52,-143 1079.52,-143 1073.52,-137 1073.52,-131 1073.52,-131 1073.52,-119 1073.52,-119 1073.52,-113 1079.52,-107 1085.52,-107 1085.52,-107 1174.52,-107 1174.52,-107 1180.52,-107 1186.52,-113 1186.52,-119 1186.52,-119 1186.52,-131 1186.52,-131 1186.52,-137 1180.52,-143 1174.52,-143"/>
+<text text-anchor="middle" x="1130.02" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">CTD MEDIC</text>
+<text text-anchor="middle" x="1130.02" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">MeSH ↔ OMIM map</text>
+</g>
+<!-- MEDIC&#45;&gt;MESH -->
+<g id="edge7" class="edge">
+<title>MEDIC&#45;&gt;MESH</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1130.02,-143.28C1130.02,-147.67 1130.02,-152.06 1130.02,-156.45"/>
+</g>
+<!-- MEDIC&#45;&gt;OMIM -->
+<g id="edge8" class="edge">
+<title>MEDIC&#45;&gt;OMIM</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1073.4,-115.96C1026.63,-112.07 962.45,-115.69 927.5,-156.5 876.47,-216.08 876.47,-449.92 927.5,-509.5 960.37,-547.87 1019.08,-553.37 1064.86,-550.65"/>
+</g>
+<!-- OMIM&#45;&gt;PPS -->
+<g id="edge40" class="edge">
+<title>OMIM&#45;&gt;PPS</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1201.49,-547.9C1276.19,-555.21 1393.49,-566.7 1468.42,-574.04"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1201.47,-545.79 1195.3,-547.29 1201.06,-549.97 1201.47,-545.79"/>
+</g>
+<!-- OMIM&#45;&gt;RB -->
+<g id="edge41" class="edge">
+<title>OMIM&#45;&gt;RB</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1201.36,-547.68C1229.63,-551.47 1262.27,-557.27 1291.03,-566 1330.42,-577.96 1335.73,-592.77 1375.03,-605 1410.99,-616.19 1452.85,-623.23 1485.34,-627.46"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1201.62,-545.59 1195.4,-546.9 1201.08,-549.76 1201.62,-545.59"/>
+</g>
+<!-- SYN -->
+<g id="node37" class="node">
+<title>SYN</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M1576.03,-250C1576.03,-250 1505.03,-250 1505.03,-250 1499.03,-250 1493.03,-244 1493.03,-238 1493.03,-238 1493.03,-226 1493.03,-226 1493.03,-220 1499.03,-214 1505.03,-214 1505.03,-214 1576.03,-214 1576.03,-214 1582.03,-214 1588.03,-220 1588.03,-226 1588.03,-226 1588.03,-238 1588.03,-238 1588.03,-244 1582.03,-250 1576.03,-250"/>
+<text text-anchor="middle" x="1540.53" y="-235" font-family="Helvetica,sans-Serif" font-size="10.00">Synthea sample</text>
+<text text-anchor="middle" x="1540.53" y="-224" font-family="Helvetica,sans-Serif" font-size="10.00">synthetic EHR</text>
+</g>
+<!-- UMLS&#45;&gt;SYN -->
+<g id="edge44" class="edge">
+<title>UMLS&#45;&gt;SYN</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1201.46,-270.07C1284.86,-260.68 1421.43,-245.3 1492.78,-237.26"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1201.02,-268 1195.3,-270.76 1201.49,-272.18 1201.02,-268"/>
+</g>
+<!-- MQUAD -->
+<g id="node43" class="node">
+<title>MQUAD</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M2059.53,-229C2059.53,-229 1939.53,-229 1939.53,-229 1933.53,-229 1927.53,-223 1927.53,-217 1927.53,-217 1927.53,-205 1927.53,-205 1927.53,-199 1933.53,-193 1939.53,-193 1939.53,-193 2059.53,-193 2059.53,-193 2065.53,-193 2071.53,-199 2071.53,-205 2071.53,-205 2071.53,-217 2071.53,-217 2071.53,-223 2065.53,-229 2059.53,-229"/>
+<text text-anchor="middle" x="1999.53" y="-214" font-family="Helvetica,sans-Serif" font-size="10.00">MedQuAD</text>
+<text text-anchor="middle" x="1999.53" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">47k NIH Q/A, 31k with CUI</text>
+</g>
+<!-- UMLS&#45;&gt;MQUAD -->
+<g id="edge43" class="edge">
+<title>UMLS&#45;&gt;MQUAD</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1201.36,-275.4C1230.2,-272.23 1263.26,-265.8 1291.03,-253 1335.69,-232.42 1328.91,-198.06 1375.03,-181 1513,-129.96 1559.11,-173.49 1706.03,-181 1781.87,-184.88 1868.33,-194.38 1927.46,-201.66"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1201.03,-273.33 1195.27,-276.03 1201.46,-277.51 1201.03,-273.33"/>
+</g>
+<!-- NAMES -->
+<g id="node11" class="node">
+<title>NAMES</title>
+<ellipse fill="#f7f7f7" stroke="#999999" stroke-dasharray="5,2" cx="1130.02" cy="-655" rx="111.03" ry="28.98"/>
+<text text-anchor="middle" x="1130.02" y="-663.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#777777">disease / symptom</text>
+<text text-anchor="middle" x="1130.02" y="-652.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#777777">name strings only</text>
+<text text-anchor="middle" x="1130.02" y="-641.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#777777">(synonym matching needed)</text>
+</g>
+<!-- NAMES&#45;&gt;HPO -->
+<g id="edge10" class="edge">
+<title>NAMES&#45;&gt;HPO</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1019.48,-658.27C984.8,-653.28 949.79,-640.82 927.5,-613.5 901.93,-582.16 901.34,-553.34 927.5,-522.5 959.77,-484.45 1017.31,-478 1062.83,-479.96"/>
+</g>
+<!-- NAMES&#45;&gt;MONDO -->
+<g id="edge9" class="edge">
+<title>NAMES&#45;&gt;MONDO</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1019.48,-658.27C984.8,-653.28 949.79,-640.82 927.5,-613.5 892.38,-570.45 891.56,-405.87 927.5,-363.5 963.23,-321.37 1029.93,-317.98 1077.01,-321.86"/>
+</g>
+<!-- NAMES&#45;&gt;CICD -->
+<g id="edge51" class="edge">
+<title>NAMES&#45;&gt;CICD</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1242.7,-663.75C1317.03,-669.57 1412.11,-677.02 1474.36,-681.89"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1242.63,-661.64 1236.48,-663.26 1242.3,-665.82 1242.63,-661.64"/>
+</g>
+<!-- WIKI -->
+<g id="node46" class="node">
+<title>WIKI</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M2491.03,-150C2491.03,-150 2376.03,-150 2376.03,-150 2370.03,-150 2364.03,-144 2364.03,-138 2364.03,-138 2364.03,-126 2364.03,-126 2364.03,-120 2370.03,-114 2376.03,-114 2376.03,-114 2491.03,-114 2491.03,-114 2497.03,-114 2503.03,-120 2503.03,-126 2503.03,-126 2503.03,-138 2503.03,-138 2503.03,-144 2497.03,-150 2491.03,-150"/>
+<text text-anchor="middle" x="2433.53" y="-135" font-family="Helvetica,sans-Serif" font-size="10.00">Wikipedia medical terms</text>
+<text text-anchor="middle" x="2433.53" y="-124" font-family="Helvetica,sans-Serif" font-size="10.00">6,861 articles</text>
+</g>
+<!-- NAMES&#45;&gt;WIKI -->
+<g id="edge52" class="edge">
+<title>NAMES&#45;&gt;WIKI</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M1244.79,-647.43C1262.11,-641.71 1278.39,-633.01 1291.03,-620 1431.01,-475.99 1227.18,-311.92 1375.03,-176 1447.57,-109.31 2140.98,-123.49 2363.89,-129.84"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1244,-645.48 1238.89,-649.27 1245.24,-649.5 1244,-645.48"/>
+</g>
+<!-- PMID -->
+<g id="node12" class="node">
+<title>PMID</title>
+<ellipse fill="#f7f7f7" stroke="#999999" stroke-dasharray="5,2" cx="1130.02" cy="-434" rx="78.48" ry="21.43"/>
+<text text-anchor="middle" x="1130.02" y="-437" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#777777">PMID / PMCID</text>
+<text text-anchor="middle" x="1130.02" y="-426" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#777777">literature reference</text>
+</g>
+<!-- PMCP -->
+<g id="node28" class="node">
+<title>PMCP</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M1599.53,-452C1599.53,-452 1481.53,-452 1481.53,-452 1475.53,-452 1469.53,-446 1469.53,-440 1469.53,-440 1469.53,-428 1469.53,-428 1469.53,-422 1475.53,-416 1481.53,-416 1481.53,-416 1599.53,-416 1599.53,-416 1605.53,-416 1611.53,-422 1611.53,-428 1611.53,-428 1611.53,-440 1611.53,-440 1611.53,-446 1605.53,-452 1599.53,-452"/>
+<text text-anchor="middle" x="1540.53" y="-437" font-family="Helvetica,sans-Serif" font-size="10.00">PMC&#45;Patients</text>
+<text text-anchor="middle" x="1540.53" y="-426" font-family="Helvetica,sans-Serif" font-size="10.00">167k case reports &#160;1.4 GB</text>
+</g>
+<!-- PMID&#45;&gt;PMCP -->
+<g id="edge32" class="edge">
+<title>PMID&#45;&gt;PMCP</title>
+<path fill="none" stroke="#8c564b" stroke-width="1.1" d="M1215.07,-434C1290.2,-434 1399.01,-434 1469.52,-434"/>
+<polygon fill="#8c564b" stroke="#8c564b" stroke-width="1.1" points="1214.82,-431.9 1208.82,-434 1214.82,-436.1 1214.82,-431.9"/>
+</g>
+<!-- OPEN -->
+<g id="node29" class="node">
+<title>OPEN</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M1585.53,-403C1585.53,-403 1495.53,-403 1495.53,-403 1489.53,-403 1483.53,-397 1483.53,-391 1483.53,-391 1483.53,-379 1483.53,-379 1483.53,-373 1489.53,-367 1495.53,-367 1495.53,-367 1585.53,-367 1585.53,-367 1591.53,-367 1597.53,-373 1597.53,-379 1597.53,-379 1597.53,-391 1597.53,-391 1597.53,-397 1591.53,-403 1585.53,-403"/>
+<text text-anchor="middle" x="1540.53" y="-388" font-family="Helvetica,sans-Serif" font-size="10.00">Open&#45;Patients</text>
+<text text-anchor="middle" x="1540.53" y="-377" font-family="Helvetica,sans-Serif" font-size="10.00">180k cases &#160;482 MB</text>
+</g>
+<!-- PMID&#45;&gt;OPEN -->
+<g id="edge33" class="edge">
+<title>PMID&#45;&gt;OPEN</title>
+<path fill="none" stroke="#8c564b" stroke-width="1.1" d="M1208.35,-424.72C1288.53,-415.11 1411.94,-400.3 1483.3,-391.74"/>
+<polygon fill="#8c564b" stroke="#8c564b" stroke-width="1.1" points="1207.88,-422.67 1202.17,-425.46 1208.38,-426.84 1207.88,-422.67"/>
+</g>
+<!-- CRC -->
+<g id="node30" class="node">
+<title>CRC</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M1589.53,-550C1589.53,-550 1491.53,-550 1491.53,-550 1485.53,-550 1479.53,-544 1479.53,-538 1479.53,-538 1479.53,-526 1479.53,-526 1479.53,-520 1485.53,-514 1491.53,-514 1491.53,-514 1589.53,-514 1589.53,-514 1595.53,-514 1601.53,-520 1601.53,-526 1601.53,-526 1601.53,-538 1601.53,-538 1601.53,-544 1595.53,-550 1589.53,-550"/>
+<text text-anchor="middle" x="1540.53" y="-535" font-family="Helvetica,sans-Serif" font-size="10.00">CaseReportCollective</text>
+<text text-anchor="middle" x="1540.53" y="-524" font-family="Helvetica,sans-Serif" font-size="10.00">86k cases &#160;244 MB</text>
+</g>
+<!-- PMID&#45;&gt;CRC -->
+<g id="edge34" class="edge">
+<title>PMID&#45;&gt;CRC</title>
+<path fill="none" stroke="#8c564b" stroke-width="1.1" d="M1209.47,-442.63C1235.85,-446.87 1265.13,-453.06 1291.03,-462 1331.06,-475.83 1334.85,-493.62 1375.03,-507 1408.61,-518.18 1447.72,-524.38 1479.38,-527.81"/>
+<polygon fill="#8c564b" stroke="#8c564b" stroke-width="1.1" points="1209.79,-440.56 1203.54,-441.7 1209.14,-444.71 1209.79,-440.56"/>
+</g>
+<!-- PMCQA -->
+<g id="node31" class="node">
+<title>PMCQA</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M1586.53,-501C1586.53,-501 1494.53,-501 1494.53,-501 1488.53,-501 1482.53,-495 1482.53,-489 1482.53,-489 1482.53,-477 1482.53,-477 1482.53,-471 1488.53,-465 1494.53,-465 1494.53,-465 1586.53,-465 1586.53,-465 1592.53,-465 1598.53,-471 1598.53,-477 1598.53,-477 1598.53,-489 1598.53,-489 1598.53,-495 1592.53,-501 1586.53,-501"/>
+<text text-anchor="middle" x="1540.53" y="-486" font-family="Helvetica,sans-Serif" font-size="10.00">PMC&#45;CaseReport QA</text>
+<text text-anchor="middle" x="1540.53" y="-475" font-family="Helvetica,sans-Serif" font-size="10.00">279k Q/A &#160;140 MB</text>
+</g>
+<!-- PMID&#45;&gt;PMCQA -->
+<g id="edge35" class="edge">
+<title>PMID&#45;&gt;PMCQA</title>
+<path fill="none" stroke="#8c564b" stroke-width="1.1" d="M1208.32,-443.27C1288.15,-452.85 1410.85,-467.57 1482.35,-476.14"/>
+<polygon fill="#8c564b" stroke="#8c564b" stroke-width="1.1" points="1208.38,-441.16 1202.17,-442.54 1207.88,-445.33 1208.38,-441.16"/>
+</g>
+<!-- FZ -->
+<g id="node32" class="node">
+<title>FZ</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M1592.53,-354C1592.53,-354 1488.53,-354 1488.53,-354 1482.53,-354 1476.53,-348 1476.53,-342 1476.53,-342 1476.53,-330 1476.53,-330 1476.53,-324 1482.53,-318 1488.53,-318 1488.53,-318 1592.53,-318 1592.53,-318 1598.53,-318 1604.53,-324 1604.53,-330 1604.53,-330 1604.53,-342 1604.53,-342 1604.53,-348 1598.53,-354 1592.53,-354"/>
+<text text-anchor="middle" x="1540.53" y="-339" font-family="Helvetica,sans-Serif" font-size="10.00">FindZebra case reports</text>
+<text text-anchor="middle" x="1540.53" y="-328" font-family="Helvetica,sans-Serif" font-size="10.00">rare diseases</text>
+</g>
+<!-- PMID&#45;&gt;FZ -->
+<g id="edge36" class="edge">
+<title>PMID&#45;&gt;FZ</title>
+<path fill="none" stroke="#8c564b" stroke-width="1.1" d="M1209.52,-425.51C1235.9,-421.28 1265.17,-415.06 1291.03,-406 1331.2,-391.92 1334.67,-373.51 1375.03,-360 1407.46,-349.15 1445.12,-343.2 1476.21,-339.94"/>
+<polygon fill="#8c564b" stroke="#8c564b" stroke-width="1.1" points="1209.19,-423.43 1203.59,-426.43 1209.84,-427.58 1209.19,-423.43"/>
+</g>
+<!-- PMID&#45;&gt;PPS -->
+<g id="edge37" class="edge">
+<title>PMID&#45;&gt;PPS</title>
+<path fill="none" stroke="#8c564b" stroke-width="1.1" d="M1213.96,-437.92C1239.88,-441.86 1267.75,-449.06 1291.03,-462 1340,-489.22 1325.76,-529.33 1375.03,-556 1403.23,-571.26 1437.9,-577.99 1468.13,-580.72"/>
+<polygon fill="#8c564b" stroke="#8c564b" stroke-width="1.1" points="1214.01,-435.8 1207.77,-437.03 1213.41,-439.96 1214.01,-435.8"/>
+</g>
+<!-- HPOA -->
+<g id="node13" class="node">
+<title>HPOA</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M726,-475.5C726,-475.5 628,-475.5 628,-475.5 622,-475.5 616,-469.5 616,-463.5 616,-463.5 616,-446.5 616,-446.5 616,-440.5 622,-434.5 628,-434.5 628,-434.5 726,-434.5 726,-434.5 732,-434.5 738,-440.5 738,-446.5 738,-446.5 738,-463.5 738,-463.5 738,-469.5 732,-475.5 726,-475.5"/>
+<text text-anchor="middle" x="677" y="-463.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpo / phenotype.hpoa</text>
+<text text-anchor="middle" x="677" y="-452.5" font-family="Helvetica,sans-Serif" font-size="10.00">12,880 diseases</text>
+<text text-anchor="middle" x="677" y="-441.5" font-family="Helvetica,sans-Serif" font-size="10.00">286,651 annotations</text>
+</g>
+<!-- HPOA&#45;&gt;HPO -->
+<g id="edge12" class="edge">
+<title>HPOA&#45;&gt;HPO</title>
+<path fill="none" stroke="#1f77b4" stroke-width="1.1" d="M738.36,-459.55C820.84,-465.77 968.56,-476.9 1056.8,-483.56"/>
+<polygon fill="#1f77b4" stroke="#1f77b4" stroke-width="1.1" points="1056.65,-485.65 1062.79,-484.01 1056.96,-481.46 1056.65,-485.65"/>
+</g>
+<!-- HPOA&#45;&gt;ORPHA -->
+<g id="edge21" class="edge">
+<title>HPOA&#45;&gt;ORPHA</title>
+<path fill="none" stroke="#7b3fa0" stroke-width="1.1" d="M738.41,-452.96C781.31,-453.82 839.18,-459.78 885,-482 932.51,-505.04 923.02,-540.9 970,-565 998.18,-579.45 1032.45,-586.6 1061.95,-590.08"/>
+<polygon fill="#7b3fa0" stroke="#7b3fa0" stroke-width="1.1" points="1061.98,-592.19 1068.17,-590.77 1062.44,-588.02 1061.98,-592.19"/>
+</g>
+<!-- HPOA&#45;&gt;OMIM -->
+<g id="edge39" class="edge">
+<title>HPOA&#45;&gt;OMIM</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M738.1,-458.84C779.83,-462.47 836.43,-469.33 885,-482 924.37,-492.27 930.77,-505.22 970,-516 998.56,-523.85 1030.73,-529.48 1058.62,-533.39"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1058.64,-535.52 1064.87,-534.25 1059.21,-531.35 1058.64,-535.52"/>
+</g>
+<!-- HPOA&#45;&gt;PMID -->
+<g id="edge38" class="edge">
+<title>HPOA&#45;&gt;PMID</title>
+<path fill="none" stroke="#8c564b" stroke-width="1.1" d="M738.36,-452.19C817.67,-448.5 957.3,-442 1046.38,-437.85"/>
+<polygon fill="#8c564b" stroke="#8c564b" stroke-width="1.1" points="1046.54,-439.94 1052.44,-437.57 1046.35,-435.75 1046.54,-439.94"/>
+</g>
+<!-- ORPH4 -->
+<g id="node14" class="node">
+<title>ORPH4</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M732,-529.5C732,-529.5 622,-529.5 622,-529.5 616,-529.5 610,-523.5 610,-517.5 610,-517.5 610,-500.5 610,-500.5 610,-494.5 616,-488.5 622,-488.5 622,-488.5 732,-488.5 732,-488.5 738,-488.5 744,-494.5 744,-500.5 744,-500.5 744,-517.5 744,-517.5 744,-523.5 738,-529.5 732,-529.5"/>
+<text text-anchor="middle" x="677" y="-517.5" font-family="Helvetica,sans-Serif" font-size="10.00">orphanet / product4</text>
+<text text-anchor="middle" x="677" y="-506.5" font-family="Helvetica,sans-Serif" font-size="10.00">4,357 disorders</text>
+<text text-anchor="middle" x="677" y="-495.5" font-family="Helvetica,sans-Serif" font-size="10.00">≈110k HPO annotations</text>
+</g>
+<!-- ORPH4&#45;&gt;HPO -->
+<g id="edge13" class="edge">
+<title>ORPH4&#45;&gt;HPO</title>
+<path fill="none" stroke="#1f77b4" stroke-width="1.1" d="M744.06,-506.07C827.46,-502.37 970.4,-496.03 1056.66,-492.21"/>
+<polygon fill="#1f77b4" stroke="#1f77b4" stroke-width="1.1" points="1056.87,-494.3 1062.77,-491.94 1056.69,-490.11 1056.87,-494.3"/>
+</g>
+<!-- ORPH4&#45;&gt;ORPHA -->
+<g id="edge22" class="edge">
+<title>ORPH4&#45;&gt;ORPHA</title>
+<path fill="none" stroke="#7b3fa0" stroke-width="1.1" d="M744.33,-514.26C785.24,-518.34 838.59,-525.17 885,-536 923.87,-545.07 931.34,-555.06 970,-565 999.91,-572.69 1033.52,-578.94 1062.12,-583.58"/>
+<polygon fill="#7b3fa0" stroke="#7b3fa0" stroke-width="1.1" points="1061.88,-585.66 1068.14,-584.54 1062.55,-581.52 1061.88,-585.66"/>
+</g>
+<!-- MKG -->
+<g id="node15" class="node">
+<title>MKG</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M738.5,-421.5C738.5,-421.5 615.5,-421.5 615.5,-421.5 609.5,-421.5 603.5,-415.5 603.5,-409.5 603.5,-409.5 603.5,-392.5 603.5,-392.5 603.5,-386.5 609.5,-380.5 615.5,-380.5 615.5,-380.5 738.5,-380.5 738.5,-380.5 744.5,-380.5 750.5,-386.5 750.5,-392.5 750.5,-392.5 750.5,-409.5 750.5,-409.5 750.5,-415.5 744.5,-421.5 738.5,-421.5"/>
+<text text-anchor="middle" x="677" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">Monarch KG</text>
+<text text-anchor="middle" x="677" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">1.67M nodes, 16.4M edges</text>
+<text text-anchor="middle" x="677" y="-387.5" font-family="Helvetica,sans-Serif" font-size="10.00">344 MB</text>
+</g>
+<!-- MKG&#45;&gt;HPO -->
+<g id="edge14" class="edge">
+<title>MKG&#45;&gt;HPO</title>
+<path fill="none" stroke="#1f77b4" stroke-width="1.1" d="M750.7,-405.99C790.78,-409.86 841.16,-416.57 885,-428 924.37,-438.27 930.83,-450.98 970,-462 997.94,-469.86 1029.33,-475.79 1056.79,-480.05"/>
+<polygon fill="#1f77b4" stroke="#1f77b4" stroke-width="1.1" points="1056.7,-482.16 1062.95,-480.99 1057.33,-478.01 1056.7,-482.16"/>
+</g>
+<!-- MKG&#45;&gt;MONDO -->
+<g id="edge18" class="edge">
+<title>MKG&#45;&gt;MONDO</title>
+<path fill="none" stroke="#7b3fa0" stroke-width="1.1" d="M750.5,-392.76C790.3,-387.93 840.48,-381.35 885,-374 923.01,-367.73 932.12,-364 970,-357 1003.3,-350.84 1040.63,-344.48 1070.74,-339.48"/>
+<polygon fill="#7b3fa0" stroke="#7b3fa0" stroke-width="1.1" points="1071.09,-341.55 1076.67,-338.49 1070.4,-337.4 1071.09,-341.55"/>
+</g>
+<!-- PKG -->
+<g id="node16" class="node">
+<title>PKG</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M732.5,-367.5C732.5,-367.5 621.5,-367.5 621.5,-367.5 615.5,-367.5 609.5,-361.5 609.5,-355.5 609.5,-355.5 609.5,-338.5 609.5,-338.5 609.5,-332.5 615.5,-326.5 621.5,-326.5 621.5,-326.5 732.5,-326.5 732.5,-326.5 738.5,-326.5 744.5,-332.5 744.5,-338.5 744.5,-338.5 744.5,-355.5 744.5,-355.5 744.5,-361.5 738.5,-367.5 732.5,-367.5"/>
+<text text-anchor="middle" x="677" y="-355.5" font-family="Helvetica,sans-Serif" font-size="10.00">PrimeKG</text>
+<text text-anchor="middle" x="677" y="-344.5" font-family="Helvetica,sans-Serif" font-size="10.00">129k nodes, 8.1M edges</text>
+<text text-anchor="middle" x="677" y="-333.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ disease text &#160;1.5 GB</text>
+</g>
+<!-- PKG&#45;&gt;HPO -->
+<g id="edge15" class="edge">
+<title>PKG&#45;&gt;HPO</title>
+<path fill="none" stroke="#1f77b4" stroke-width="1.1" d="M744.67,-344.68C786.94,-345.8 841.62,-352.17 885,-374 933.57,-398.44 921.91,-436.63 970,-462 996.47,-475.97 1028.57,-482.98 1056.97,-486.41"/>
+<polygon fill="#1f77b4" stroke="#1f77b4" stroke-width="1.1" points="1056.77,-488.5 1062.97,-487.08 1057.24,-484.32 1056.77,-488.5"/>
+</g>
+<!-- PKG&#45;&gt;MONDO -->
+<g id="edge19" class="edge">
+<title>PKG&#45;&gt;MONDO</title>
+<path fill="none" stroke="#7b3fa0" stroke-width="1.1" d="M744.55,-344.49C832.76,-341.17 986.99,-335.35 1070.8,-332.19"/>
+<polygon fill="#7b3fa0" stroke="#7b3fa0" stroke-width="1.1" points="1071.04,-334.29 1076.96,-331.96 1070.88,-330.09 1071.04,-334.29"/>
+</g>
+<!-- HET -->
+<g id="node17" class="node">
+<title>HET</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M748.5,-264C748.5,-264 605.5,-264 605.5,-264 599.5,-264 593.5,-258 593.5,-252 593.5,-252 593.5,-240 593.5,-240 593.5,-234 599.5,-228 605.5,-228 605.5,-228 748.5,-228 748.5,-228 754.5,-228 760.5,-234 760.5,-240 760.5,-240 760.5,-252 760.5,-252 760.5,-258 754.5,-264 748.5,-264"/>
+<text text-anchor="middle" x="677" y="-249" font-family="Helvetica,sans-Serif" font-size="10.00">Hetionet</text>
+<text text-anchor="middle" x="677" y="-238" font-family="Helvetica,sans-Serif" font-size="10.00">137 diseases × 438 symptoms</text>
+</g>
+<!-- HET&#45;&gt;DOID -->
+<g id="edge20" class="edge">
+<title>HET&#45;&gt;DOID</title>
+<path fill="none" stroke="#7b3fa0" stroke-width="1.1" d="M760.72,-242.88C851.19,-239.47 993.73,-234.1 1072.32,-231.14"/>
+<polygon fill="#7b3fa0" stroke="#7b3fa0" stroke-width="1.1" points="1072.41,-233.24 1078.33,-230.91 1072.25,-229.04 1072.41,-233.24"/>
+</g>
+<!-- HET&#45;&gt;MESH -->
+<g id="edge24" class="edge">
+<title>HET&#45;&gt;MESH</title>
+<path fill="none" stroke="#2ca02c" stroke-width="1.1" d="M760.8,-237.48C798.75,-233.2 844.25,-227.53 885,-221 923.04,-214.91 932.12,-211 970,-204 1002.52,-197.99 1038.88,-191.78 1068.61,-186.83"/>
+<polygon fill="#2ca02c" stroke="#2ca02c" stroke-width="1.1" points="1069.28,-188.85 1074.85,-185.79 1068.59,-184.71 1069.28,-188.85"/>
+</g>
+<!-- HSDN -->
+<g id="node18" class="node">
+<title>HSDN</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M753,-214.5C753,-214.5 601,-214.5 601,-214.5 595,-214.5 589,-208.5 589,-202.5 589,-202.5 589,-185.5 589,-185.5 589,-179.5 595,-173.5 601,-173.5 601,-173.5 753,-173.5 753,-173.5 759,-173.5 765,-179.5 765,-185.5 765,-185.5 765,-202.5 765,-202.5 765,-208.5 759,-214.5 753,-214.5"/>
+<text text-anchor="middle" x="677" y="-202.5" font-family="Helvetica,sans-Serif" font-size="10.00">HSDN (Zhou 2014)</text>
+<text text-anchor="middle" x="677" y="-191.5" font-family="Helvetica,sans-Serif" font-size="10.00">4,219 diseases × 322 symptoms</text>
+<text text-anchor="middle" x="677" y="-180.5" font-family="Helvetica,sans-Serif" font-size="10.00">TF&#45;IDF from PubMed</text>
+</g>
+<!-- HSDN&#45;&gt;MESH -->
+<g id="edge25" class="edge">
+<title>HSDN&#45;&gt;MESH</title>
+<path fill="none" stroke="#2ca02c" stroke-width="1.1" d="M765.23,-190.71C854.39,-187.35 990.54,-182.22 1068.52,-179.28"/>
+<polygon fill="#2ca02c" stroke="#2ca02c" stroke-width="1.1" points="1069.04,-181.36 1074.96,-179.04 1068.89,-177.17 1069.04,-181.36"/>
+</g>
+<!-- SYMC -->
+<g id="node19" class="node">
+<title>SYMC</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M748.5,-583.5C748.5,-583.5 605.5,-583.5 605.5,-583.5 599.5,-583.5 593.5,-577.5 593.5,-571.5 593.5,-571.5 593.5,-554.5 593.5,-554.5 593.5,-548.5 599.5,-542.5 605.5,-542.5 605.5,-542.5 748.5,-542.5 748.5,-542.5 754.5,-542.5 760.5,-548.5 760.5,-554.5 760.5,-554.5 760.5,-571.5 760.5,-571.5 760.5,-577.5 754.5,-583.5 748.5,-583.5"/>
+<text text-anchor="middle" x="677" y="-571.5" font-family="Helvetica,sans-Serif" font-size="10.00">SymCat</text>
+<text text-anchor="middle" x="677" y="-560.5" font-family="Helvetica,sans-Serif" font-size="10.00">801 diseases × 474 symptoms</text>
+<text text-anchor="middle" x="677" y="-549.5" font-family="Helvetica,sans-Serif" font-size="10.00">probabilities</text>
+</g>
+<!-- SYMC&#45;&gt;NAMES -->
+<g id="edge45" class="edge">
+<title>SYMC&#45;&gt;NAMES</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M760.72,-579.87C838.42,-595.72 954.54,-619.41 1035.56,-635.94"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1035.52,-638.07 1041.82,-637.21 1036.36,-633.96 1035.52,-638.07"/>
+</g>
+<!-- COL -->
+<g id="node20" class="node">
+<title>COL</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M716.5,-313C716.5,-313 637.5,-313 637.5,-313 631.5,-313 625.5,-307 625.5,-301 625.5,-301 625.5,-289 625.5,-289 625.5,-283 631.5,-277 637.5,-277 637.5,-277 716.5,-277 716.5,-277 722.5,-277 728.5,-283 728.5,-289 728.5,-289 728.5,-301 728.5,-301 728.5,-307 722.5,-313 716.5,-313"/>
+<text text-anchor="middle" x="677" y="-298" font-family="Helvetica,sans-Serif" font-size="10.00">Columbia EHR KB</text>
+<text text-anchor="middle" x="677" y="-287" font-family="Helvetica,sans-Serif" font-size="10.00">≈150 diseases</text>
+</g>
+<!-- COL&#45;&gt;UMLS -->
+<g id="edge42" class="edge">
+<title>COL&#45;&gt;UMLS</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M728.86,-293.08C809.59,-290.04 967.28,-284.1 1058.75,-280.65"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1059.03,-282.74 1064.95,-280.41 1058.88,-278.54 1059.03,-282.74"/>
+</g>
+<!-- DDX -->
+<g id="node21" class="node">
+<title>DDX</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M280.5,-733.5C280.5,-733.5 103.5,-733.5 103.5,-733.5 97.5,-733.5 91.5,-727.5 91.5,-721.5 91.5,-721.5 91.5,-704.5 91.5,-704.5 91.5,-698.5 97.5,-692.5 103.5,-692.5 103.5,-692.5 280.5,-692.5 280.5,-692.5 286.5,-692.5 292.5,-698.5 292.5,-704.5 292.5,-704.5 292.5,-721.5 292.5,-721.5 292.5,-727.5 286.5,-733.5 280.5,-733.5"/>
+<text text-anchor="middle" x="192" y="-721.5" font-family="Helvetica,sans-Serif" font-size="10.00">DDXPlus</text>
+<text text-anchor="middle" x="192" y="-710.5" font-family="Helvetica,sans-Serif" font-size="10.00">1.29M synthetic patients</text>
+<text text-anchor="middle" x="192" y="-699.5" font-family="Helvetica,sans-Serif" font-size="10.00">49 conditions, 223 evidences &#160;847 MB</text>
+</g>
+<!-- DDX&#45;&gt;ICD -->
+<g id="edge28" class="edge">
+<title>DDX&#45;&gt;ICD</title>
+<path fill="none" stroke="#e6811c" stroke-width="1.1" d="M292.73,-713.21C487.4,-713.63 912.67,-714.54 1069.44,-714.87"/>
+<polygon fill="#e6811c" stroke="#e6811c" stroke-width="1.1" points="1069.8,-716.97 1075.8,-714.89 1069.8,-712.77 1069.8,-716.97"/>
+</g>
+<!-- ICDSYN -->
+<g id="node22" class="node">
+<title>ICDSYN</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M262.5,-783C262.5,-783 121.5,-783 121.5,-783 115.5,-783 109.5,-777 109.5,-771 109.5,-771 109.5,-759 109.5,-759 109.5,-753 115.5,-747 121.5,-747 121.5,-747 262.5,-747 262.5,-747 268.5,-747 274.5,-753 274.5,-759 274.5,-759 274.5,-771 274.5,-771 274.5,-777 268.5,-783 262.5,-783"/>
+<text text-anchor="middle" x="192" y="-768" font-family="Helvetica,sans-Serif" font-size="10.00">ICD&#45;10 synthetic EHR snippets</text>
+<text text-anchor="middle" x="192" y="-757" font-family="Helvetica,sans-Serif" font-size="10.00">753k rows &#160;528 MB</text>
+</g>
+<!-- ICDSYN&#45;&gt;ICD -->
+<g id="edge29" class="edge">
+<title>ICDSYN&#45;&gt;ICD</title>
+<path fill="none" stroke="#e6811c" stroke-width="1.1" d="M274.84,-760.63C460.21,-750.73 908.54,-726.78 1069.9,-718.16"/>
+<polygon fill="#e6811c" stroke="#e6811c" stroke-width="1.1" points="1070.11,-720.25 1075.99,-717.83 1069.88,-716.06 1070.11,-720.25"/>
+</g>
+<!-- COD -->
+<g id="node23" class="node">
+<title>COD</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M273.5,-679C273.5,-679 110.5,-679 110.5,-679 104.5,-679 98.5,-673 98.5,-667 98.5,-667 98.5,-655 98.5,-655 98.5,-649 104.5,-643 110.5,-643 110.5,-643 273.5,-643 273.5,-643 279.5,-643 285.5,-649 285.5,-655 285.5,-655 285.5,-667 285.5,-667 285.5,-673 279.5,-679 273.5,-679"/>
+<text text-anchor="middle" x="192" y="-664" font-family="Helvetica,sans-Serif" font-size="10.00">CoD patient cases</text>
+<text text-anchor="middle" x="192" y="-653" font-family="Helvetica,sans-Serif" font-size="10.00">76k cases, 8,222 diseases &#160;436 MB</text>
+</g>
+<!-- COD&#45;&gt;NAMES -->
+<g id="edge46" class="edge">
+<title>COD&#45;&gt;NAMES</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M285.63,-663.08C418.39,-665.71 670.44,-669.39 885,-665 927.24,-664.13 973.56,-662.43 1014.39,-660.67"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1014.73,-662.75 1020.63,-660.39 1014.55,-658.56 1014.73,-662.75"/>
+</g>
+<!-- T773 -->
+<g id="node24" class="node">
+<title>T773</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M253,-630C253,-630 131,-630 131,-630 125,-630 119,-624 119,-618 119,-618 119,-606 119,-606 119,-600 125,-594 131,-594 131,-594 253,-594 253,-594 259,-594 265,-600 265,-606 265,-606 265,-618 265,-618 265,-624 259,-630 253,-630"/>
+<text text-anchor="middle" x="192" y="-615" font-family="Helvetica,sans-Serif" font-size="10.00">773&#45;disease table</text>
+<text text-anchor="middle" x="192" y="-604" font-family="Helvetica,sans-Serif" font-size="10.00">247k rows, 377 symptoms</text>
+</g>
+<!-- T773&#45;&gt;NAMES -->
+<g id="edge47" class="edge">
+<title>T773&#45;&gt;NAMES</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M265.25,-620.16C320.86,-626.12 399.7,-633.85 469,-638 659.21,-649.4 880.7,-653.16 1012.64,-654.4"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1012.83,-656.5 1018.85,-654.46 1012.87,-652.3 1012.83,-656.5"/>
+</g>
+<!-- MLP -->
+<g id="node25" class="node">
+<title>MLP</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M262.5,-581C262.5,-581 121.5,-581 121.5,-581 115.5,-581 109.5,-575 109.5,-569 109.5,-569 109.5,-557 109.5,-557 109.5,-551 115.5,-545 121.5,-545 121.5,-545 262.5,-545 262.5,-545 268.5,-545 274.5,-551 274.5,-557 274.5,-557 274.5,-569 274.5,-569 274.5,-575 268.5,-581 262.5,-581"/>
+<text text-anchor="middle" x="192" y="-566" font-family="Helvetica,sans-Serif" font-size="10.00">MedlinePlus encyclopedia</text>
+<text text-anchor="middle" x="192" y="-555" font-family="Helvetica,sans-Serif" font-size="10.00">1,713 diseases, symptom lists</text>
+</g>
+<!-- MLP&#45;&gt;NAMES -->
+<g id="edge48" class="edge">
+<title>MLP&#45;&gt;NAMES</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M274.97,-569.6C308.98,-573.29 348.67,-578.84 384,-587 422.89,-595.98 429.82,-608.38 469,-616 650.77,-651.34 700.17,-627.83 885,-639 927.92,-641.59 975.06,-644.64 1016.38,-647.37"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1016.3,-649.47 1022.43,-647.77 1016.58,-645.28 1016.3,-649.47"/>
+</g>
+<!-- MLP&#45;&gt;SYMC -->
+<!-- MAYO -->
+<g id="node26" class="node">
+<title>MAYO</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M245.5,-477C245.5,-477 138.5,-477 138.5,-477 132.5,-477 126.5,-471 126.5,-465 126.5,-465 126.5,-453 126.5,-453 126.5,-447 132.5,-441 138.5,-441 138.5,-441 245.5,-441 245.5,-441 251.5,-441 257.5,-447 257.5,-453 257.5,-453 257.5,-465 257.5,-465 257.5,-471 251.5,-477 245.5,-477"/>
+<text text-anchor="middle" x="192" y="-462" font-family="Helvetica,sans-Serif" font-size="10.00">Mayo Clinic scrape</text>
+<text text-anchor="middle" x="192" y="-451" font-family="Helvetica,sans-Serif" font-size="10.00">≈1,130 diseases, prose</text>
+</g>
+<!-- MAYO&#45;&gt;NAMES -->
+<g id="edge49" class="edge">
+<title>MAYO&#45;&gt;NAMES</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M201.5,-440.81C229.68,-383 326.39,-203.46 469,-138 637.03,-60.87 743.37,-19.16 885,-138 1051.64,-277.82 819.46,-462.98 970,-620 982.39,-632.92 998.39,-641.6 1015.44,-647.33"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1014.91,-649.36 1021.26,-649.16 1016.17,-645.36 1014.91,-649.36"/>
+</g>
+<!-- CLASS -->
+<g id="node27" class="node">
+<title>CLASS</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M283,-531.5C283,-531.5 101,-531.5 101,-531.5 95,-531.5 89,-525.5 89,-519.5 89,-519.5 89,-502.5 89,-502.5 89,-496.5 95,-490.5 101,-490.5 101,-490.5 283,-490.5 283,-490.5 289,-490.5 295,-496.5 295,-502.5 295,-502.5 295,-519.5 295,-519.5 295,-525.5 289,-531.5 283,-531.5"/>
+<text text-anchor="middle" x="192" y="-519.5" font-family="Helvetica,sans-Serif" font-size="10.00">5 classic ML tables</text>
+<text text-anchor="middle" x="192" y="-508.5" font-family="Helvetica,sans-Serif" font-size="10.00">Kaggle&#45;41 · Symptom2Disease · Gretel</text>
+<text text-anchor="middle" x="192" y="-497.5" font-family="Helvetica,sans-Serif" font-size="10.00">quyenanhde&#45;400 · dux&#45;1,082</text>
+</g>
+<!-- CLASS&#45;&gt;NAMES -->
+<g id="edge50" class="edge">
+<title>CLASS&#45;&gt;NAMES</title>
+<path fill="none" stroke="#999999" stroke-width="1.1" stroke-dasharray="5,2" d="M295.44,-516.97C327.14,-513.72 360,-504.43 384,-483 494.1,-384.72 352.05,-252.02 469,-162 505.63,-133.81 849.46,-132.45 885,-162 1044.19,-294.36 826.05,-471.2 970,-620 982.36,-632.78 998.25,-641.39 1015.18,-647.11"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.1" points="1014.6,-649.13 1020.95,-648.94 1015.87,-645.13 1014.6,-649.13"/>
+</g>
+<!-- NOTES -->
+<g id="node36" class="node">
+<title>NOTES</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M1631.03,-304.5C1631.03,-304.5 1450.03,-304.5 1450.03,-304.5 1444.03,-304.5 1438.03,-298.5 1438.03,-292.5 1438.03,-292.5 1438.03,-275.5 1438.03,-275.5 1438.03,-269.5 1444.03,-263.5 1450.03,-263.5 1450.03,-263.5 1631.03,-263.5 1631.03,-263.5 1637.03,-263.5 1643.03,-269.5 1643.03,-275.5 1643.03,-275.5 1643.03,-292.5 1643.03,-292.5 1643.03,-298.5 1637.03,-304.5 1631.03,-304.5"/>
+<text text-anchor="middle" x="1540.53" y="-292.5" font-family="Helvetica,sans-Serif" font-size="10.00">Asclepius · augmented notes</text>
+<text text-anchor="middle" x="1540.53" y="-281.5" font-family="Helvetica,sans-Serif" font-size="10.00">MTSamples · MACCROBAT</text>
+<text text-anchor="middle" x="1540.53" y="-270.5" font-family="Helvetica,sans-Serif" font-size="10.00">synthetic / de&#45;identified notes &#160;800 MB</text>
+</g>
+<!-- CHAT -->
+<g id="node38" class="node">
+<title>CHAT</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M2078.53,-485.5C2078.53,-485.5 1920.53,-485.5 1920.53,-485.5 1914.53,-485.5 1908.53,-479.5 1908.53,-473.5 1908.53,-473.5 1908.53,-456.5 1908.53,-456.5 1908.53,-450.5 1914.53,-444.5 1920.53,-444.5 1920.53,-444.5 2078.53,-444.5 2078.53,-444.5 2084.53,-444.5 2090.53,-450.5 2090.53,-456.5 2090.53,-456.5 2090.53,-473.5 2090.53,-473.5 2090.53,-479.5 2084.53,-485.5 2078.53,-485.5"/>
+<text text-anchor="middle" x="1999.53" y="-473.5" font-family="Helvetica,sans-Serif" font-size="10.00">ChatDoctor (HCM 112k + iCliniq)</text>
+<text text-anchor="middle" x="1999.53" y="-462.5" font-family="Helvetica,sans-Serif" font-size="10.00">ai_medical_chatbot 257k</text>
+<text text-anchor="middle" x="1999.53" y="-451.5" font-family="Helvetica,sans-Serif" font-size="10.00">MedDialog 257k · dialogue→SOAP</text>
+</g>
+<!-- NOTES&#45;&gt;CHAT -->
+<!-- LAV -->
+<g id="node39" class="node">
+<title>LAV</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M2059.03,-431C2059.03,-431 1940.03,-431 1940.03,-431 1934.03,-431 1928.03,-425 1928.03,-419 1928.03,-419 1928.03,-407 1928.03,-407 1928.03,-401 1934.03,-395 1940.03,-395 1940.03,-395 2059.03,-395 2059.03,-395 2065.03,-395 2071.03,-401 2071.03,-407 2071.03,-407 2071.03,-419 2071.03,-419 2071.03,-425 2065.03,-431 2059.03,-431"/>
+<text text-anchor="middle" x="1999.53" y="-416" font-family="Helvetica,sans-Serif" font-size="10.00">lavita collection &#160;1.35 GB</text>
+<text text-anchor="middle" x="1999.53" y="-405" font-family="Helvetica,sans-Serif" font-size="10.00">medical_meadow (8 sets)</text>
+</g>
+<!-- MEDQA -->
+<g id="node40" class="node">
+<title>MEDQA</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M2060.53,-381.5C2060.53,-381.5 1938.53,-381.5 1938.53,-381.5 1932.53,-381.5 1926.53,-375.5 1926.53,-369.5 1926.53,-369.5 1926.53,-352.5 1926.53,-352.5 1926.53,-346.5 1932.53,-340.5 1938.53,-340.5 1938.53,-340.5 2060.53,-340.5 2060.53,-340.5 2066.53,-340.5 2072.53,-346.5 2072.53,-352.5 2072.53,-352.5 2072.53,-369.5 2072.53,-369.5 2072.53,-375.5 2066.53,-381.5 2060.53,-381.5"/>
+<text text-anchor="middle" x="1999.53" y="-369.5" font-family="Helvetica,sans-Serif" font-size="10.00">MedQA family (4 variants)</text>
+<text text-anchor="middle" x="1999.53" y="-358.5" font-family="Helvetica,sans-Serif" font-size="10.00">MedMCQA · MedBullets</text>
+<text text-anchor="middle" x="1999.53" y="-347.5" font-family="Helvetica,sans-Serif" font-size="10.00">exam MCQs</text>
+</g>
+<!-- EPFL -->
+<g id="node47" class="node">
+<title>EPFL</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M2488.53,-199C2488.53,-199 2378.53,-199 2378.53,-199 2372.53,-199 2366.53,-193 2366.53,-187 2366.53,-187 2366.53,-175 2366.53,-175 2366.53,-169 2372.53,-163 2378.53,-163 2378.53,-163 2488.53,-163 2488.53,-163 2494.53,-163 2500.53,-169 2500.53,-175 2500.53,-175 2500.53,-187 2500.53,-187 2500.53,-193 2494.53,-199 2488.53,-199"/>
+<text text-anchor="middle" x="2433.53" y="-184" font-family="Helvetica,sans-Serif" font-size="10.00">EPFL clinical guidelines</text>
+<text text-anchor="middle" x="2433.53" y="-173" font-family="Helvetica,sans-Serif" font-size="10.00">38k documents &#160;878 MB</text>
+</g>
+<!-- MEDQA&#45;&gt;EPFL -->
+<!-- O1 -->
+<g id="node41" class="node">
+<title>O1</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M2080.03,-327C2080.03,-327 1919.03,-327 1919.03,-327 1913.03,-327 1907.03,-321 1907.03,-315 1907.03,-315 1907.03,-303 1907.03,-303 1907.03,-297 1913.03,-291 1919.03,-291 1919.03,-291 2080.03,-291 2080.03,-291 2086.03,-291 2092.03,-297 2092.03,-303 2092.03,-303 2092.03,-315 2092.03,-315 2092.03,-321 2086.03,-327 2080.03,-327"/>
+<text text-anchor="middle" x="1999.53" y="-312" font-family="Helvetica,sans-Serif" font-size="10.00">medical&#45;o1 reasoning</text>
+<text text-anchor="middle" x="1999.53" y="-301" font-family="Helvetica,sans-Serif" font-size="10.00">SFT + verifiable problems &#160;260 MB</text>
+</g>
+<!-- MRAG -->
+<g id="node48" class="node">
+<title>MRAG</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M2520.03,-52C2520.03,-52 2347.03,-52 2347.03,-52 2341.03,-52 2335.03,-46 2335.03,-40 2335.03,-40 2335.03,-28 2335.03,-28 2335.03,-22 2341.03,-16 2347.03,-16 2347.03,-16 2520.03,-16 2520.03,-16 2526.03,-16 2532.03,-22 2532.03,-28 2532.03,-28 2532.03,-40 2532.03,-40 2532.03,-46 2526.03,-52 2520.03,-52"/>
+<text text-anchor="middle" x="2433.53" y="-37" font-family="Helvetica,sans-Serif" font-size="10.00">MedRAG textbooks</text>
+<text text-anchor="middle" x="2433.53" y="-26" font-family="Helvetica,sans-Serif" font-size="10.00">18 textbooks, 126k snippets &#160;212 MB</text>
+</g>
+</g>
+</svg>
+</div>
+<div class="legend">
+<span style="--c:#1f77b4">HPO phenotype ids</span><span style="--c:#7b3fa0">Mondo / Orphanet / DOID ids</span><span style="--c:#e6811c">ICD-10 codes</span><span style="--c:#2ca02c">MeSH</span><span style="--c:#8c564b">PubMed / PMC reference</span><span class="dash" style="--c:#999999">name strings only, xref, or licence-gated vocabulary (OMIM, UMLS, SNOMED not downloaded)</span>
+</div>
+<p class="note">Scroll sideways on narrow screens. The same figure is in the repository as docs/figures/dataset_structure.svg and .png, generated from dataset_structure.dot with Graphviz.</p>
+</figure>
+
+<div class="panels">
+<section class="panel">
+<h2>How deep the symptom evidence goes</h2>
+<p class="muted" style="font-size:.85rem">Number of distinct diseases covered at each level of evidence. Breadth falls off quickly: tens of thousands of diseases have a name, only a few dozen have large labelled patient sets. Bars use a log scale.</p>
+<div class="row"><span class="lab">Named in Mondo (any disease concept)</span><span class="track"><span class="bar" style="width:99.0%;background:#7b3fa0"></span></span><span class="val">36,096 diseases</span></div><div class="row"><span class="lab">Prose symptom description (PrimeKG text, Mayo, MedlinePlus)</span><span class="track"><span class="bar" style="width:91.9%;background:#9a9a9a"></span></span><span class="val">17,000 ≈ diseases</span></div><div class="row"><span class="lab">Curated HPO symptom profile (phenotype.hpoa, Orphanet)</span><span class="track"><span class="bar" style="width:89.3%;background:#1f77b4"></span></span><span class="val">12,880 diseases</span></div><div class="row"><span class="lab">LLM-synthetic patient cases (CoD)</span><span class="track"><span class="bar" style="width:85.1%;background:#e0a070"></span></span><span class="val">8,222 ≈ diseases</span></div><div class="row"><span class="lab">Literature-weighted symptom vector (HSDN)</span><span class="track"><span class="bar" style="width:78.8%;background:#2ca02c"></span></span><span class="val">4,219 diseases</span></div><div class="row"><span class="lab">Labelled patient rows, ~1k classes (dux / 773-table)</span><span class="track"><span class="bar" style="width:65.9%;background:#e0a070"></span></span><span class="val">1,082 diseases</span></div><div class="row"><span class="lab">Labelled patient rows, large volume (DDXPlus)</span><span class="track"><span class="bar" style="width:36.7%;background:#e6811c"></span></span><span class="val">49 diseases</span></div>
+</section>
+<section class="panel">
+<h2>Bytes per layer</h2>
+<p class="muted" style="font-size:.85rem">Size on the drive and number of datasets in each layer. Total 12.98 GB.</p>
+<div class="row"><span class="lab">01 Ontologies & terminologies</span><span class="track"><span class="bar" style="width:49.4%;background:#8a93a8"></span></span><span class="val">1.67 GB · 8 sets</span></div><div class="row"><span class="lab">02 Disease ↔ symptom knowledge</span><span class="track"><span class="bar" style="width:56.6%;background:#6b9fd1"></span></span><span class="val">1.92 GB · 6 sets</span></div><div class="row"><span class="lab">03 Symptom → disease tables</span><span class="track"><span class="bar" style="width:60.3%;background:#e0a070"></span></span><span class="val">2.04 GB · 11 sets</span></div><div class="row"><span class="lab">04 Clinical cases & notes</span><span class="track"><span class="bar" style="width:100.0%;background:#7cb86a"></span></span><span class="val">3.39 GB · 16 sets</span></div><div class="row"><span class="lab">05 Dialogue & QA</span><span class="track"><span class="bar" style="width:83.4%;background:#b97fb0"></span></span><span class="val">2.83 GB · 17 sets</span></div><div class="row"><span class="lab">06 Reference text</span><span class="track"><span class="bar" style="width:33.3%;background:#9a9a9a"></span></span><span class="val">1.13 GB · 4 sets</span></div>
+<p class="note">Largest single datasets: PrimeKG 1.5 GB, PMC-Patients 1.4 GB, lavita QA collection 1.35 GB, MeSH 2026 1.1 GB.</p>
+</section>
+</div>
