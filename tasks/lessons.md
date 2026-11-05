@@ -4,3 +4,14 @@
 - 2026-11-05: Dataverse `.tab` files need `?format=original` to get the uploaded CSV; GitHub `releases/latest/download/` and OBO purls redirect, so use `wget` (follows redirects) rather than checking `Content-Length` on the first hop.
 - 2026-11-05: Two fetch.py processes with overlapping selections downloaded the same HF dataset into the same folder; after one was killed the other wrote `_meta.json` with a file missing. Fix: per-dataset `_LOCK` (pid) in fetch.py, and `scripts/verify.py` compares every HF file to upstream sha256 after a run. Rule: never launch overlapping selections; always run verify.py before declaring a run complete.
 - 2026-11-05: pyarrow 19 fails with "Repetition level histogram size mismatch" on some newer parquet files (Medbullets, DiagnosisArena, clinical-case-icd10). Files are byte-identical to upstream; it is a reader bug – read them with pyarrow >= 20 (or polars/duckdb).
+
+## 2026-11-06 Dr. Diagno game
+- `python3 -I` does not put the script's own directory on `sys.path`; shared modules next to the
+  script need an explicit `sys.path.insert(0, dirname(__file__))`.
+- Hash-only navigation (`page#case`) does not reload a single-page app; after editing JS, navigate
+  to a different URL (or hard-reload) before testing, otherwise the old code keeps running.
+- A test that reveals a whole HPO subtree dumps the entire profile (neuro exam showed 14 findings);
+  cap findings per test and let the rest surface through progression.
+- A bot that is handed the true disease in its differential measures nothing; the honest bot must
+  build its differential from findings (consult) and the win rate halves.
+- Hand-curated content (`content/tests.json`) must not live in a gitignored derived-data folder.

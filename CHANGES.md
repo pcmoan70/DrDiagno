@@ -1,5 +1,12 @@
 # CHANGES
 
+## 2026-11-06
+- Dr. Diagno game, first playable version (`game/`): data build scripts (7,086 diseases, 19,894
+  HPO terms, 55 tests, 696 drugs; 3.5 MB gzipped), pure-function engine with 10 node tests,
+  balance bot, vanilla-JS UI (title, case board, workup, debrief, case codes, local best scores),
+  GitHub Pages workflow. Project turned into a git repo and pushed to github.com/pcmoan70/DrDiagno
+  (data excluded).
+
 ## 2026-11-05
 - Added `tasks/house_game_plan_20261105.md`: plan for a static-JavaScript House-style diagnostic game built from the HPO/Orphanet/Mondo/PrimeKG data, deployable on GitHub Pages. Plan only, no code yet.
 - Added `docs/figures/`: Graphviz structure diagram of the collection (layers, datasets, identifier joins) as .dot/.svg/.png, plus `diagnosis_data_map.html` with coverage-depth and bytes-per-layer panels. Linked from DATA_OVERVIEW.md section 2 and README.

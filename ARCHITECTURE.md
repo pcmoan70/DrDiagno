@@ -52,3 +52,35 @@ flowchart LR
   more than a few thousand diseases, so breadth comes from the union.
 - **No credentials in the pipeline** – anything requiring an account is a
   `manual` entry with instructions, never a stored secret.
+
+## Dr. Diagno game subsystem (added 2026-11-06)
+
+```mermaid
+flowchart LR
+  subgraph drive[External drive]
+    HPO[hp.obo + phenotype.hpoa]
+    ORPHA[Orphanet product9]
+    MONDO[mondo.obo]
+    PKG[PrimeKG]
+  end
+  subgraph build[game/build, python3 -I]
+    BT[build_terms.py] --> TJ[terms.json]
+    BD[build_diseases.py] --> DJ[diseases/index.json + 16 shards]
+    BR[build_drugs.py] --> RJ[drugs.json]
+    BC[build_credits.py] --> CJ[credits.json]
+    V[validate.py] --> REP[data_report.md]
+  end
+  subgraph web[game/web, static ES modules]
+    IDX[index.html + styles.css] --> APP[app.js]
+    APP --> ENG[engine: rng, db, case, scoring]
+    ENG --> DATA[data/*.json]
+    ENG --> TESTS[content/tests.json]
+  end
+  HPO & ORPHA & MONDO & PKG --> build
+  TJ & DJ & RJ --> DATA
+  web -->|push to main| GH[GitHub Pages workflow]
+```
+
+- Engine functions are pure over `(db, state)` and tested with `node --test` (`game/web/tests`).
+- `tests/bot.js` plays hundreds of cases with a greedy strategy to measure balance.
+- `web/data/` is derived and gitignored; `web/content/tests.json` is hand-curated and versioned.

@@ -6,7 +6,7 @@ from common import OUT
 problems = []
 terms = json.load(open(OUT / "terms.json", encoding="utf-8"))["t"]
 index = json.load(open(OUT / "diseases" / "index.json", encoding="utf-8"))
-tests = json.load(open(OUT / "tests.json", encoding="utf-8")) if (OUT / "tests.json").exists() else []
+tests = json.load(open(OUT.parent / "content" / "tests.json", encoding="utf-8"))
 drugs = json.load(open(OUT / "drugs.json", encoding="utf-8"))
 ids = {e["i"] for e in index["d"]}
 sizes = {}

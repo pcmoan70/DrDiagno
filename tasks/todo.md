@@ -24,10 +24,10 @@ Active plan: `tasks/diagnosis_datasets_plan_20261105.md`
 ## House-style game (plan only, 2026-11-05)
 Plan: `tasks/house_game_plan_20261105.md` (static JavaScript, GitHub Pages)
 - [x] M0 user confirmed: "Dr. Diagno" (preliminary), English only
-- [ ] M1 data build (terms, diseases, drugs, validate)
-- [ ] M2 engine with node tests
-- [ ] M3 test catalog (60 tests)
-- [ ] M4 UI
-- [ ] M5 balance / playtest
-- [ ] M6 deploy to GitHub Pages
-- [ ] M7 documentation
+- [x] M1 data build (terms, diseases, drugs, credits, validate) 2026-11-05
+- [x] M2 engine with node tests (10 passing)
+- [x] M3 test catalog (55 tests, all HPO ids validated)
+- [x] M4 UI (first version, verified in Chrome 2026-11-06)
+- [~] M5 balance: bot baseline done, per-test cap added; human playtest pending
+- [~] M6 deploy: workflow added; blocked, repo is private (Pages needs public repo or Pro) and data bundles are not pushed
+- [x] M7 documentation (game/README.md, root README, ARCHITECTURE, CHANGES)

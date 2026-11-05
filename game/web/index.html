@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dr. Diagno</title>
+<meta name="description" content="A diagnostic puzzle game: a patient with puzzling symptoms, a ticking clock, and thousands of real diseases to tell apart.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#" id="brand">Dr. Diagno</a>
+  <div class="hud" id="hud" hidden>
+    <span class="hud-item"><span class="hud-label">Case</span> <code id="hud-code"></code></span>
+    <span class="hud-item"><span class="hud-label">Clock</span> <strong id="hud-clock"></strong></span>
+    <span class="hud-item"><span class="hud-label">Spent</span> <strong id="hud-spent"></strong></span>
+    <span class="hud-item stab"><span class="hud-label">Stability</span>
+      <span class="stab-track"><span class="stab-bar" id="hud-stab"></span></span></span>
+  </div>
+</header>
+
+<main id="screen-loading" class="screen">
+  <p class="loading">Loading the disease library… <span id="load-progress">0%</span></p>
+</main>
+
+<main id="screen-title" class="screen" hidden>
+  <section class="hero">
+    <h1>Dr. Diagno</h1>
+    <p class="lede">A patient walks in with symptoms that don't add up. The clock is running. Build a differential, order the right tests, and name the disease before it's too late.</p>
+    <p class="lede small">Every case is generated from real medical knowledge: 7,000 diseases and 20,000 clinical findings from the Human Phenotype Ontology, Orphanet and Mondo. Entertainment and education only, not medical advice.</p>
+  </section>
+  <section class="tiers" id="tiers"></section>
+  <section class="resume">
+    <form id="code-form" class="code-form">
+      <label for="code-input">Replay a case code</label>
+      <input id="code-input" name="code" placeholder="house-7f3a2c" autocomplete="off" spellcheck="false">
+      <button type="submit" class="btn">Open</button>
+    </form>
+    <div id="best" class="best"></div>
+  </section>
+  <footer class="credits">
+    <p>Data: <a href="https://hpo.jax.org/" target="_blank" rel="noopener">Human Phenotype Ontology</a>, <a href="https://www.orphadata.com/" target="_blank" rel="noopener">Orphanet / Orphadata</a> (CC BY 4.0), <a href="https://mondo.monarchinitiative.org/" target="_blank" rel="noopener">Mondo</a> (CC BY 4.0), <a href="https://github.com/mims-harvard/PrimeKG" target="_blank" rel="noopener">PrimeKG</a> (MIT). Versions in <a href="data/credits.json" target="_blank" rel="noopener">credits.json</a>.</p>
+  </footer>
+</main>
+
+<main id="screen-play" class="screen play" hidden>
+  <section class="col patient">
+    <h2>Patient</h2>
+    <p class="persona" id="persona"></p>
+    <h3>Findings</h3>
+    <ul class="findings" id="findings"></ul>
+    <h3>Chart</h3>
+    <ol class="log" id="log"></ol>
+  </section>
+
+  <section class="col differential">
+    <h2>Differential</h2>
+    <div class="search">
+      <input id="dx-search" placeholder="Add a disease…" autocomplete="off" spellcheck="false" aria-label="Search diseases">
+      <ul class="suggest" id="dx-suggest" hidden></ul>
+    </div>
+    <div class="actions-row">
+      <button class="btn" id="btn-consult" title="Rank the whole library against the findings so far. Costs 3 hours.">Consult the literature (3 h)</button>
+    </div>
+    <ul class="dx-list" id="dx-list"></ul>
+    <p class="hint" id="dx-hint">Add candidates by name, or consult the literature. Fit bars show how well each candidate explains the findings.</p>
+  </section>
+
+  <section class="col workup">
+    <h2>Workup</h2>
+    <div id="tests"></div>
+  </section>
+</main>
+
+<div id="debrief" class="modal" hidden>
+  <div class="modal-card">
+    <h2 id="db-title"></h2>
+    <p class="score" id="db-score"></p>
+    <div id="db-body"></div>
+    <div class="actions-row">
+      <button class="btn primary" id="btn-again">New case</button>
+      <button class="btn" id="btn-copy">Copy case link</button>
+      <a class="btn" href="#" id="btn-title">Title screen</a>
+    </div>
+  </div>
+</div>
+
+<div id="confirm" class="modal" hidden>
+  <div class="modal-card small">
+    <h3 id="cf-title"></h3>
+    <p id="cf-text"></p>
+    <div class="actions-row">
+      <button class="btn primary" id="cf-yes">Confirm</button>
+      <button class="btn" id="cf-no">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -159,9 +159,11 @@ np.fill_diagonal(S, 0)
 for i, mid in enumerate(ids):
     order = np.argsort(-S[i])
     twins = [ids[j] for j in order[:20] if S[i, j] >= 0.9]
-    decoys = [ids[j] for j in order if 0.25 <= S[i, j] < 0.9][:N_DECOYS]
+    decoys = [ids[j] for j in order if 0.05 <= S[i, j] < 0.9][:N_DECOYS]
     pool[mid]["twins"] = twins
     pool[mid]["decoys"] = decoys
+    dec_terms = set().union(*(pool[d]["terms"].keys() for d in decoys)) if decoys else set()
+    pool[mid]["shared"] = sorted(t for t in pool[mid]["terms"] if t in dec_terms)
 
 # ---- 7. write shards + index ----
 def shard_of(mid):
@@ -177,7 +179,7 @@ for mid in ids:
         "t": [[t, round(p, 2)] for t, p in sorted(e["terms"].items(), key=lambda kv: -kv[1])],
         "neg": sorted(e["neg"]), "onset": sorted(e["onset"]), "course": sorted(e["course"]), "inh": sorted(e["inh"]),
         "oonset": e["orpha_onset"], "prev": list(e["prev"]) if e["prev"] else None,
-        "decoys": e["decoys"], "twins": e["twins"],
+        "decoys": e["decoys"], "twins": e["twins"], "shared": e["shared"],
     }
     index.append({"i": mid, "n": e["name"], "s": e["syn"], "tiers": e["tiers"], "h": sh, "k": len(e["terms"])})
 (OUT / "diseases").mkdir(parents=True, exist_ok=True)
