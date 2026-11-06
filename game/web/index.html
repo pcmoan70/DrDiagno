@@ -73,9 +73,12 @@
     </div>
     <div class="actions-row">
       <button class="btn" id="btn-consult" title="Rank the whole library against the findings so far. Costs 3 hours.">Consult the literature (3 h)</button>
+      <button class="btn" id="chips-auto" title="Put the chips back where the chart's fit would place them" hidden>Chips: follow the chart</button>
     </div>
+    <p class="hint chips-pool" id="chips-pool"></p>
     <ul class="dx-list" id="dx-list"></ul>
-    <p class="hint" id="dx-hint">Add candidates by name, or consult the literature. Fit bars show how well each candidate explains the findings.</p>
+    <p class="hint" id="dx-hint">Add candidates by name, or consult the literature. Spread your 10 confidence chips over the candidates: a disease needs 5 to be diagnosed, 10 is all in. Chips on the right answer through the case earn a bonus.</p>
+    <p class="hint" id="dx-fit-note" hidden>Fit bars are shown after a literature consult.</p>
     <details class="map" id="map">
       <summary><h3>Differential map</h3><span class="meta" id="map-count"></span></summary>
       <p class="hint">Diseases in this tier that still explain at least half the evidence, by organ system. Struck-through systems have no fitting disease left. Hover a bar for the tests that probe it.</p>

@@ -1,5 +1,6 @@
 // Case generation and the actions a player can take. Pure functions over a db and a state object.
 import { makeRng } from './rng.js';
+import { rankDifferential } from './scoring.js';
 
 export const TUNING = {
   horizon: { resident: 72, attending: 60, house: 48 }, // game hours until the patient is lost untreated
@@ -12,6 +13,12 @@ export const TUNING = {
   scoreBase: 1000,
   costWeight: 0.05,
   maxPerTest: 3, // a single test shows at most this many findings; the rest need other tests or time
+  chips: 10, // confidence chips the player spreads over the differential
+  commitMinChips: 5, // chips needed on a disease before it can be diagnosed
+  chipBonus: 20, // points per chip above the minimum when the diagnosis is right
+  calibrationMax: 150, // points for having had chips on the truth over the whole case
+  wrongHours: 6, // a hedged (5-9 chips) wrong diagnosis costs time and stability but the case goes on
+  wrongStability: 20,
 };
 
 // Findings under these HPO roots never appear spontaneously; they need a test.
@@ -78,6 +85,7 @@ export function createCase(db, { tier, seed, id }) {
   const state = {
     seed, tier, id, H, clock: 0, stability: 100, drain: (100 / H) * TUNING.drainScale, spent: 0,
     realized, timeline, findings: [], negatives: [], tests: {}, differential: [], treatments: [],
+    chips: {}, chipsManual: false, chipTrack: [], wrong: [],
     treated: false, status: 'open', score: null, log: [],
   };
   for (const r of presenting) addFinding(state, r.t, 'presenting');
@@ -93,9 +101,15 @@ export function addFinding(state, t, src) {
   return true;
 }
 
+function chipsOnTruth(db, state) {
+  const d = db.disease(state.id);
+  return Math.max(state.chips[state.id] || 0, ...d.twins.map((t) => state.chips[t] || 0));
+}
+
 export function advance(db, state, hours) {
   if (state.status !== 'open') return state;
   const end = state.clock + hours;
+  state.chipTrack.push({ from: state.clock, to: end, c: chipsOnTruth(db, state) });
   for (const item of state.timeline) {
     if (!item.done && item.at <= end) {
       item.done = true;
@@ -157,8 +171,43 @@ export function consult(db, state, suggestFn) {
   return ids;
 }
 
-export function addCandidate(state, id) { if (!state.differential.includes(id)) state.differential.push(id); return state; }
-export function removeCandidate(state, id) { state.differential = state.differential.filter((x) => x !== id); return state; }
+export function addCandidate(state, id) { if (!state.differential.includes(id) && !state.wrong.includes(id)) state.differential.push(id); return state; }
+export function removeCandidate(state, id) { state.differential = state.differential.filter((x) => x !== id); delete state.chips[id]; return state; }
+
+// Confidence chips. Placing n chips on a disease takes them from the pool, then from the biggest other holders.
+export function setChips(state, id, n) {
+  n = Math.max(0, Math.min(TUNING.chips, Math.round(n)));
+  state.chipsManual = true;
+  const others = Object.entries(state.chips).filter(([k]) => k !== id).sort((a, b) => b[1] - a[1]);
+  let used = others.reduce((sum, [, v]) => sum + v, 0);
+  for (const [k, v] of others) {
+    if (used + n <= TUNING.chips) break;
+    const take = Math.min(v, used + n - TUNING.chips);
+    state.chips[k] -= take; used -= take;
+    if (!state.chips[k]) delete state.chips[k];
+  }
+  if (n) state.chips[id] = n; else delete state.chips[id];
+  return state;
+}
+// Until the player moves a chip, chips follow the chart's fit (largest-remainder rounding).
+export function autoChips(db, state) {
+  if (state.chipsManual) return state;
+  state.chips = {};
+  const ranked = rankDifferential(db, state);
+  const total = ranked.reduce((sum, r) => sum + r.score, 0);
+  if (!ranked.length || total <= 0) return state;
+  const raw = ranked.map((r) => { const x = (TUNING.chips * r.score) / total; return { id: r.id, x, n: Math.floor(x) }; });
+  let left = TUNING.chips - raw.reduce((sum, r) => sum + r.n, 0);
+  raw.sort((a, b) => (b.x - b.n) - (a.x - a.n));
+  for (let i = 0; i < left; i++) raw[i % raw.length].n++;
+  for (const r of raw) if (r.n) state.chips[r.id] = r.n;
+  return state;
+}
+// Share of the case (time-weighted) during which chips sat on the truth, 0..1.
+export function calibration(state) {
+  const area = state.chipTrack.reduce((sum, x) => sum + x.c * (x.to - x.from), 0);
+  return Math.min(1, area / (TUNING.chips * state.H));
+}
 
 export function treat(db, state, drugId) {
   if (state.status !== 'open') return state;
@@ -188,18 +237,33 @@ export function treat(db, state, drugId) {
   return state;
 }
 
+// Diagnose. Needs >= commitMinChips on the disease. All-in and wrong ends the case; hedged and wrong
+// costs time and stability, rules the disease out, and the case goes on.
 export function commit(db, state, id) {
   if (state.status !== 'open') return state;
+  const c = state.chips[id] || 0;
+  if (c < TUNING.commitMinChips) return state;
   const d = db.disease(state.id);
   const correct = id === state.id || d.twins.includes(id);
   if (correct) {
     const timeFactor = 0.3 + 0.7 * Math.max(0, 1 - state.clock / state.H);
-    state.score = Math.max(50, Math.round(TUNING.scoreBase * timeFactor - TUNING.costWeight * state.spent + (state.stability > 50 ? 100 : 0)));
+    state.bonus = { chips: TUNING.chipBonus * (c - TUNING.commitMinChips), calibration: Math.round(TUNING.calibrationMax * calibration(state)) };
+    state.score = Math.max(50, Math.round(TUNING.scoreBase * timeFactor - TUNING.costWeight * state.spent + (state.stability > 50 ? 100 : 0) + state.bonus.chips + state.bonus.calibration));
     state.status = 'won';
     log(state, `Diagnosis confirmed: ${d.n}.`);
-  } else {
+  } else if (c >= TUNING.chips) {
     state.status = 'lost'; state.score = 0;
     log(state, `Wrong diagnosis. The patient had ${d.n}.`);
+  } else {
+    const name = db.disease(id).n;
+    advance(db, state, TUNING.wrongHours);
+    state.wrong.push(id);
+    removeCandidate(state, id);
+    if (state.status !== 'open') return state;
+    state.stability = Math.max(0, state.stability - TUNING.wrongStability);
+    log(state, `Treated as ${name}: no response. ${name} is ruled out.`);
+    if (state.stability <= 0) { state.status = 'lost'; state.score = 0; log(state, 'The patient has deteriorated beyond rescue.'); }
+    return state;
   }
   state.committed = id;
   return state;

@@ -1,6 +1,6 @@
 # Architecture
 
-Last updated: 2026-11-05
+Last updated: 2026-11-06
 
 A deliberately small system: one declarative catalog, one idempotent fetch
 script, data on an external exFAT drive.
@@ -72,7 +72,7 @@ flowchart LR
   end
   subgraph web[game/web, static ES modules]
     IDX[index.html + styles.css] --> APP[app.js]
-    APP --> ENG[engine: rng, db, case, scoring]
+    APP --> ENG[engine: rng, db, case, scoring, search]
     ENG --> DATA[data/*.json]
     ENG --> TESTS[content/tests.json]
   end
@@ -82,5 +82,11 @@ flowchart LR
 ```
 
 - Engine functions are pure over `(db, state)` and tested with `node --test` (`game/web/tests`).
+- `scoring.js` also serves the differential map (`differentialMap()`: tier diseases not hard-excluded and
+  explaining >= half the weighted evidence, per HPO organ system) and `search.js` the watch-along term search.
+- Confidence chips live in `state.chips` (`setChips`, `autoChips`, `calibration` in `case.js`); `commit()` needs
+  5 chips and treats a hedged wrong call as a 6 h / 20-stability setback instead of a loss.
+- Screens: title, play (patient / differential with chips and map / workup), watch-along (`#watch/...`,
+  state in the URL), debrief modal. Added 2026-11-06.
 - `tests/bot.js` plays hundreds of cases with a greedy strategy to measure balance.
 - `web/data/` is derived and gitignored; `web/content/tests.json` is hand-curated and versioned.

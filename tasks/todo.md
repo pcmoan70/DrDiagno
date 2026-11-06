@@ -45,8 +45,8 @@ F1 Differential map (Resident on, Attending collapsible, House off)
 - [x] "Ruled out N" toast after each action; node test: true disease never cut over 1,000 random cases
 - [x] Verify in Chrome; docs; commit
 F2 Confidence chips
-- [ ] Engine: `state.chips`, `setChips()`, auto placement by fit until the player moves one; chips-on-truth recorded on every advance
-- [ ] Commit rule: >=5 chips to diagnose; wrong with 10 ends the case, wrong with 5-9 costs 6 h and 20 stability and continues
-- [ ] Score: +20 per chip above 5 when correct, calibration bonus up to 150 from area under chips-on-truth curve
-- [ ] Fit bars hidden in Attending/House until a consult; debrief chart of chips on truth over time
-- [ ] Bot updated and re-balanced; node tests; verify in Chrome; docs; commit
+- [x] Engine: `state.chips`, `setChips()`, auto placement by fit until the player moves one; chips-on-truth recorded on every advance
+- [x] Commit rule: >=5 chips to diagnose; wrong with 10 ends the case, wrong with 5-9 costs 6 h and 20 stability and continues
+- [x] Score: +20 per chip above 5 when correct, calibration bonus up to 150 from area under chips-on-truth curve
+- [x] Fit bars hidden in Attending/House until a consult; debrief chart of chips on truth over time
+- [x] Bot updated and re-balanced; node tests; verify in Chrome; docs; commit

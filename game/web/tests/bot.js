@@ -1,6 +1,6 @@
 // Balance bot: plays cases with a greedy strategy and prints win rate, actions and hours per tier.
 import { loadTestDb } from './helpers.js';
-import { pickDisease, createCase, orderTest, commit, addCandidate, consult } from '../engine/case.js';
+import { pickDisease, createCase, orderTest, commit, addCandidate, consult, setChips, autoChips } from '../engine/case.js';
 import { rankDifferential, suggest } from '../engine/scoring.js';
 import { makeRng } from '../engine/rng.js';
 
@@ -36,12 +36,15 @@ for (const tier of ['resident', 'attending', 'house']) {
     let steps = 2, truthSeen = s.differential.includes(id);
     while (s.status === 'open') {
       if (steps % 4 === 0) for (const c of consult(db, s, suggest)) addCandidate(s, c);
-      if (!s.differential.length) { commit(db, s, rng.pick(db.index).i); break; }
+      if (!s.differential.length) { const g = rng.pick(db.index).i; addCandidate(s, g); setChips(s, g, 10); commit(db, s, g); break; }
+      autoChips(db, s);
       const ranked = rankDifferential(db, s);
       const [top, second] = ranked;
-      if ((steps >= 3 && top.score >= 0.55 && top.score - (second?.score ?? 0) >= 0.15) || steps >= 14 || s.stability < 20) { commit(db, s, top.id); break; }
+      const confident = top.score >= 0.55 && top.score - (second?.score ?? 0) >= 0.15;
+      // confident: all in. Forced by the clock: hedge with 5 chips, which rules the disease out if wrong and plays on.
+      if ((steps >= 3 && confident) || steps >= 14 || s.stability < 20) { setChips(s, top.id, confident ? 10 : 5); commit(db, s, top.id); steps++; if (s.status !== 'open') break; continue; }
       const t = chooseTest(s);
-      if (!t) { commit(db, s, top.id); break; }
+      if (!t) { setChips(s, top.id, 10); commit(db, s, top.id); break; }
       orderTest(db, s, t.id); steps++;
     }
     if (s.status === 'won') stats.won++; else if (s.committed) stats.lostWrong++; else stats.lostTime++;

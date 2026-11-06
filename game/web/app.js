@@ -1,5 +1,5 @@
 import { loadDb } from './engine/db.js';
-import { pickDisease, createCase, orderTest, consult, addCandidate, removeCandidate, treat, commit, patientFor, poolFor, CONSULT } from './engine/case.js';
+import { pickDisease, createCase, orderTest, consult, addCandidate, removeCandidate, treat, commit, patientFor, poolFor, CONSULT, setChips, autoChips, TUNING } from './engine/case.js';
 import { rankDifferential, suggest, differentialMap } from './engine/scoring.js';
 import { randomCode } from './engine/rng.js';
 import { searchTerms } from './engine/search.js';
@@ -113,16 +113,29 @@ function renderDifferential() {
   const ranked = rankDifferential(db, state);
   $('dx-hint').hidden = ranked.length > 0;
   $('btn-consult').disabled = state.status !== 'open';
+  const showFit = tier === 'resident' || (state.consults || 0) > 0; // the chart's own ranking is earned by a consult outside Resident
+  const placed = Object.values(state.chips).reduce((a, b) => a + b, 0);
+  $('chips-pool').textContent = ranked.length ? `${TUNING.chips - placed} of ${TUNING.chips} chips unplaced · ${state.chipsManual ? 'your call' : 'following the chart'}` : '';
+  $('chips-auto').hidden = !state.chipsManual || !ranked.length;
+  $('dx-fit-note').hidden = showFit || !ranked.length;
   for (const r of ranked) {
     const d = db.disease(r.id);
     const drugs = (db.drugsByDisease[r.id] || [[]])[0];
+    const c = state.chips[r.id] || 0;
+    const canCommit = c >= TUNING.commitMinChips;
+    const allIn = c >= TUNING.chips;
     const ops = el('div', { class: 'ops' },
       drugs.length ? el('button', { class: 'btn small', title: `Treat as ${d.n} with ${db.drugs[drugs[0]][0]} (4 h, $150)`, onclick: () => confirmThen('Treat', `Start ${db.drugs[drugs[0]][0]} for ${d.n}? If this is the wrong disease it may cause harm or side effects.`, () => act(() => treat(db, state, drugs[0]))) }, 'Treat') : null,
-      el('button', { class: 'btn small primary', onclick: () => confirmThen('Commit', `Commit to the diagnosis ${d.n}? The case ends.`, () => act(() => commit(db, state, r.id))) }, 'Diagnose'),
+      el('button', { class: 'btn small primary', disabled: canCommit ? null : 'disabled', title: canCommit ? (allIn ? 'All in: wrong ends the case' : `Hedged: wrong costs ${TUNING.wrongHours} h and ${TUNING.wrongStability} stability, the case goes on`) : `Needs ${TUNING.commitMinChips} chips`,
+        onclick: () => confirmThen('Diagnose', allIn ? `All ${TUNING.chips} chips on ${d.n}. If you are wrong the case ends. Diagnose?` : `${c} chips on ${d.n}. If you are wrong it costs ${TUNING.wrongHours} hours and ${TUNING.wrongStability} stability and ${d.n} is ruled out. Diagnose?`, () => act(() => commit(db, state, r.id))) }, 'Diagnose'),
       el('button', { class: 'btn small', title: 'Remove from differential', onclick: () => act(() => removeCandidate(state, r.id)) }, '×'));
-    list.append(el('li', { class: 'dx' }, el('span', { class: 'name' }, d.n), ops,
-      el('div', { class: 'fit' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.score)}%` })), el('span', {}, `explains ${r.explained} of ${r.total}`)),
-      r.unexplained.length ? el('div', { class: 'why' }, 'Does not explain: ' + r.unexplained.slice(0, 4).map((t) => db.label(t)).join(', ') + (r.unexplained.length > 4 ? '…' : '')) : null));
+    const chips = el('div', { class: 'chips', role: 'group', 'aria-label': `Confidence chips on ${d.n}: ${c}` },
+      Array.from({ length: TUNING.chips }, (_, i) => el('button', { class: 'chip-dot' + (i < c ? ' on' : ''), title: `${i + 1} chip${i ? 's' : ''}`, disabled: state.status !== 'open' ? 'disabled' : null,
+        onclick: () => { setChips(state, r.id, i + 1 === c ? i : i + 1); renderDifferential(); } })),
+      el('span', { class: 'meta' }, `${c}/${TUNING.chips}`));
+    list.append(el('li', { class: 'dx' }, el('span', { class: 'name' }, d.n), ops, chips,
+      showFit ? el('div', { class: 'fit' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.score)}%` })), el('span', {}, `explains ${r.explained} of ${r.total}`)) : null,
+      showFit && r.unexplained.length ? el('div', { class: 'why' }, 'Does not explain: ' + r.unexplained.slice(0, 4).map((t) => db.label(t)).join(', ') + (r.unexplained.length > 4 ? '…' : '')) : null));
   }
 }
 
@@ -149,7 +162,7 @@ function renderTests() {
   }
 }
 
-function act(fn) { if (state.status !== 'open') return; fn(); renderAll(); }
+function act(fn) { if (state.status !== 'open') return; fn(); autoChips(db, state); renderAll(); }
 
 function confirmThen(title, text, fn) {
   $('cf-title').textContent = title; $('cf-text').textContent = text; $('confirm').hidden = false;
@@ -165,6 +178,8 @@ function renderDebrief() {
   if (won) { const best = store.get('best') || {}; if (!best[tier] || state.score > best[tier]) { best[tier] = state.score; store.set('best', best); } }
   const found = new Set(state.findings.map((f) => f.t));
   const body = $('db-body'); body.replaceChildren(
+    won && state.bonus ? el('p', { class: 'def' }, `Chips bonus +${state.bonus.chips} · calibration bonus +${state.bonus.calibration} (chips on the answer over the whole case)`) : null,
+    chipChart(),
     el('p', { class: 'def' }, d.def || ''),
     d.prev ? el('p', { class: 'def' }, `${d.prev[0]}: ${d.prev[1]}.`) : null,
     el('h3', {}, 'Typical findings (highlighted = found in this patient)'),
@@ -175,6 +190,20 @@ function renderDebrief() {
   $('btn-title').onclick = () => { $('debrief').hidden = true; };
   $('btn-copy').onclick = async () => { const url = location.href; try { await navigator.clipboard.writeText(url); $('btn-copy').textContent = 'Copied'; } catch { prompt('Case link', url); } };
   $('debrief').hidden = false;
+}
+
+// Debrief chart: chips on the true disease over the case clock (step line).
+function chipChart() {
+  const track = state.chipTrack;
+  if (!track.length) return null;
+  const W = 320, Hh = 60, pad = 4, end = Math.max(state.clock, state.H);
+  const x = (h) => pad + ((W - 2 * pad) * h) / end, y = (c) => Hh - pad - ((Hh - 2 * pad) * c) / TUNING.chips;
+  let dpath = `M${x(0)},${y(track[0].c)}`;
+  for (const seg of track) dpath += ` L${x(seg.from)},${y(seg.c)} L${x(seg.to)},${y(seg.c)}`;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${Hh}`); svg.setAttribute('class', 'chip-chart'); svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', 'Chips on the true disease over time');
+  svg.innerHTML = `<line x1="${pad}" y1="${y(0)}" x2="${W - pad}" y2="${y(0)}" class="axis"/><line x1="${pad}" y1="${y(TUNING.chips)}" x2="${W - pad}" y2="${y(TUNING.chips)}" class="axis faint"/><path d="${dpath}" class="line"/>`;
+  return el('div', { class: 'chart-wrap' }, el('h3', {}, 'Your chips on the answer, over the case'), svg);
 }
 
 // search boxes with a suggestion list and keyboard navigation. find(q) -> [{key, node}], pick(key)
@@ -206,7 +235,7 @@ wireSearch('dx-search', 'dx-suggest', (q) => {
     if (out.length >= 8) break;
   }
   return out;
-}, (id) => { addCandidate(state, id); renderDifferential(); });
+}, (id) => { addCandidate(state, id); autoChips(db, state); renderDifferential(); });
 
 // ---- watch-along mode: free findings, no patient, no clock. State lives in the URL hash.
 const watch = { findings: [], negatives: [] };
@@ -245,5 +274,6 @@ wireSearch('w-search', 'w-suggest', (q) => searchTerms(db, q, 10, new Set([...wa
 $('w-clear').onclick = () => { watch.findings = []; watch.negatives = []; watchChanged(); };
 $('w-copy').onclick = async () => { try { await navigator.clipboard.writeText(location.href); $('w-copy').textContent = 'Copied'; setTimeout(() => { $('w-copy').textContent = 'Copy link'; }, 1500); } catch { prompt('Link', location.href); } };
 $('btn-consult').onclick = () => act(() => { for (const id of consult(db, state, suggest)) addCandidate(state, id); });
+$('chips-auto').onclick = () => { state.chipsManual = false; autoChips(db, state); renderDifferential(); };
 
 boot().catch((e) => { $('screen-loading').innerHTML = `<p class="loading">Could not load the game data (${e.message}). The data bundles in <code>data/</code> are built with <code>game/build</code>.</p>`; });

@@ -83,6 +83,17 @@ input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .fit-track { height: 8px; background: var(--rule); border-radius: 4px; overflow: hidden; }
 .fit-bar { display: block; height: 100%; background: var(--fit); }
 .dx .ops { display: flex; gap: 6px; }
+.dx .chips { grid-column: 1 / -1; display: flex; align-items: center; gap: 3px; }
+.chip-dot { width: 14px; height: 14px; padding: 0; border-radius: 50%; border: 1px solid var(--muted); background: transparent; cursor: pointer; }
+.chip-dot.on { background: var(--accent); border-color: var(--accent); }
+.chip-dot:hover { border-color: var(--accent); } .chip-dot:disabled { cursor: default; opacity: .6; }
+.chip-dot:nth-child(5) { margin-right: 6px; }
+.dx .chips .meta { font-family: var(--mono); font-size: .72rem; color: var(--muted); margin-left: 4px; }
+.chips-pool { margin: 0 0 8px; font-family: var(--mono); font-size: .75rem; }
+.chart-wrap { margin: 8px 0 4px; } .chart-wrap h3 { margin-top: 8px; }
+.chip-chart { width: 100%; max-width: 420px; height: auto; display: block; }
+.chip-chart .axis { stroke: var(--rule); stroke-width: 1; } .chip-chart .axis.faint { stroke-dasharray: 3 3; }
+.chip-chart .line { fill: none; stroke: var(--accent); stroke-width: 2; }
 .dx .why { grid-column: 1 / -1; font-size: .78rem; color: var(--muted); }
 .hint { font-size: .85rem; color: var(--muted); }
 

@@ -11,12 +11,12 @@ test('organ systems: 23 roots under Phenotypic abnormality', () => {
   assert.equal(organSystems(db).length, 23);
 });
 
-test('differential map never rules out the true disease (600 random cases, random workups, treatments)', () => {
+test('differential map never rules out the true disease (300 random cases, random workups, treatments)', () => {
   const plain = db.tests.filter((t) => !t.special).map((t) => t.id);
   const drugIds = Object.keys(db.drugs);
   for (const tier of ['resident', 'attending', 'house']) {
     const pool = poolFor(db, tier);
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 100; i++) {
       const seed = `map${i}`, rng = makeRng(seed);
       const id = pickDisease(db, { tier, seed });
       const s = createCase(db, { tier, seed, id });

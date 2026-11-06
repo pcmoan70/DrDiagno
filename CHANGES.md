@@ -1,6 +1,10 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: confidence chips. Ten chips over the differential (auto-placed by fit until moved);
+  5 needed to diagnose; all-in wrong ends the case, hedged wrong costs 6 h and 20 stability and rules
+  the disease out; chip and calibration bonuses on a correct call; chips-on-answer chart in the
+  debrief; fit bars outside Resident only after a consult. Bot hedges too. 18 node tests.
 - Dr. Diagno: differential map. An anonymised panel shows how many diseases of the tier still fit
   the evidence, per organ system, with cut systems struck through and a "Ruled out N diseases" toast
   after each action. On in Resident, collapsed in Attending, off in House. 15 node tests.

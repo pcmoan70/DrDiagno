@@ -35,6 +35,17 @@ cd game/web && python3 -m http.server 8077     # then open http://127.0.0.1:8077
 Do not open `index.html` directly from disk: browsers block ES modules and `fetch` on `file://`
 URLs, so the page would stay at "Loading… 0%" (it now shows a hint instead). It needs an HTTP server.
 
+## Confidence chips
+Ten chips sit on the differential. Until the player moves one they follow the chart's fit
+(`autoChips()`, largest-remainder rounding); a click on a dot places chips, taking them first from
+the pool and then from the biggest other holder (`setChips()`). A disease needs 5 chips to be
+diagnosed. All 10 and wrong ends the case; 5-9 and wrong costs 6 hours and 20 stability, rules
+the disease out and the case goes on. On a correct diagnosis the score adds 20 per chip above 5
+and a calibration bonus of up to 150 for the time-weighted share of the case during which chips
+sat on the answer (`calibration()`, recorded by `advance()` in `state.chipTrack`, drawn in the
+debrief). Outside Resident, fit bars appear only after a literature consult, so the chips carry
+the player's own judgement. All numbers are in `TUNING` in `engine/case.js`.
+
 ## Differential map
 Under the differential (Resident: open, Attending: collapsed, House: off) a panel counts the tier's
 diseases that still fit: not hard-excluded (`isCut()`: a present finding the disease never has, or an
