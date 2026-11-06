@@ -72,8 +72,9 @@ the whole library is ranked live with the same `fit()` used in play. The list is
 (`#watch/HP:0001250,-HP:0000819`, minus = absent) so a link reopens it.
 
 ## Parallel studies
-Laboratory, imaging and specialist studies carry a checkbox. Ticked studies run together from a
-sticky bar that shows their count, duration and cost: the clock advances once, by the longest
+Laboratory, imaging and specialist studies carry a checkbox. Ticking one turns its Order button amber
+to show it belongs to the batch; that button, or the sticky bar with count, duration and cost, runs
+the whole batch: the clock advances once, by the longest
 study, and costs add up (`orderTests()`; results are produced in catalog order, so the batch is
 deterministic whatever the click order). History and examination items stay one at a time.
 

@@ -232,10 +232,12 @@ function renderTests() {
     const ul = el('ul', { class: 'test-list' });
     for (const t of tests) {
       const res = state.tests[t.id];
-      const tick = PARALLEL.has(t.kind) && !res && state.status === 'open' ? el('input', { type: 'checkbox', class: 'tick', title: 'Run together with other ticked studies', 'aria-label': `Select ${t.name}`, checked: selected.has(t.id) ? '' : null,
-        onchange: (ev) => { if (ev.target.checked) selected.add(t.id); else selected.delete(t.id); renderBatch(); } }) : null;
-      const li = el('li', { class: 'test' + (res ? ' done' : '') + (tick ? ' tickable' : '') }, tick, el('span', {}, t.name, el('div', { class: 'meta' }, `${hoursText(t.hours)} · $${t.cost}`)),
-        el('button', { class: 'btn small', disabled: state.status !== 'open' || res ? 'disabled' : null, onclick: () => act(() => orderTest(db, state, t.id)) }, 'Order'));
+      const inBatch = selected.has(t.id);
+      const order = el('button', { class: 'btn small' + (inBatch ? ' primary' : ''), disabled: state.status !== 'open' || res ? 'disabled' : null, title: inBatch ? 'Runs all ticked studies together' : null,
+        onclick: () => (selected.has(t.id) ? runBatch() : act(() => orderTest(db, state, t.id))) }, 'Order');
+      const tick = PARALLEL.has(t.kind) && !res && state.status === 'open' ? el('input', { type: 'checkbox', class: 'tick', title: 'Run together with other ticked studies', 'aria-label': `Select ${t.name}`, checked: inBatch ? '' : null,
+        onchange: (ev) => { if (ev.target.checked) selected.add(t.id); else selected.delete(t.id); order.classList.toggle('primary', ev.target.checked); order.title = ev.target.checked ? 'Runs all ticked studies together' : ''; renderBatch(); } }) : null;
+      const li = el('li', { class: 'test' + (res ? ' done' : '') + (tick ? ' tickable' : '') }, tick, el('span', {}, t.name, el('div', { class: 'meta' }, `${hoursText(t.hours)} · $${t.cost}`)), order);
       if (res) {
         const body = res.text != null ? [res.text] : [termList(res.terms), res.terms.length && res.negs.length ? '. ' : null, res.negs.length ? ['Absent: ', termList(res.negs)] : null];
         li.append(el('div', { class: 'result ' + (res.terms.length || res.confirms ? 'pos' : 'neg') }, body, res.partial ? ' (more may emerge)' : null));
@@ -257,7 +259,8 @@ function renderBatch() {
   $('batch').hidden = tests.length === 0;
   if (tests.length) $('batch-sum').textContent = `${tests.length} ${tests.length === 1 ? 'study' : 'studies'} · ${hoursText(Math.max(...tests.map((t) => t.hours)))} · $${tests.reduce((a, t) => a + t.cost, 0).toLocaleString()}`;
 }
-$('batch-run').onclick = () => { const ids = [...selected]; selected.clear(); act(() => orderTests(db, state, ids)); };
+function runBatch() { const ids = [...selected]; selected.clear(); act(() => orderTests(db, state, ids)); }
+$('batch-run').onclick = runBatch;
 $('batch-clear').onclick = () => { selected.clear(); renderTests(); };
 
 function act(fn) { if (state.status !== 'open') return; fn(); autoChips(db, state); renderAll(); }

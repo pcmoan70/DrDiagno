@@ -1,6 +1,7 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: ticked studies show an amber Order button; pressing any of them runs the whole batch.
 - Dr. Diagno: Wikimedia pictures. `build_images.py` collects Commons images (with author and licence)
   for 884 findings and 326 diseases and Wikipedia links for 1,533 diseases via Wikidata. Balloons show
   the finding's picture; the disease profile and debrief show the disease's picture and Wikipedia link.
