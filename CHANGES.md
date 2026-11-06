@@ -1,6 +1,10 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: fix watch-along findings vanishing as soon as they were added (and their × not
+  removing them): the progress feature's `history()` helper shadowed `window.history`, so the URL
+  update threw before the list re-rendered. Helper renamed; a node test now forbids top-level
+  bindings in app.js that shadow browser globals (26 tests). Hint mentions the × to remove a finding.
 - Dr. Diagno: Venn view in Student mode. A collapsible panel under the differential draws the three
   best-matching candidates as circles and places every symptom (filled chip) and test result
   (outlined chip) in the region of the diseases that explain it; unexplained findings are listed

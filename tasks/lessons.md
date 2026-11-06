@@ -22,3 +22,12 @@
 - 2026-11-06: `pkill -f "http.server 8077"` matched the shell running it (the pattern is in its own command line) and killed the tool shell (exit 144) while leaving the server state unclear. Anchor the pattern (`pkill -f '^python3 -m http.server 8077'`) or kill by port (`fuser -k 8077/tcp`).
 - 2026-11-06: The served folder (`game/web`) had tests and package.json inside it, so any deployment (Pages upload, home server, artifact) would have shipped them. Rule: the deploy folder contains only what the browser loads; tests, build scripts and raw data live beside it, and CI asserts it.
 - 2026-11-06: The GitHub Pages source silently flipped from "GitHub Actions" to "Deploy from a branch" (API `build_type: legacy`), so a green workflow run deployed nothing and the site served the repo root (app.js 404). A successful run is not proof of a deploy: after deploying, curl a file that only the new version has. Fix: `gh api -X PUT repos/<owner>/<repo>/pages -f build_type=workflow`, wait for any in-progress legacy build, re-run the workflow.
+
+## 2026-11-06: top-level names in a browser module can shadow window globals
+- Mistake: `const history = () => ...` in `app.js` (progress feature) shadowed `window.history`; the
+  watch-along's `history.replaceState` then threw and findings seemed to vanish on entry. Node tests
+  passed because the bug lives in UI code, and the feature I was testing (progress) worked.
+- Rule: never name a top-level binding in `app.js` after a browser global (`history`, `location`,
+  `name`, `status`, `event`, `open`, `close`, ...). `tests/globals.test.js` enforces a list. After a
+  change to shared UI code, click through every mode once (play, watch-along, progress), not only the
+  mode the change was made for.

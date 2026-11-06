@@ -62,25 +62,25 @@ function renderTitle() {
   $('code-form').onsubmit = (ev) => { ev.preventDefault(); const v = $('code-input').value.trim().toLowerCase().replace(/^#/, ''); if (/^(student|resident|attending|house)-[a-z0-9]+$/.test(v)) location.hash = '#' + v; };
   const best = store.get('best') || {};
   $('best').textContent = Object.keys(best).length ? 'Best scores: ' + TIERS.filter((t) => best[t.id]).map((t) => `${t.name} ${best[t.id]}`).join(' · ') : '';
-  const h = history();
+  const h = pastCases();
   const won = h.filter((e) => e.status === 'won').length;
   $('progress-brief').textContent = h.length ? `${h.length} ${h.length === 1 ? 'case' : 'cases'} played, ${Math.round(100 * won / h.length)}% solved` : 'Finished cases are kept in this browser.';
 }
 
 // ---- progress: finished cases live in localStorage; aggregation is in engine/progress.js
-const history = () => store.get('history') || [];
+const pastCases = () => store.get('history') || []; // not `history`: that would shadow window.history
 function recordCase() {
   if (state.recorded) return;
   state.recorded = true;
   const d = db.disease(state.id);
   const systems = [...systemsOf(db, d)].map((id) => db.name(id).replace(/^Abnormality of (the )?/, ''));
-  store.set('history', addEntry(history(), { at: Date.now(), tier, seed, id: d.id, name: d.n, status: state.status === 'won' ? 'won' : state.committed ? 'wrong' : 'timeout',
+  store.set('history', addEntry(pastCases(), { at: Date.now(), tier, seed, id: d.id, name: d.n, status: state.status === 'won' ? 'won' : state.committed ? 'wrong' : 'timeout',
     score: state.score || 0, hours: Math.round(state.clock * 10) / 10, spent: state.spent, tests: Object.keys(state.tests).length, systems }));
 }
 const tierName = (id) => TIERS.find((t) => t.id === id)?.name || id;
 const dateText = (ms) => new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 function renderProgress() {
-  const h = history();
+  const h = pastCases();
   const row = (...cells) => el('tr', {}, cells.map((c, i) => el(i ? 'td' : 'th', { scope: i ? null : 'row' }, c)));
   const head = (...cells) => el('thead', {}, el('tr', {}, cells.map((c) => el('th', {}, c))));
   $('pg-tiers').replaceChildren(head('Tier', 'Played', 'Solved', 'Best', 'Last 5 avg', 'Trend'),
