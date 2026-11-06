@@ -1,0 +1,26 @@
+[
+ {
+  "name": "Human Phenotype Ontology + disease annotations",
+  "homepage": "https://hpo.jax.org",
+  "license": "HPO licence (free use with attribution)",
+  "downloaded": "2026-11-05 19:27:02 UTC"
+ },
+ {
+  "name": "Mondo Disease Ontology",
+  "homepage": "https://mondo.monarchinitiative.org",
+  "license": "CC BY 4.0",
+  "downloaded": "2026-11-05 19:27:58 UTC"
+ },
+ {
+  "name": "Orphanet / Orphadata rare disease products",
+  "homepage": "https://www.orphadata.com/orphanet-scientific-knowledge-files/",
+  "license": "CC BY 4.0",
+  "downloaded": "2026-11-05 19:35:04 UTC"
+ },
+ {
+  "name": "PrimeKG v2.1 (Chandak et al. 2023)",
+  "homepage": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM",
+  "license": "CC0 1.0",
+  "downloaded": "2026-11-05 19:46:53 UTC"
+ }
+]
