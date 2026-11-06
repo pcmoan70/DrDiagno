@@ -24,8 +24,8 @@ jobs:
           node-version: '22'
       - name: Served folder must hold only the site (no tests, build scripts or raw data)
         run: test -z "$(find game/web -name '*.py' -o -name '*.test.js' -o -name package.json -o -name 'tests' -type d)"
-      - name: Engine tests (needs data bundles in game/web/data)
-        run: cd game && test -f web/data/terms.json && npm test || echo "data bundles not committed; skipping tests"
+      - name: Engine tests
+        run: cd game && npm test
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
