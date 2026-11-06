@@ -19,3 +19,4 @@
   module scripts and fetch). Always state the HTTP-server requirement in the run docs and make the
   page itself detect `location.protocol === 'file:'` and say so; never leave a loader that can
   stall without an error path.
+- 2026-11-06: `pkill -f "http.server 8077"` matched the shell running it (the pattern is in its own command line) and killed the tool shell (exit 144) while leaving the server state unclear. Anchor the pattern (`pkill -f '^python3 -m http.server 8077'`) or kill by port (`fuser -k 8077/tcp`).

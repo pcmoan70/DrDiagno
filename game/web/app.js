@@ -2,6 +2,7 @@ import { loadDb } from './engine/db.js';
 import { pickDisease, createCase, orderTest, consult, addCandidate, removeCandidate, treat, commit, patientFor, poolFor, CONSULT } from './engine/case.js';
 import { rankDifferential, suggest } from './engine/scoring.js';
 import { randomCode } from './engine/rng.js';
+import { searchTerms } from './engine/search.js';
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, attrs = {}, ...kids) => {
@@ -40,7 +41,9 @@ async function boot() {
 
 function route() {
   const m = location.hash.match(/^#(resident|attending|house)-([a-z0-9]+)$/);
-  if (m) startCase(m[1], m[2]); else show('screen-title');
+  if (m) startCase(m[1], m[2]);
+  else if (location.hash.startsWith('#watch')) startWatch(location.hash.slice(7));
+  else show('screen-title');
 }
 
 function renderTitle() {
@@ -156,28 +159,73 @@ function renderDebrief() {
   $('debrief').hidden = false;
 }
 
-// disease search
-let selIdx = -1, matches = [];
-$('dx-search').addEventListener('input', (ev) => {
-  const q = ev.target.value.trim().toLowerCase();
-  const box = $('dx-suggest'); box.replaceChildren(); selIdx = -1; matches = [];
-  if (q.length < 2) { box.hidden = true; return; }
+// search boxes with a suggestion list and keyboard navigation. find(q) -> [{key, node}], pick(key)
+function wireSearch(inputId, boxId, find, pick) {
+  const input = $(inputId), box = $(boxId);
+  let selIdx = -1, matches = [];
+  const choose = (m) => { box.hidden = true; input.value = ''; pick(m.key); };
+  input.addEventListener('input', () => {
+    box.replaceChildren(); selIdx = -1; matches = find(input.value.trim().toLowerCase());
+    for (const m of matches) box.append(el('li', { role: 'option', onclick: () => choose(m) }, m.node));
+    box.hidden = matches.length === 0;
+  });
+  input.addEventListener('keydown', (ev) => {
+    const items = [...box.children];
+    if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') { ev.preventDefault(); selIdx = Math.max(0, Math.min(items.length - 1, selIdx + (ev.key === 'ArrowDown' ? 1 : -1))); items.forEach((li, i) => li.setAttribute('aria-selected', i === selIdx)); }
+    else if (ev.key === 'Enter') { ev.preventDefault(); const m = matches[selIdx >= 0 ? selIdx : 0]; if (m) choose(m); }
+    else if (ev.key === 'Escape') { box.hidden = true; }
+  });
+}
+document.addEventListener('click', (ev) => { if (!ev.target.closest('.search')) for (const b of document.querySelectorAll('.suggest')) b.hidden = true; });
+
+wireSearch('dx-search', 'dx-suggest', (q) => {
+  const out = [];
+  if (q.length < 2) return out;
   for (const e of db.index) {
     if (state.differential.includes(e.i)) continue;
     const syn = e.s.find((x) => x.toLowerCase().includes(q));
-    if (e.n.toLowerCase().includes(q) || syn) { matches.push(e); box.append(el('li', { role: 'option', onclick: () => pickMatch(e) }, e.n, syn && !e.n.toLowerCase().includes(q) ? el('span', { class: 'syn' }, ` (${syn})`) : null)); }
-    if (matches.length >= 8) break;
+    if (e.n.toLowerCase().includes(q) || syn) out.push({ key: e.i, node: [e.n, syn && !e.n.toLowerCase().includes(q) ? el('span', { class: 'syn' }, ` (${syn})`) : null] });
+    if (out.length >= 8) break;
   }
-  box.hidden = matches.length === 0;
-});
-$('dx-search').addEventListener('keydown', (ev) => {
-  const items = [...$('dx-suggest').children];
-  if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') { ev.preventDefault(); selIdx = Math.max(0, Math.min(items.length - 1, selIdx + (ev.key === 'ArrowDown' ? 1 : -1))); items.forEach((li, i) => li.setAttribute('aria-selected', i === selIdx)); }
-  else if (ev.key === 'Enter') { ev.preventDefault(); if (matches[selIdx >= 0 ? selIdx : 0]) pickMatch(matches[selIdx >= 0 ? selIdx : 0]); }
-  else if (ev.key === 'Escape') { $('dx-suggest').hidden = true; }
-});
-function pickMatch(e) { $('dx-suggest').hidden = true; $('dx-search').value = ''; addCandidate(state, e.i); renderDifferential(); }
-document.addEventListener('click', (ev) => { if (!ev.target.closest('.search')) $('dx-suggest').hidden = true; });
+  return out;
+}, (id) => { addCandidate(state, id); renderDifferential(); });
+
+// ---- watch-along mode: free findings, no patient, no clock. State lives in the URL hash.
+const watch = { findings: [], negatives: [] };
+function startWatch(spec) {
+  const ids = (spec.replace(/^\//, '') || '').split(',').filter(Boolean);
+  watch.findings = ids.filter((x) => !x.startsWith('-')).filter((t) => db.terms[t]).map((t) => ({ t }));
+  watch.negatives = ids.filter((x) => x.startsWith('-')).map((x) => x.slice(1)).filter((t) => db.terms[t]).map((t) => ({ t }));
+  show('screen-watch');
+  renderWatch();
+}
+function watchChanged() {
+  const spec = [...watch.findings.map((f) => f.t), ...watch.negatives.map((n) => '-' + n.t)].join(',');
+  history.replaceState(null, '', '#watch' + (spec ? '/' + spec : ''));
+  renderWatch();
+}
+function renderWatch() {
+  const list = $('w-findings'); list.replaceChildren();
+  const chip = (t, neg) => el('li', { class: 'chip click' + (neg ? ' neg' : ''), title: `${db.name(t)} (${t}). Click to mark ${neg ? 'present' : 'absent'}.`,
+    onclick: () => { if (neg) { watch.negatives = watch.negatives.filter((n) => n.t !== t); watch.findings.push({ t }); } else { watch.findings = watch.findings.filter((f) => f.t !== t); watch.negatives.push({ t }); } watchChanged(); } },
+    db.label(t), el('span', { class: 'rm', title: 'Remove', onclick: (ev) => { ev.stopPropagation(); watch.findings = watch.findings.filter((f) => f.t !== t); watch.negatives = watch.negatives.filter((n) => n.t !== t); watchChanged(); } }, '×'));
+  for (const f of watch.findings) list.append(chip(f.t, false));
+  for (const n of watch.negatives) list.append(chip(n.t, true));
+  const out = $('w-list'); out.replaceChildren();
+  const ranked = watch.findings.length >= 2 ? suggest(db, watch, 12) : [];
+  $('w-hint').hidden = ranked.length > 0;
+  for (const r of ranked) {
+    const d = db.disease(r.id);
+    out.append(el('li', { class: 'dx' }, el('span', { class: 'name' }, d.n), el('span', { class: 'meta' }, d.prev ? d.prev[1] : ''),
+      el('div', { class: 'fit' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.score)}%` })), el('span', {}, `explains ${r.explained} of ${r.total}`)),
+      r.unexplained.length ? el('div', { class: 'why' }, 'Does not explain: ' + r.unexplained.slice(0, 4).map((t) => db.label(t)).join(', ') + (r.unexplained.length > 4 ? '…' : '')) : null,
+      d.def ? el('p', { class: 'def' }, d.def.length > 220 ? d.def.slice(0, 220) + '…' : d.def) : null));
+  }
+}
+wireSearch('w-search', 'w-suggest', (q) => searchTerms(db, q, 10, new Set([...watch.findings, ...watch.negatives].map((x) => x.t))).map((e) => ({ key: e.id, node: [e.lay || e.name, e.lay ? el('span', { class: 'syn' }, ` (${e.name})`) : null] })),
+  (id) => { watch.findings.push({ t: id }); watchChanged(); });
+$('w-clear').onclick = () => { watch.findings = []; watch.negatives = []; watchChanged(); };
+$('w-copy').onclick = async () => { try { await navigator.clipboard.writeText(location.href); $('w-copy').textContent = 'Copied'; setTimeout(() => { $('w-copy').textContent = 'Copy link'; }, 1500); } catch { prompt('Link', location.href); } };
 $('btn-consult').onclick = () => act(() => { for (const id of consult(db, state, suggest)) addCandidate(state, id); });
 
 boot().catch((e) => { $('screen-loading').innerHTML = `<p class="loading">Could not load the game data (${e.message}). The data bundles in <code>data/</code> are built with <code>game/build</code>.</p>`; });

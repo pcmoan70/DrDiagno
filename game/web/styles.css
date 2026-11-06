@@ -52,7 +52,13 @@ input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .credits { margin-top: 40px; font-size: .8rem; color: var(--muted); max-width: 80ch; }
 
 .play { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; }
-@media (max-width: 900px) { .play { grid-template-columns: 1fr; } }
+.play.watch { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+.watch-entry { max-width: 520px; margin-bottom: 24px; }
+.watch-entry .btn { align-self: flex-start; }
+.chip.click { cursor: pointer; }
+.chip .rm { margin-left: 6px; opacity: .6; cursor: pointer; } .chip .rm:hover { opacity: 1; }
+.dx .def { grid-column: 1 / -1; margin: 0; font-size: .78rem; }
+@media (max-width: 900px) { .play, .play.watch { grid-template-columns: 1fr; } }
 .col { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 16px; min-width: 0; }
 .persona { margin: 0; }
 .findings { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }

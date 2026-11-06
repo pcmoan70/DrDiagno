@@ -35,6 +35,12 @@ cd game/web && python3 -m http.server 8077     # then open http://127.0.0.1:8077
 Do not open `index.html` directly from disk: browsers block ES modules and `fetch` on `file://`
 URLs, so the page would stay at "Loading… 0%" (it now shows a hint instead). It needs an HTTP server.
 
+## Watch-along mode
+`#watch` on the title screen opens a free diagnosis screen with no patient, clock or score: type
+findings (HPO term or lay name, `engine/search.js`), mark them present or absent by clicking, and
+the whole library is ranked live with the same `fit()` used in play. The list is kept in the URL
+(`#watch/HP:0001250,-HP:0000819`, minus = absent) so a link reopens it.
+
 ## Test and balance
 ```bash
 cd game/web

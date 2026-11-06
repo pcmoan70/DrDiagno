@@ -1,6 +1,9 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: watch-along mode (`#watch`): type findings as you hear them, mark present/absent,
+  and see all 7,086 diseases ranked live; shareable link; HPO term search (`engine/search.js`,
+  12 node tests now). Design note for this and the next two features: `tasks/game_ideas_20261106.md`.
 - Dr. Diagno: the Workup column now shows each test category (History, Examination, Laboratory,
   Imaging, Specialist studies) as a collapsible section with a count of ordered tests; History
   starts expanded and the open/closed state survives re-renders.

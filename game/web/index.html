@@ -36,6 +36,12 @@
     <p class="lede small">Every case is generated from real medical knowledge: 7,000 diseases and 20,000 clinical findings from the Human Phenotype Ontology, Orphanet and Mondo. Entertainment and education only, not medical advice.</p>
   </section>
   <section class="tiers" id="tiers"></section>
+  <section class="tier watch-entry">
+    <h3>Watch-along</h3>
+    <p>No patient, no clock, no score. Type findings as you hear them, say while watching a medical drama, and see which of 7,000 diseases fit. Also a study tool.</p>
+    <span class="meta">free diagnosis · shareable link</span>
+    <a class="btn" href="#watch">Open</a>
+  </section>
   <section class="resume">
     <form id="code-form" class="code-form">
       <label for="code-input">Replay a case code</label>
@@ -75,6 +81,28 @@
   <section class="col workup">
     <h2>Workup</h2>
     <div id="tests"></div>
+  </section>
+</main>
+
+<main id="screen-watch" class="screen play watch" hidden>
+  <section class="col">
+    <h2>Findings</h2>
+    <div class="search">
+      <input id="w-search" placeholder="Add a finding, e.g. seizure, foot drop, high calcium…" autocomplete="off" spellcheck="false" aria-label="Search findings">
+      <ul class="suggest" id="w-suggest" hidden></ul>
+    </div>
+    <p class="hint">Click a finding to mark it absent (ruled out) or present again. Findings use Human Phenotype Ontology terms; try the medical word if the everyday one finds nothing.</p>
+    <ul class="findings" id="w-findings"></ul>
+    <div class="actions-row">
+      <button class="btn" id="w-copy" title="Copy a link that reopens this list">Copy link</button>
+      <button class="btn" id="w-clear">Clear</button>
+    </div>
+    <p class="hint">Entertainment and education only, not medical advice. Rankings reflect how well each disease's published phenotype explains the findings, nothing more.</p>
+  </section>
+  <section class="col">
+    <h2>Diseases that fit</h2>
+    <p class="hint" id="w-hint">Add two or more findings to rank the library.</p>
+    <ul class="dx-list" id="w-list"></ul>
   </section>
 </main>
 

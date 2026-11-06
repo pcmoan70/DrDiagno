@@ -31,3 +31,22 @@ Plan: `tasks/house_game_plan_20261105.md` (static JavaScript, GitHub Pages)
 - [~] M5 balance: bot baseline done, per-test cap added; human playtest pending
 - [~] M6 deploy: workflow added; blocked, repo is private (Pages needs public repo or Pro) and data bundles are not pushed
 - [x] M7 documentation (game/README.md, root README, ARCHITECTURE, CHANGES)
+- [x] Game ideas written up: `tasks/game_ideas_20261106.md`; user approved the recommended order 2026-11-06
+
+## Game features round 2 (approved 2026-11-06, in order)
+F3 Watch-along mode
+- [x] HPO term search (name + lay name, phenotypic-abnormality subtree) in a new `#watch` screen
+- [x] Present/absent findings as chips; live ranking of all 7,086 diseases via `suggest()` with reason lines
+- [x] Shareable URL `#watch/HP:..,HP:..,-HP:..`; copy-link button; disclaimer; title-screen entry
+- [x] Verify in Chrome; docs (game/README, CHANGES); commit
+F1 Differential map (Resident on, Attending collapsible, House off)
+- [ ] `scoring.compatible()` hard-cut rule (present finding in excluded list; absent finding the disease has at p>=0.9), drug-sourced findings exempt
+- [ ] Map panel: compatible count, per-organ-system bars, cut branches struck through, tooltip listing tests that probe the branch
+- [ ] "Ruled out N" toast after each action; node test: true disease never cut over 1,000 random cases
+- [ ] Verify in Chrome; docs; commit
+F2 Confidence chips
+- [ ] Engine: `state.chips`, `setChips()`, auto placement by fit until the player moves one; chips-on-truth recorded on every advance
+- [ ] Commit rule: >=5 chips to diagnose; wrong with 10 ends the case, wrong with 5-9 costs 6 h and 20 stability and continues
+- [ ] Score: +20 per chip above 5 when correct, calibration bonus up to 150 from area under chips-on-truth curve
+- [ ] Fit bars hidden in Attending/House until a consult; debrief chart of chips on truth over time
+- [ ] Bot updated and re-balanced; node tests; verify in Chrome; docs; commit
