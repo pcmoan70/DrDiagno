@@ -97,6 +97,8 @@ flowchart LR
 - `web/data/` is derived but versioned (Pages builds from the repo alone); `web/content/tests.json` is hand-curated.
 - Term balloons: elements with `data-term` get a fixed-position tooltip (lay name, HPO name, definition from
   `data/defs.json`, fetched in the background after boot) via document-level mouseover/focusin delegation.
+- Student tier: `poolFor` maps it to the Resident pool; `consult` skips the clock, `commit` never ends the case on a
+  wrong call, and `scoring.suggestTests()` (over `compatibleIds()`) feeds the Coach panel.
 - Pictures: `data/images.json` (from `build_images.py`, the only build step that uses the network) maps HPO and
   Mondo ids to hotlinked Commons thumbnails with credits, and Mondo ids to Wikipedia articles; shown in balloons,
   the disease profile and the debrief.

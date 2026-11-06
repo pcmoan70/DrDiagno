@@ -160,3 +160,7 @@ input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .modal-card .media { float: right; max-width: 240px; margin: 0 0 8px 16px; } .modal-card .symptoms, .modal-card .profile, .modal-card .chart-wrap { clear: both; }
 .tip .media { margin: 6px 0 0; } .tip .media img { width: 100%; height: 150px; object-fit: contain; background: rgba(255, 255, 255, .08); border-radius: 4px; }
 .tip .media figcaption { color: inherit; opacity: .7; }
+.coach { border: 1px solid var(--fit); border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; }
+.coach h3 { margin: 0 0 6px; font-size: .9rem; } .coach ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.coach li { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; font-size: .9rem; }
+.coach .meta { font-family: var(--mono); font-size: .72rem; color: var(--muted); } .coach .hint { margin: 6px 0 0; }

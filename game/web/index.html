@@ -40,7 +40,7 @@
     <h3>Watch-along</h3>
     <p>No patient, no clock, no score. Type findings as you hear them, say while watching a medical drama, and see which of 7,000 diseases fit. Also a study tool.</p>
     <span class="meta">free diagnosis · shareable link</span>
-    <a class="btn" href="#watch">Open</a>
+    <a class="btn primary" href="#watch">Open</a>
   </section>
   <section class="resume">
     <form id="code-form" class="code-form">
@@ -92,7 +92,13 @@
 
   <section class="col workup">
     <h2>Workup</h2>
-    <p class="hint">Tick several laboratory, imaging or specialist studies to run them together: their Order buttons turn amber, the clock advances by the longest, costs add up.</p>
+    <p class="hint">Tick several laboratory, imaging or specialist studies to run them together: their Order buttons turn amber and read "Order batch"; the clock advances by the longest, costs add up.</p>
+    <div class="coach" id="coach" hidden>
+      <h3>Coach: suggested next studies</h3>
+      <ul id="coach-list"></ul>
+      <p class="hint" id="coach-empty">No single study separates the remaining diseases; consult the literature or diagnose.</p>
+      <p class="hint">Ranked by how evenly a study splits the diseases that still fit, so either result rules out the most.</p>
+    </div>
     <div class="batch" id="batch" hidden>
       <span class="meta" id="batch-sum"></span>
       <button class="btn small primary" id="batch-run">Run together</button>

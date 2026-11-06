@@ -1,6 +1,6 @@
 import { loadDb } from './engine/db.js';
 import { pickDisease, createCase, orderTest, orderTests, consult, addCandidate, removeCandidate, treat, commit, patientFor, poolFor, CONSULT, setChips, autoChips, TUNING } from './engine/case.js';
-import { rankDifferential, suggest, differentialMap, fit } from './engine/scoring.js';
+import { rankDifferential, suggest, differentialMap, fit, suggestTests } from './engine/scoring.js';
 import { randomCode } from './engine/rng.js';
 import { searchTerms } from './engine/search.js';
 
@@ -12,6 +12,7 @@ const el = (tag, attrs = {}, ...kids) => {
   return e;
 };
 const TIERS = [
+  { id: 'student', name: 'Student', blurb: 'Learn with a coach: free consults, suggested studies, the map open, and no sudden death. Resident cases, a long clock.', clock: '96 h' },
   { id: 'resident', name: 'Resident', blurb: 'Well-described diseases with plenty of findings. Learn the ropes.', clock: '72 h' },
   { id: 'attending', name: 'Attending', blurb: 'The full library. Decoys share most of the picture.', clock: '60 h' },
   { id: 'house', name: 'House', blurb: 'Rare diseases, misleading openers, a fast clock. Everybody lies.', clock: '48 h' },
@@ -44,7 +45,7 @@ async function boot() {
 }
 
 function route() {
-  const m = location.hash.match(/^#(resident|attending|house)-([a-z0-9]+)$/);
+  const m = location.hash.match(/^#(student|resident|attending|house)-([a-z0-9]+)$/);
   if (m) startCase(m[1], m[2]);
   else if (location.hash.startsWith('#watch')) startWatch(location.hash.slice(7));
   else show('screen-title');
@@ -57,7 +58,7 @@ function renderTitle() {
     tiers.append(el('div', { class: 'tier' }, el('h3', {}, t.name), el('p', {}, t.blurb), el('span', { class: 'meta' }, `${n.toLocaleString()} diseases · ${t.clock} to diagnose`),
       el('button', { class: 'btn primary', onclick: () => { location.hash = `#${t.id}-${randomCode()}`; } }, 'New case')));
   }
-  $('code-form').onsubmit = (ev) => { ev.preventDefault(); const v = $('code-input').value.trim().toLowerCase().replace(/^#/, ''); if (/^(resident|attending|house)-[a-z0-9]+$/.test(v)) location.hash = '#' + v; };
+  $('code-form').onsubmit = (ev) => { ev.preventDefault(); const v = $('code-input').value.trim().toLowerCase().replace(/^#/, ''); if (/^(student|resident|attending|house)-[a-z0-9]+$/.test(v)) location.hash = '#' + v; };
   const best = store.get('best') || {};
   $('best').textContent = Object.keys(best).length ? 'Best scores: ' + TIERS.filter((t) => best[t.id]).map((t) => `${t.name} ${best[t.id]}`).join(' · ') : '';
   show('screen-title');
@@ -70,12 +71,14 @@ function startCase(t, s) {
   state.patient = patientFor(db, state);
   $('hud-code').textContent = `${tier}-${seed}`;
   $('dx-search').value = ''; selected.clear(); suggestions = null;
-  mapPrev = null; $('map').hidden = tier === 'house'; $('map').open = tier === 'resident';
+  mapPrev = null; $('map').hidden = tier === 'house'; $('map').open = tier === 'resident' || tier === 'student';
+  $('coach').hidden = tier !== 'student';
+  $('btn-consult').textContent = tier === 'student' ? 'Consult the literature (free)' : 'Consult the literature (3 h)';
   show('screen-play');
   renderAll();
 }
 
-const fitVisible = () => tier === 'resident' || (state.consults || 0) > 0 || state.status !== 'open'; // the chart's own ranking is earned by a consult outside Resident
+const fitVisible = () => tier === 'resident' || tier === 'student' || (state.consults || 0) > 0 || state.status !== 'open'; // the chart's own ranking is earned by a consult outside Resident
 // A disease name that opens the profile table. obs: {findings, negatives} to mark against, or null.
 const nameLink = (d, obs) => el('button', { class: 'name link', title: 'Show findings and how often they occur', onclick: () => showDisease(d.id, obs) }, d.n);
 
@@ -140,7 +143,20 @@ for (const evName of ['mouseover', 'focusin']) document.addEventListener(evName,
 document.addEventListener('focusout', hideTip);
 window.addEventListener('scroll', hideTip, true);
 
-function renderAll() { const y = window.scrollY; renderHud(); renderPatient(); renderDifferential(); renderMap(); renderTests(); window.scrollTo(0, y); if (state.status !== 'open') renderDebrief(); }
+function renderAll() { const y = window.scrollY; renderHud(); renderPatient(); renderDifferential(); renderMap(); renderTests(); renderCoach(); window.scrollTo(0, y); if (state.status !== 'open') renderDebrief(); }
+
+// Student tier: which studies would split the still-fitting diseases best.
+function renderCoach() {
+  if (tier !== 'student') return;
+  const list = $('coach-list'); list.replaceChildren();
+  const tips = state.status === 'open' ? suggestTests(db, state, poolFor(db, tier)) : [];
+  $('coach-empty').hidden = tips.length > 0;
+  for (const x of tips) {
+    const t = db.testById.get(x.id);
+    list.append(el('li', {}, el('span', {}, t.name, el('div', { class: 'meta' }, `probes ${x.probes} of the ${x.total} diseases still fitting · ${hoursText(t.hours)} · $${t.cost}`)),
+      el('button', { class: 'btn small', onclick: () => act(() => orderTest(db, state, x.id)) }, 'Order')));
+  }
+}
 
 function toast(text) { const t = el('div', { class: 'toast', role: 'status' }, text); document.body.append(t); setTimeout(() => t.remove(), 2700); }
 
@@ -193,7 +209,7 @@ function renderDifferential() {
     const drugs = (db.drugsByDisease[r.id] || [[]])[0];
     const c = state.chips[r.id] || 0;
     const canCommit = c >= TUNING.commitMinChips;
-    const allIn = c >= TUNING.chips;
+    const allIn = c >= TUNING.chips && tier !== 'student'; // students never face sudden death
     const ops = el('div', { class: 'ops' },
       drugs.length ? el('button', { class: 'btn small', title: `Treat as ${d.n} with ${db.drugs[drugs[0]][0]} (4 h, $150)`, onclick: () => confirmThen('Treat', `Start ${db.drugs[drugs[0]][0]} for ${d.n}? If this is the wrong disease it may cause harm or side effects.`, () => act(() => treat(db, state, drugs[0]))) }, 'Treat') : null,
       el('button', { class: 'btn small primary', disabled: canCommit ? null : 'disabled', title: canCommit ? (allIn ? 'All in: wrong ends the case' : `Hedged: wrong costs ${TUNING.wrongHours} h and ${TUNING.wrongStability} stability, the case goes on`) : `Needs ${TUNING.commitMinChips} chips`,
@@ -234,9 +250,9 @@ function renderTests() {
       const res = state.tests[t.id];
       const inBatch = selected.has(t.id);
       const order = el('button', { class: 'btn small' + (inBatch ? ' primary' : ''), disabled: state.status !== 'open' || res ? 'disabled' : null, title: inBatch ? 'Runs all ticked studies together' : null,
-        onclick: () => (selected.has(t.id) ? runBatch() : act(() => orderTest(db, state, t.id))) }, 'Order');
+        onclick: () => (selected.has(t.id) ? runBatch() : act(() => orderTest(db, state, t.id))) }, inBatch ? 'Order batch' : 'Order');
       const tick = PARALLEL.has(t.kind) && !res && state.status === 'open' ? el('input', { type: 'checkbox', class: 'tick', title: 'Run together with other ticked studies', 'aria-label': `Select ${t.name}`, checked: inBatch ? '' : null,
-        onchange: (ev) => { if (ev.target.checked) selected.add(t.id); else selected.delete(t.id); order.classList.toggle('primary', ev.target.checked); order.title = ev.target.checked ? 'Runs all ticked studies together' : ''; renderBatch(); } }) : null;
+        onchange: (ev) => { if (ev.target.checked) selected.add(t.id); else selected.delete(t.id); order.classList.toggle('primary', ev.target.checked); order.textContent = ev.target.checked ? 'Order batch' : 'Order'; order.title = ev.target.checked ? 'Runs all ticked studies together' : ''; renderBatch(); } }) : null;
       const li = el('li', { class: 'test' + (res ? ' done' : '') + (tick ? ' tickable' : '') }, tick, el('span', {}, t.name, el('div', { class: 'meta' }, `${hoursText(t.hours)} · $${t.cost}`)), order);
       if (res) {
         const body = res.text != null ? [res.text] : [termList(res.terms), res.terms.length && res.negs.length ? '. ' : null, res.negs.length ? ['Absent: ', termList(res.negs)] : null];

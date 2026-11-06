@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadTestDb } from './helpers.js';
 import { pickDisease, createCase, orderTest, poolFor, treat } from '../web/engine/case.js';
-import { differentialMap, isCut, organSystems } from '../web/engine/scoring.js';
+import { differentialMap, isCut, organSystems, suggestTests } from '../web/engine/scoring.js';
 import { makeRng } from '../web/engine/rng.js';
 
 const db = loadTestDb();
@@ -47,4 +47,14 @@ test('differential map shrinks as findings accumulate (typical case)', () => {
   const m1 = differentialMap(db, s, pool);
   assert.ok(m0.compatible < pool.length, 'presenting findings already prune');
   assert.ok(m1.compatible <= m0.compatible, `${m1.compatible} <= ${m0.compatible}`);
+});
+
+test('suggestTests proposes unordered studies that split the fitting diseases', () => {
+  const id = pickDisease(db, { tier: 'student', seed: 'coach' });
+  const s = createCase(db, { tier: 'student', seed: 'coach', id });
+  orderTest(db, s, 'ex_vitals');
+  const tips = suggestTests(db, s, poolFor(db, 'student'));
+  assert.ok(tips.length >= 1 && tips.length <= 3);
+  for (const x of tips) { assert.ok(!s.tests[x.id]); assert.ok(x.probes > 0 && x.probes < x.total); }
+  for (let i = 1; i < tips.length; i++) assert.ok(tips[i - 1].gain >= tips[i].gain);
 });

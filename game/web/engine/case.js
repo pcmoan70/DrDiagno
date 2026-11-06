@@ -3,7 +3,7 @@ import { makeRng } from './rng.js';
 import { rankDifferential } from './scoring.js';
 
 export const TUNING = {
-  horizon: { resident: 72, attending: 60, house: 48 }, // game hours until the patient is lost untreated
+  horizon: { student: 96, resident: 72, attending: 60, house: 48 }, // game hours until the patient is lost untreated
   presenting: { min: 2, max: 3 },
   minRealized: 6,
   drainScale: 1.0,
@@ -51,7 +51,8 @@ export function patientFor(db, state) {
 }
 
 export function poolFor(db, tier) {
-  return db.index.filter((e) => e.tiers.includes(tier)).map((e) => e.i);
+  const t = tier === 'student' ? 'resident' : tier; // Student plays Resident cases with help
+  return db.index.filter((e) => e.tiers.includes(t)).map((e) => e.i);
 }
 
 export function pickDisease(db, { tier, seed }) {
@@ -173,7 +174,7 @@ export const CONSULT = { hours: 3, cost: 0, n: 6 };
 export function consult(db, state, suggestFn) {
   if (state.status !== 'open') return [];
   state.spent += CONSULT.cost;
-  advance(db, state, CONSULT.hours);
+  if (state.tier !== 'student') advance(db, state, CONSULT.hours); // free for students
   if (state.status !== 'open') return [];
   const ids = suggestFn(db, state, CONSULT.n).map((r) => r.id);
   state.consults = (state.consults || 0) + 1;
@@ -261,7 +262,7 @@ export function commit(db, state, id) {
     state.score = Math.max(50, Math.round(TUNING.scoreBase * timeFactor - TUNING.costWeight * state.spent + (state.stability > 50 ? 100 : 0) + state.bonus.chips + state.bonus.calibration));
     state.status = 'won';
     log(state, `Diagnosis confirmed: ${d.n}.`);
-  } else if (c >= TUNING.chips) {
+  } else if (c >= TUNING.chips && state.tier !== 'student') { // students never face sudden death
     state.status = 'lost'; state.score = 0;
     log(state, `Wrong diagnosis. The patient had ${d.n}.`);
   } else {

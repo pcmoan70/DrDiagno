@@ -1,8 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadTestDb } from './helpers.js';
-import { pickDisease, createCase, orderTest, orderTests, advance, commit, treat, addCandidate, poolFor, setChips, autoChips, calibration, TUNING } from '../web/engine/case.js';
-import { fit, rankDifferential } from '../web/engine/scoring.js';
+import { pickDisease, createCase, orderTest, orderTests, advance, commit, treat, addCandidate, poolFor, setChips, autoChips, calibration, consult, TUNING } from '../web/engine/case.js';
+import { fit, rankDifferential, suggest } from '../web/engine/scoring.js';
 import { makeRng } from '../web/engine/rng.js';
 
 const db = loadTestDb();
@@ -176,4 +176,19 @@ test('parallel tests: one clock advance by the longest, costs summed, determinis
   orderTests(db, b, ids); // already done: no-op
   assert.equal(b.clock, a.clock); assert.equal(b.spent, a.spent);
   assert.throws(() => orderTests(db, mk(), ['nope']));
+});
+
+test('student tier: resident pool, 96 h, free consult, no sudden death', () => {
+  assert.deepEqual(poolFor(db, 'student'), poolFor(db, 'resident'));
+  const id = pickDisease(db, { tier: 'student', seed: 'stu' });
+  const s = createCase(db, { tier: 'student', seed: 'stu', id });
+  assert.equal(s.H, 96);
+  const before = s.clock;
+  assert.ok(consult(db, s, suggest).length > 0);
+  assert.equal(s.clock, before);
+  const wrong = poolFor(db, 'student').find((x) => x !== id && !db.disease(id).twins.includes(x));
+  addCandidate(s, wrong); setChips(s, wrong, 10); commit(db, s, wrong);
+  assert.equal(s.status, 'open');
+  assert.ok(s.wrong.includes(wrong));
+  assert.equal(s.clock, before + TUNING.wrongHours);
 });

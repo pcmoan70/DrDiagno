@@ -128,9 +128,18 @@ npm run bot -- 200  # greedy bot, 200 cases per tier: win rate, actions, hours, 
 ## Tiers
 | Tier | Pool | Clock |
 |---|---|---|
+| Student | the Resident pool, with help (below) | 96 h |
 | Resident | ≥ 20 findings and a Mayo Clinic symptom text | 72 h |
 | Attending | all 7,086 diseases with ≥ 10 findings | 60 h |
 | House | 2,444 Orphanet rare diseases with onset data | 48 h |
+
+## Student mode
+`#student-<code>` plays Resident cases with help: literature consults cost no time, fit bars and
+"does not explain" are always shown, the differential map starts open, a wrong all-in diagnosis is
+treated like a hedged one (6 h, 20 stability, disease ruled out) instead of ending the case, and a
+Coach panel above the workup lists the three unordered studies that best split the diseases still
+fitting (`scoring.suggestTests()`: a study probes a disease when it can reveal one of its findings
+with p >= 0.5; rank by min(probed, not probed), then by duration). Best scores are kept per tier.
 
 ## Adding a test
 Edit `web/content/tests.json`: `id`, `kind`, `name`, `hours`, `cost`, `reveals` (HPO ids whose

@@ -64,16 +64,31 @@ export function isCut(db, d, state) {
 export const MAP_MIN_FIT = 0.5;
 // Diseases in the pool that still fit: not cut, and explaining at least half the weighted evidence.
 // Findings caused by treatment are left out, so the true disease always stays compatible.
-export function differentialMap(db, state, pool) {
+export function compatibleIds(db, state, pool) {
   const s = { findings: state.findings.filter((f) => f.src !== 'drug'), negatives: state.negatives };
+  return pool.filter((id) => { const d = db.disease(id); return !(isCut(db, d, s) || (s.findings.length && fit(db, d, s).score < MAP_MIN_FIT)); });
+}
+export function differentialMap(db, state, pool) {
   const counts = new Map(organSystems(db).map((r) => [r, 0]));
-  let compatible = 0;
-  for (const id of pool) {
-    const d = db.disease(id);
-    if (isCut(db, d, s) || (s.findings.length && fit(db, d, s).score < MAP_MIN_FIT)) continue;
-    compatible++;
-    for (const r of systemsOf(db, d)) counts.set(r, counts.get(r) + 1);
-  }
+  const ids = compatibleIds(db, state, pool);
+  for (const id of ids) for (const r of systemsOf(db, db.disease(id))) counts.set(r, counts.get(r) + 1);
   const systems = [...counts].map(([id, count]) => ({ id, name: db.name(id).replace(/^Abnormality of (the )?/, ''), count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-  return { total: pool.length, compatible, systems };
+  return { total: pool.length, compatible: ids.length, systems };
+}
+
+// Coach (Student tier): unordered studies that best split the diseases still fitting. A study "probes" a
+// disease when it can reveal one of the disease's frequent findings; the most useful study is the one
+// whose probed / not-probed split is closest to even, so either outcome rules out the most.
+export function suggestTests(db, state, pool, n = 3) {
+  const ids = compatibleIds(db, state, pool);
+  if (!ids.length) return [];
+  const out = [];
+  for (const test of db.tests) {
+    if (state.tests[test.id] || !test.reveals?.length) continue;
+    let probes = 0;
+    for (const id of ids) { const d = db.disease(id); if (d.t.some(([t, p]) => p >= 0.5 && db.under(t, test.reveals))) probes++; }
+    if (probes === 0 || probes === ids.length) continue;
+    out.push({ id: test.id, probes, total: ids.length, gain: Math.min(probes, ids.length - probes) });
+  }
+  return out.sort((a, b) => b.gain - a.gain || db.testById.get(a.id).hours - db.testById.get(b.id).hours).slice(0, n);
 }
