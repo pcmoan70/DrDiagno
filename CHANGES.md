@@ -1,6 +1,10 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: parallel studies. Tick several lab, imaging or specialist studies and run them
+  together: the clock advances by the longest, costs add up (`orderTests()`, 19 node tests).
+- Dr. Diagno: literature consult results now open in a closable pane with Add / Add all buttons
+  instead of being pushed straight into the differential.
 - Dr. Diagno: clicking a disease name (differential, watch-along, debrief) opens a findings table
   with likelihood per finding (percentage, bar, HPO frequency class, excluded findings) and a
   column marking the patient's present/absent findings (in play: Resident or after a consult).

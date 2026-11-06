@@ -75,6 +75,10 @@
       <button class="btn" id="btn-consult" title="Rank the whole library against the findings so far. Costs 3 hours.">Consult the literature (3 h)</button>
       <button class="btn" id="chips-auto" title="Put the chips back where the chart's fit would place them" hidden>Chips: follow the chart</button>
     </div>
+    <div class="consult-pane" id="consult-pane" hidden>
+      <div class="pane-head"><h3>Literature suggests</h3><button class="btn small" id="consult-add-all">Add all</button><button class="btn small" id="consult-close" title="Close" aria-label="Close suggestions">×</button></div>
+      <ul class="dx-list" id="consult-list"></ul>
+    </div>
     <p class="hint chips-pool" id="chips-pool"></p>
     <ul class="dx-list" id="dx-list"></ul>
     <p class="hint" id="dx-hint">Add candidates by name, or consult the literature. Spread your 10 confidence chips over the candidates: a disease needs 5 to be diagnosed, 10 is all in. Chips on the right answer through the case earn a bonus. Click a disease name for its findings and how often they occur.</p>
@@ -88,6 +92,12 @@
 
   <section class="col workup">
     <h2>Workup</h2>
+    <p class="hint">Tick several laboratory, imaging or specialist studies to run them together: the clock advances by the longest, costs add up.</p>
+    <div class="batch" id="batch" hidden>
+      <span class="meta" id="batch-sum"></span>
+      <button class="btn small primary" id="batch-run">Run together</button>
+      <button class="btn small" id="batch-clear">Clear</button>
+    </div>
     <div id="tests"></div>
   </section>
 </main>

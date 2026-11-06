@@ -64,6 +64,12 @@ findings (HPO term or lay name, `engine/search.js`), mark them present or absent
 the whole library is ranked live with the same `fit()` used in play. The list is kept in the URL
 (`#watch/HP:0001250,-HP:0000819`, minus = absent) so a link reopens it.
 
+## Parallel studies
+Laboratory, imaging and specialist studies carry a checkbox. Ticked studies run together from a
+sticky bar that shows their count, duration and cost: the clock advances once, by the longest
+study, and costs add up (`orderTests()`; results are produced in catalog order, so the batch is
+deterministic whatever the click order). History and examination items stay one at a time.
+
 ## Disease profile
 Every disease name (differential, watch-along ranking, debrief) opens a table of the disease's
 annotated findings with their likelihood: the share of patients who show the finding, as a
@@ -87,7 +93,8 @@ npm run bot -- 200  # greedy bot, 200 cases per tier: win rate, actions, hours, 
 4. The remaining patient-visible findings appear over the clock, non-specific first.
 5. Lab/imaging findings only appear through tests. Each test reveals at most 3 findings.
 6. Fit of a candidate = IDF-weighted share of findings it explains, minus pertinent negatives.
-7. Consult (3 h) ranks the whole library by fit. Treat uses PrimeKG indications; wrong drugs
+7. Consult (3 h) ranks the whole library by fit; the six best appear in a closable pane with Add
+   buttons (and Add all), so the differential stays the player's own list. Treat uses PrimeKG indications; wrong drugs
    cost stability or add side-effect findings. Commit ends the case; twins (near-identical
    subtypes) count as correct.
 

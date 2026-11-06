@@ -1,6 +1,6 @@
 import { loadDb } from './engine/db.js';
-import { pickDisease, createCase, orderTest, consult, addCandidate, removeCandidate, treat, commit, patientFor, poolFor, CONSULT, setChips, autoChips, TUNING } from './engine/case.js';
-import { rankDifferential, suggest, differentialMap } from './engine/scoring.js';
+import { pickDisease, createCase, orderTest, orderTests, consult, addCandidate, removeCandidate, treat, commit, patientFor, poolFor, CONSULT, setChips, autoChips, TUNING } from './engine/case.js';
+import { rankDifferential, suggest, differentialMap, fit } from './engine/scoring.js';
 import { randomCode } from './engine/rng.js';
 import { searchTerms } from './engine/search.js';
 
@@ -20,7 +20,10 @@ const KIND_NAMES = { history: 'History', exam: 'Examination', lab: 'Laboratory',
 const SRC = { presenting: 'presenting', progression: 'developed', drug: 'after treatment' };
 
 let db, state, tier, seed, mapPrev; // mapPrev: compatible count at the last render, for the 'ruled out' toast
+let suggestions = null; // last literature consult: [{id, score, ...}] until the pane is closed
 const openKinds = new Set(['history']); // expanded workup sections, kept across re-renders
+const selected = new Set(); // tests ticked to run together
+const PARALLEL = new Set(['lab', 'imaging', 'special']); // studies that can run at the same time
 const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage unavailable */ } } };
 
 function show(id) { for (const s of document.querySelectorAll('main.screen')) s.hidden = s.id !== id; $('hud').hidden = id !== 'screen-play'; }
@@ -65,7 +68,7 @@ function startCase(t, s) {
   state = createCase(db, { tier, seed, id });
   state.patient = patientFor(db, state);
   $('hud-code').textContent = `${tier}-${seed}`;
-  $('dx-search').value = '';
+  $('dx-search').value = ''; selected.clear(); suggestions = null;
   mapPrev = null; $('map').hidden = tier === 'house'; $('map').open = tier === 'resident';
   show('screen-play');
   renderAll();
@@ -149,6 +152,7 @@ function renderDifferential() {
   $('chips-pool').textContent = ranked.length ? `${TUNING.chips - placed} of ${TUNING.chips} chips unplaced · ${state.chipsManual ? 'your call' : 'following the chart'}` : '';
   $('chips-auto').hidden = !state.chipsManual || !ranked.length;
   $('dx-fit-note').hidden = showFit || !ranked.length;
+  renderConsult(showFit);
   for (const r of ranked) {
     const d = db.disease(r.id);
     const drugs = (db.drugsByDisease[r.id] || [[]])[0];
@@ -170,6 +174,21 @@ function renderDifferential() {
   }
 }
 
+function renderConsult(showFit) {
+  $('consult-pane').hidden = !suggestions;
+  if (!suggestions) return;
+  const list = $('consult-list'); list.replaceChildren();
+  for (const r of suggestions) {
+    const d = db.disease(r.id);
+    const added = state.differential.includes(r.id), out = state.wrong.includes(r.id);
+    list.append(el('li', { class: 'dx' }, nameLink(d, showFit ? { ...state, label: 'This patient' } : null),
+      el('button', { class: 'btn small', disabled: added || out || state.status !== 'open' ? 'disabled' : null, onclick: () => { addCandidate(state, r.id); autoChips(db, state); renderDifferential(); } }, out ? 'Ruled out' : added ? 'Added' : 'Add'),
+      el('div', { class: 'fit' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.score)}%` })), el('span', {}, `explains ${r.explained} of ${r.total}`))));
+  }
+}
+$('consult-close').onclick = () => { suggestions = null; renderDifferential(); };
+$('consult-add-all').onclick = () => { if (state.status !== 'open') return; for (const r of suggestions || []) addCandidate(state, r.id); autoChips(db, state); renderDifferential(); };
+
 function renderTests() {
   const root = $('tests'); root.replaceChildren();
   const groups = new Map();
@@ -178,7 +197,9 @@ function renderTests() {
     const ul = el('ul', { class: 'test-list' });
     for (const t of tests) {
       const res = state.tests[t.id];
-      const li = el('li', { class: 'test' + (res ? ' done' : '') }, el('span', {}, t.name, el('div', { class: 'meta' }, `${t.hours < 1 ? Math.round(t.hours * 60) + ' min' : t.hours + ' h'} · $${t.cost}`)),
+      const tick = PARALLEL.has(t.kind) && !res && state.status === 'open' ? el('input', { type: 'checkbox', class: 'tick', title: 'Run together with other ticked studies', 'aria-label': `Select ${t.name}`, checked: selected.has(t.id) ? '' : null,
+        onchange: (ev) => { if (ev.target.checked) selected.add(t.id); else selected.delete(t.id); renderBatch(); } }) : null;
+      const li = el('li', { class: 'test' + (res ? ' done' : '') + (tick ? ' tickable' : '') }, tick, el('span', {}, t.name, el('div', { class: 'meta' }, `${hoursText(t.hours)} · $${t.cost}`)),
         el('button', { class: 'btn small', disabled: state.status !== 'open' || res ? 'disabled' : null, onclick: () => act(() => orderTest(db, state, t.id)) }, 'Order'));
       if (res) {
         const text = (res.text ?? [res.terms.map((x) => db.name(x)).join('; '), res.negs.length ? 'Absent: ' + res.negs.map((x) => db.name(x)).join('; ') : ''].filter(Boolean).join('. ')) + (res.partial ? ' (more may emerge)' : '');
@@ -191,7 +212,18 @@ function renderTests() {
       el('summary', {}, el('h3', {}, KIND_NAMES[kind] || kind), el('span', { class: 'meta' }, done ? `${done} of ${tests.length} ordered` : `${tests.length} tests`)), ul);
     root.append(sec);
   }
+  renderBatch();
 }
+
+const hoursText = (h) => (h < 1 ? Math.round(h * 60) + ' min' : h + ' h');
+function renderBatch() {
+  for (const id of selected) if (state.tests[id]) selected.delete(id);
+  const tests = db.tests.filter((t) => selected.has(t.id));
+  $('batch').hidden = tests.length === 0;
+  if (tests.length) $('batch-sum').textContent = `${tests.length} ${tests.length === 1 ? 'study' : 'studies'} · ${hoursText(Math.max(...tests.map((t) => t.hours)))} · $${tests.reduce((a, t) => a + t.cost, 0).toLocaleString()}`;
+}
+$('batch-run').onclick = () => { const ids = [...selected]; selected.clear(); act(() => orderTests(db, state, ids)); };
+$('batch-clear').onclick = () => { selected.clear(); renderTests(); };
 
 function act(fn) { if (state.status !== 'open') return; fn(); autoChips(db, state); renderAll(); }
 
@@ -304,7 +336,7 @@ wireSearch('w-search', 'w-suggest', (q) => searchTerms(db, q, 10, new Set([...wa
   (id) => { watch.findings.push({ t: id }); watchChanged(); });
 $('w-clear').onclick = () => { watch.findings = []; watch.negatives = []; watchChanged(); };
 $('w-copy').onclick = async () => { try { await navigator.clipboard.writeText(location.href); $('w-copy').textContent = 'Copied'; setTimeout(() => { $('w-copy').textContent = 'Copy link'; }, 1500); } catch { prompt('Link', location.href); } };
-$('btn-consult').onclick = () => act(() => { for (const id of consult(db, state, suggest)) addCandidate(state, id); });
+$('btn-consult').onclick = () => act(() => { const ids = consult(db, state, suggest); if (ids.length) suggestions = ids.map((id) => fit(db, db.disease(id), state)); });
 $('chips-auto').onclick = () => { state.chipsManual = false; autoChips(db, state); renderDifferential(); };
 
 boot().catch((e) => { $('screen-loading').innerHTML = `<p class="loading">Could not load the game data (${e.message}). The data bundles in <code>data/</code> are built with <code>game/build</code>.</p>`; });

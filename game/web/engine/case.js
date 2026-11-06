@@ -123,12 +123,23 @@ export function advance(db, state, hours) {
   return state;
 }
 
-export function orderTest(db, state, testId) {
-  if (state.status !== 'open' || state.tests[testId]) return state;
-  const test = db.testById.get(testId);
-  if (!test) throw new Error(`unknown test ${testId}`);
-  state.spent += test.cost;
-  advance(db, state, test.hours);
+export function orderTest(db, state, testId) { return orderTests(db, state, [testId]); }
+
+// Several tests run in parallel: the clock advances once, by the longest test; costs add up.
+// Results are produced in catalog order so a batch is deterministic whatever the click order.
+export function orderTests(db, state, ids) {
+  if (state.status !== 'open') return state;
+  const tests = db.tests.filter((t) => ids.includes(t.id) && !state.tests[t.id]);
+  for (const id of ids) if (!db.testById.has(id)) throw new Error(`unknown test ${id}`);
+  if (!tests.length) return state;
+  state.spent += tests.reduce((a, t) => a + t.cost, 0);
+  advance(db, state, Math.max(...tests.map((t) => t.hours)));
+  for (const test of tests) runTest(db, state, test);
+  return state;
+}
+
+function runTest(db, state, test) {
+  const testId = test.id;
   const d = db.disease(state.id);
   const res = { at: state.clock, terms: [], negs: [], text: null };
   if (test.special === 'onset') {
@@ -155,7 +166,6 @@ export function orderTest(db, state, testId) {
     state.tests[testId] = res;
     log(state, `${test.name}: ${res.text ?? res.terms.map((t) => db.name(t)).join('; ') + (res.negs.length ? ' Absent: ' + res.negs.map((t) => db.name(t)).join('; ') : '')}`);
   }
-  return state;
 }
 
 export const CONSULT = { hours: 3, cost: 0, n: 6 };

@@ -81,6 +81,8 @@ flowchart LR
   web -->|push to main| GH[GitHub Pages workflow]
 ```
 
+- `orderTests(db, state, ids)` runs several studies in one clock advance (longest duration, summed cost);
+  `orderTest` is the one-study case. The UI offers this for lab, imaging and specialist studies.
 - Engine functions are pure over `(db, state)` and tested with `node --test` (`game/tests`, outside the served folder).
 - `scoring.js` also serves the differential map (`differentialMap()`: tier diseases not hard-excluded and
   explaining >= half the weighted evidence, per HPO organ system) and `search.js` the watch-along term search.

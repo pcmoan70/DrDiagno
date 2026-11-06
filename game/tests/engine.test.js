@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadTestDb } from './helpers.js';
-import { pickDisease, createCase, orderTest, advance, commit, treat, addCandidate, poolFor, setChips, autoChips, calibration, TUNING } from '../web/engine/case.js';
+import { pickDisease, createCase, orderTest, orderTests, advance, commit, treat, addCandidate, poolFor, setChips, autoChips, calibration, TUNING } from '../web/engine/case.js';
 import { fit, rankDifferential } from '../web/engine/scoring.js';
 import { makeRng } from '../web/engine/rng.js';
 
@@ -160,4 +160,20 @@ test('1000 random cases run to completion without errors', () => {
     if (s.status === 'open') { const pick = rng() < 0.5 ? s.id : s.differential[1]; setChips(s, pick, 10); commit(db, s, pick); }
     assert.ok(['won', 'lost'].includes(s.status));
   }
+});
+
+test('parallel tests: one clock advance by the longest, costs summed, deterministic', () => {
+  const mk = () => { const id = pickDisease(db, { tier: 'resident', seed: 'batch' }); return createCase(db, { tier: 'resident', seed: 'batch', id }); };
+  const ids = ['lab_cbc', 'lab_coag', 'img_ct'].filter((x) => db.testById.has(x));
+  assert.ok(ids.length >= 2);
+  const tests = ids.map((x) => db.testById.get(x));
+  const a = mk(); orderTests(db, a, ids);
+  assert.equal(a.clock, Math.max(...tests.map((t) => t.hours)));
+  assert.equal(a.spent, tests.reduce((n, t) => n + t.cost, 0));
+  for (const x of ids) assert.ok(a.tests[x], x);
+  const b = mk(); orderTests(db, b, ids.slice().reverse());
+  assert.deepEqual(b.tests, a.tests); // click order does not matter
+  orderTests(db, b, ids); // already done: no-op
+  assert.equal(b.clock, a.clock); assert.equal(b.spent, a.spent);
+  assert.throws(() => orderTests(db, mk(), ['nope']));
 });
