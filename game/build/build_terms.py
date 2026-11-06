@@ -1,5 +1,6 @@
 """terms.json: every non-obsolete HPO term with name, layperson synonym, parents and IDF.
-IDF is computed over the diseases in phenotype.hpoa (distinct term per disease, aspect P)."""
+IDF is computed over the diseases in phenotype.hpoa (distinct term per disease, aspect P).
+defs.json: the HPO definition of every such term that has one (shown in the term balloons)."""
 import json, math, collections
 import sys, os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import HPO_DIR, OUT, parse_obo
@@ -30,4 +31,7 @@ for tid, t in hp.items():
 OUT.mkdir(parents=True, exist_ok=True)
 with open(OUT / "terms.json", "w", encoding="utf-8") as f:
     json.dump({"N": N, "t": terms}, f, ensure_ascii=False, separators=(",", ":"))
-print(f"terms.json: {len(terms)} terms, {sum(1 for v in terms.values() if v[1])} with lay names, N={N} diseases")
+defs = {tid: hp[tid]["def"] for tid in terms if hp[tid]["def"]}
+with open(OUT / "defs.json", "w", encoding="utf-8") as f:
+    json.dump(defs, f, ensure_ascii=False, separators=(",", ":"))
+print(f"terms.json: {len(terms)} terms, {sum(1 for v in terms.values() if v[1])} with lay names, N={N} diseases; defs.json: {len(defs)} definitions")

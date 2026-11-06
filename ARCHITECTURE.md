@@ -64,7 +64,7 @@ flowchart LR
     PKG[PrimeKG]
   end
   subgraph build[game/build, python3 -I]
-    BT[build_terms.py] --> TJ[terms.json]
+    BT[build_terms.py] --> TJ[terms.json + defs.json]
     BD[build_diseases.py] --> DJ[diseases/index.json + 16 shards]
     BR[build_drugs.py] --> RJ[drugs.json]
     BC[build_credits.py] --> CJ[credits.json]
@@ -93,5 +93,7 @@ flowchart LR
   opened from any disease name). Added 2026-11-06.
 - `game/tests/bot.js` plays hundreds of cases with a greedy strategy to measure balance.
 - `web/data/` is derived but versioned (Pages builds from the repo alone); `web/content/tests.json` is hand-curated.
+- Term balloons: elements with `data-term` get a fixed-position tooltip (lay name, HPO name, definition from
+  `data/defs.json`, fetched in the background after boot) via document-level mouseover/focusin delegation.
 - `game/web/` is the deployment unit and contains only what the browser loads; raw data (drive), build
   scripts (`game/build`) and tests (`game/tests`) live outside it, and the Pages workflow checks that.

@@ -1,6 +1,9 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: term balloons. Hovering or focusing any finding (chart, test results, map, watch-along,
+  disease profile, "does not explain" lists) shows its everyday name, HPO name and HPO definition.
+  New bundle `data/defs.json` (17,432 definitions) built by build_terms.py, loaded in the background.
 - Root README now describes the game for visitors of the GitHub page; the dataset-collection
   README moved to `docs/DATASETS.md`. Differential-map count made bold and accent-coloured.
 - Dr. Diagno deployed to GitHub Pages: https://pcmoan70.github.io/DrDiagno/ . The repository was made

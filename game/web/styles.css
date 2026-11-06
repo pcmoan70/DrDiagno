@@ -151,3 +151,7 @@ input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .profile .chip.found { outline: 2px solid var(--fit); }
 .def { color: var(--muted); font-size: .9rem; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+.term, .result [data-term], .symptoms [data-term], .map .sys[data-term] { text-decoration: underline dotted; text-decoration-color: var(--muted); text-underline-offset: 2px; cursor: help; }
+.chip[data-term] { cursor: help; } .chip.click[data-term] { cursor: pointer; }
+.tip { position: fixed; z-index: 30; max-width: 340px; background: var(--fg); color: var(--panel); padding: 8px 11px; border-radius: 6px; font-size: .82rem; line-height: 1.35; box-shadow: 0 6px 20px rgba(0, 0, 0, .25); pointer-events: none; }
+.tip .syn { opacity: .75; font-size: .76rem; } .tip p { margin: 4px 0 0; } .tip p.syn { margin-top: 6px; }

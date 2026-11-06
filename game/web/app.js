@@ -8,7 +8,7 @@ const $ = (id) => document.getElementById(id);
 const el = (tag, attrs = {}, ...kids) => {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) { if (k === 'class') e.className = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else if (v !== null && v !== undefined) e.setAttribute(k, v); }
-  for (const k of kids.flat()) if (k !== null && k !== undefined) e.append(k.nodeType ? k : document.createTextNode(String(k)));
+  for (const k of kids.flat(Infinity)) if (k !== null && k !== undefined) e.append(k.nodeType ? k : document.createTextNode(String(k)));
   return e;
 };
 const TIERS = [
@@ -37,6 +37,7 @@ async function boot() {
     $('load-msg').textContent = `Could not load the disease library (${e.message}). The data bundles must be built into web/data/ and the folder served over HTTP.`;
     throw e;
   }
+  loadDefs(); // definitions for the term balloons arrive in the background
   renderTitle();
   window.addEventListener('hashchange', route);
   route();
@@ -95,7 +96,7 @@ function showDisease(id, obs) {
     el('tbody', {}, rows.map((r) => {
       const m = mark(r.t);
       return el('tr', { class: r.cls === 'Excluded' ? 'excluded' : '' },
-        el('td', {}, db.label(r.t), db.label(r.t) !== db.name(r.t) ? el('span', { class: 'syn' }, db.name(r.t)) : null),
+        el('td', { 'data-term': r.t }, db.label(r.t), db.label(r.t) !== db.name(r.t) ? el('span', { class: 'syn' }, db.name(r.t)) : null),
         el('td', { class: 'freq' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.p)}%` })), el('span', {}, `${Math.round(100 * r.p)}%`), el('span', { class: 'syn' }, r.cls)),
         obs ? el('td', { class: 'obs ' + (m || '') }, m === 'present' ? '✓ present' : m === 'absent' ? '✗ absent' : '') : null);
     })));
@@ -104,6 +105,28 @@ function showDisease(id, obs) {
   $('disease').hidden = false;
 }
 document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') $('disease').hidden = true; });
+
+// ---- term balloons: hovering or focusing any element with data-term shows the lay name, the HPO name and definition.
+let defs = null, defsLoading = null;
+function loadDefs() { return defsLoading ||= fetch('data/defs.json').then((r) => r.json()).then((d) => { defs = d; }).catch(() => { defs = {}; }); }
+const term = (t) => el('span', { class: 'term', 'data-term': t }, db.label(t));
+const termList = (ids) => ids.flatMap((t, i) => [i ? ', ' : null, term(t)]);
+function showTip(target) {
+  const t = target.dataset.term;
+  if (!db.terms[t]) return;
+  const tip = $('tip'), lay = db.lay(t), name = db.name(t);
+  tip.replaceChildren(el('div', {}, el('strong', {}, lay || name), lay ? el('span', { class: 'syn' }, ` ${name}`) : null,
+    el('p', {}, defs ? defs[t] || 'No definition in the HPO.' : 'Loading definition…'), target.dataset.extra ? el('p', { class: 'syn' }, target.dataset.extra) : null));
+  tip.hidden = false; tip._for = target;
+  const r = target.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+  tip.style.left = `${Math.min(Math.max(8, r.left), window.innerWidth - w - 8)}px`;
+  tip.style.top = `${r.bottom + h + 14 > window.innerHeight ? Math.max(8, r.top - h - 6) : r.bottom + 6}px`;
+  if (!defs) loadDefs().then(() => { if (tip._for === target) showTip(target); });
+}
+function hideTip() { const tip = $('tip'); tip.hidden = true; tip._for = null; }
+for (const evName of ['mouseover', 'focusin']) document.addEventListener(evName, (ev) => { const x = ev.target.closest?.('[data-term]'); if (x) showTip(x); else hideTip(); });
+document.addEventListener('focusout', hideTip);
+window.addEventListener('scroll', hideTip, true);
 
 function renderAll() { const y = window.scrollY; renderHud(); renderPatient(); renderDifferential(); renderMap(); renderTests(); window.scrollTo(0, y); if (state.status !== 'open') renderDebrief(); }
 
@@ -119,8 +142,8 @@ function renderMap() {
   const list = $('map-list'); list.replaceChildren();
   for (const x of m.systems) {
     const probes = db.tests.filter((t) => t.reveals?.some((r) => db.ancestors(r).has(x.id))).map((t) => t.name);
-    list.append(el('li', { class: x.count ? '' : 'cut', title: probes.length ? `Probed by: ${probes.join(', ')}` : 'No test targets this system directly' },
-      el('span', { class: 'sys' }, x.name), el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * x.count / max)}%` })), el('span', { class: 'n' }, x.count)));
+    list.append(el('li', { class: x.count ? '' : 'cut' },
+      el('span', { class: 'sys', 'data-term': x.id, 'data-extra': probes.length ? `Probed by: ${probes.join(', ')}` : 'No test targets this system directly.' }, x.name), el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * x.count / max)}%` })), el('span', { class: 'n' }, x.count)));
   }
 }
 
@@ -136,8 +159,8 @@ function renderPatient() {
   const p = state.patient;
   $('persona').textContent = `${p.name}, ${p.age} ${p.sex}. ${TIERS.find((t) => t.id === tier).name} case.`;
   const list = $('findings'); list.replaceChildren();
-  for (const f of state.findings) list.append(el('li', { class: 'chip', title: db.name(f.t) + ' (' + f.t + ')' }, db.label(f.t), el('span', { class: 'src' }, SRC[f.src] || db.testById.get(f.src)?.name || f.src)));
-  for (const n of state.negatives) list.append(el('li', { class: 'chip neg', title: 'Absent: ' + db.name(n.t) }, db.label(n.t)));
+  for (const f of state.findings) list.append(el('li', { class: 'chip', 'data-term': f.t }, db.label(f.t), el('span', { class: 'src' }, SRC[f.src] || db.testById.get(f.src)?.name || f.src)));
+  for (const n of state.negatives) list.append(el('li', { class: 'chip neg', 'data-term': n.t, 'data-extra': 'Absent in this patient.' }, db.label(n.t)));
   const log = $('log'); log.replaceChildren();
   for (const l of state.log.slice().reverse()) log.append(el('li', {}, el('span', { class: 'at' }, clockText(l.at)), el('span', {}, l.text)));
 }
@@ -170,7 +193,7 @@ function renderDifferential() {
       el('span', { class: 'meta' }, `${c}/${TUNING.chips}`));
     list.append(el('li', { class: 'dx' }, nameLink(d, showFit ? { ...state, label: 'This patient' } : null), ops, chips,
       showFit ? el('div', { class: 'fit' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.score)}%` })), el('span', {}, `explains ${r.explained} of ${r.total}`)) : null,
-      showFit && r.unexplained.length ? el('div', { class: 'why' }, 'Does not explain: ' + r.unexplained.slice(0, 4).map((t) => db.label(t)).join(', ') + (r.unexplained.length > 4 ? '…' : '')) : null));
+      showFit && r.unexplained.length ? el('div', { class: 'why' }, 'Does not explain: ', termList(r.unexplained.slice(0, 4)), r.unexplained.length > 4 ? '…' : null) : null));
   }
 }
 
@@ -202,8 +225,8 @@ function renderTests() {
       const li = el('li', { class: 'test' + (res ? ' done' : '') + (tick ? ' tickable' : '') }, tick, el('span', {}, t.name, el('div', { class: 'meta' }, `${hoursText(t.hours)} · $${t.cost}`)),
         el('button', { class: 'btn small', disabled: state.status !== 'open' || res ? 'disabled' : null, onclick: () => act(() => orderTest(db, state, t.id)) }, 'Order'));
       if (res) {
-        const text = (res.text ?? [res.terms.map((x) => db.name(x)).join('; '), res.negs.length ? 'Absent: ' + res.negs.map((x) => db.name(x)).join('; ') : ''].filter(Boolean).join('. ')) + (res.partial ? ' (more may emerge)' : '');
-        li.append(el('div', { class: 'result ' + (res.terms.length || res.confirms ? 'pos' : 'neg') }, text));
+        const body = res.text != null ? [res.text] : [termList(res.terms), res.terms.length && res.negs.length ? '. ' : null, res.negs.length ? ['Absent: ', termList(res.negs)] : null];
+        li.append(el('div', { class: 'result ' + (res.terms.length || res.confirms ? 'pos' : 'neg') }, body, res.partial ? ' (more may emerge)' : null));
       }
       ul.append(li);
     }
@@ -316,7 +339,7 @@ function watchChanged() {
 }
 function renderWatch() {
   const list = $('w-findings'); list.replaceChildren();
-  const chip = (t, neg) => el('li', { class: 'chip click' + (neg ? ' neg' : ''), title: `${db.name(t)} (${t}). Click to mark ${neg ? 'present' : 'absent'}.`,
+  const chip = (t, neg) => el('li', { class: 'chip click' + (neg ? ' neg' : ''), 'data-term': t, 'data-extra': `Click to mark ${neg ? 'present' : 'absent'}.`,
     onclick: () => { if (neg) { watch.negatives = watch.negatives.filter((n) => n.t !== t); watch.findings.push({ t }); } else { watch.findings = watch.findings.filter((f) => f.t !== t); watch.negatives.push({ t }); } watchChanged(); } },
     db.label(t), el('span', { class: 'rm', title: 'Remove', onclick: (ev) => { ev.stopPropagation(); watch.findings = watch.findings.filter((f) => f.t !== t); watch.negatives = watch.negatives.filter((n) => n.t !== t); watchChanged(); } }, '×'));
   for (const f of watch.findings) list.append(chip(f.t, false));
@@ -328,7 +351,7 @@ function renderWatch() {
     const d = db.disease(r.id);
     out.append(el('li', { class: 'dx' }, nameLink(d, { ...watch, label: 'Entered' }), el('span', { class: 'meta' }, d.prev ? d.prev[1] : ''),
       el('div', { class: 'fit' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.score)}%` })), el('span', {}, `explains ${r.explained} of ${r.total}`)),
-      r.unexplained.length ? el('div', { class: 'why' }, 'Does not explain: ' + r.unexplained.slice(0, 4).map((t) => db.label(t)).join(', ') + (r.unexplained.length > 4 ? '…' : '')) : null,
+      r.unexplained.length ? el('div', { class: 'why' }, 'Does not explain: ', termList(r.unexplained.slice(0, 4)), r.unexplained.length > 4 ? '…' : null) : null,
       d.def ? el('p', { class: 'def' }, d.def.length > 220 ? d.def.slice(0, 220) + '…' : d.def) : null));
   }
 }

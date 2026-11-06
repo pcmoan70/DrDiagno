@@ -17,7 +17,8 @@ library with decoys that share most of the picture, 60 hours. House is rare dise
 openers and 48 hours. Everybody lies.
 
 **Read the chart.** The patient presents with two or three common complaints. More findings
-surface as the clock runs, the non-specific ones first.
+surface as the clock runs, the non-specific ones first. Hover any finding for a plain-language
+name and its precise definition.
 
 **Work the patient up.** History and examination items take minutes. Laboratory, imaging and
 specialist studies take hours and cost money; tick several to run them together, the clock

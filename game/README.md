@@ -21,7 +21,7 @@ a claude.ai artifact) takes that folder alone. Raw datasets stay on the drive, b
 Needs the datasets on the drive (`DIAG_DATA_ROOT`, default `/media/pc/ext4TB/diagnosis_data`), numpy and scipy.
 ```bash
 cd game/build
-python3 -I build_terms.py      # terms.json: HPO terms, lay names, parents, IDF
+python3 -I build_terms.py      # terms.json: HPO terms, lay names, parents, IDF; defs.json: HPO definitions
 python3 -I build_diseases.py   # diseases/index.json + 16 shards: profiles, onset, prevalence, decoys
 python3 -I build_drugs.py      # drugs.json: PrimeKG indications, contraindications, side effects
 python3 -I build_credits.py    # credits.json
@@ -75,6 +75,14 @@ Laboratory, imaging and specialist studies carry a checkbox. Ticked studies run 
 sticky bar that shows their count, duration and cost: the clock advances once, by the longest
 study, and costs add up (`orderTests()`; results are produced in catalog order, so the batch is
 deterministic whatever the click order). History and examination items stay one at a time.
+
+## Term balloons
+Hovering (or keyboard-focusing) any finding shows a balloon with its everyday name, the HPO name
+and the HPO definition from `data/defs.json` (17,432 definitions, 0.7 MB gzipped, loaded in the
+background after the game starts). Findings carry `data-term`; an optional `data-extra` adds a
+line, used for pertinent negatives, the organ-system map (which studies probe it) and watch-along
+chips. Covered: patient findings, test results, "does not explain" lists, the map, watch-along
+chips and the disease profile table.
 
 ## Disease profile
 Every disease name (differential, watch-along ranking, debrief) opens a table of the disease's
