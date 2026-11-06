@@ -114,7 +114,7 @@ input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .map summary { display: flex; align-items: baseline; gap: 10px; padding: 10px 0; cursor: pointer; list-style: none; }
 .map summary::-webkit-details-marker { display: none; }
 .map summary::before { content: '▸'; color: var(--muted); font-size: .8rem; } .map[open] summary::before { content: '▾'; }
-.map summary h3 { margin: 0; flex: 1; } .map summary .meta { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+.map summary h3 { margin: 0; flex: 1; } .map summary .meta { font-size: .95rem; font-weight: 700; color: var(--accent); }
 .map-list { list-style: none; padding: 0; margin: 6px 0 0; display: grid; grid-template-columns: 1fr; gap: 3px; font-size: .78rem; }
 .map-list li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) 3ch; gap: 8px; align-items: center; }
 .map-list .sys { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

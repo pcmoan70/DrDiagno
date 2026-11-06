@@ -1,6 +1,8 @@
 # CHANGES
 
 ## 2026-11-06
+- Root README now describes the game for visitors of the GitHub page; the dataset-collection
+  README moved to `docs/DATASETS.md`. Differential-map count made bold and accent-coloured.
 - Dr. Diagno deployed to GitHub Pages: https://pcmoan70.github.io/DrDiagno/ . The repository was made
   public (required by the plan) and the built data bundles (`game/web/data`, 15 MB) are now versioned
   because Pages builds from the repository alone.
