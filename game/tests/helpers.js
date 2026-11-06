@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createDb } from '../engine/db.js';
+import { createDb } from '../web/engine/db.js';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'web');
 const read = (p) => JSON.parse(fs.readFileSync(path.join(root, p), 'utf8'));
 
 export function loadTestDb() {

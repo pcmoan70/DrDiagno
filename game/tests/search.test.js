@@ -1,8 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadTestDb } from './helpers.js';
-import { searchTerms } from '../engine/search.js';
-import { suggest } from '../engine/scoring.js';
+import { searchTerms } from '../web/engine/search.js';
+import { suggest } from '../web/engine/scoring.js';
 
 const db = loadTestDb();
 

@@ -1,9 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadTestDb } from './helpers.js';
-import { pickDisease, createCase, orderTest, poolFor, treat } from '../engine/case.js';
-import { differentialMap, isCut, organSystems } from '../engine/scoring.js';
-import { makeRng } from '../engine/rng.js';
+import { pickDisease, createCase, orderTest, poolFor, treat } from '../web/engine/case.js';
+import { differentialMap, isCut, organSystems } from '../web/engine/scoring.js';
+import { makeRng } from '../web/engine/rng.js';
 
 const db = loadTestDb();
 

@@ -70,7 +70,7 @@ flowchart LR
     BC[build_credits.py] --> CJ[credits.json]
     V[validate.py] --> REP[data_report.md]
   end
-  subgraph web[game/web, static ES modules]
+  subgraph web[game/web, static ES modules = the deployed folder]
     IDX[index.html + styles.css] --> APP[app.js]
     APP --> ENG[engine: rng, db, case, scoring, search]
     ENG --> DATA[data/*.json]
@@ -81,12 +81,14 @@ flowchart LR
   web -->|push to main| GH[GitHub Pages workflow]
 ```
 
-- Engine functions are pure over `(db, state)` and tested with `node --test` (`game/web/tests`).
+- Engine functions are pure over `(db, state)` and tested with `node --test` (`game/tests`, outside the served folder).
 - `scoring.js` also serves the differential map (`differentialMap()`: tier diseases not hard-excluded and
   explaining >= half the weighted evidence, per HPO organ system) and `search.js` the watch-along term search.
 - Confidence chips live in `state.chips` (`setChips`, `autoChips`, `calibration` in `case.js`); `commit()` needs
   5 chips and treats a hedged wrong call as a 6 h / 20-stability setback instead of a loss.
 - Screens: title, play (patient / differential with chips and map / workup), watch-along (`#watch/...`,
   state in the URL), debrief modal. Added 2026-11-06.
-- `tests/bot.js` plays hundreds of cases with a greedy strategy to measure balance.
+- `game/tests/bot.js` plays hundreds of cases with a greedy strategy to measure balance.
 - `web/data/` is derived and gitignored; `web/content/tests.json` is hand-curated and versioned.
+- `game/web/` is the deployment unit and contains only what the browser loads; raw data (drive), build
+  scripts (`game/build`) and tests (`game/tests`) live outside it, and the Pages workflow checks that.

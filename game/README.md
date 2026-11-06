@@ -10,9 +10,12 @@ Updated 2026-11-06. Plan: `../tasks/house_game_plan_20261105.md`.
 ## Layout
 ```
 build/      Python scripts that compile the drive data into JSON bundles (run with python3 -I)
-web/        the site: index.html, app.js, styles.css, engine/, content/tests.json, data/ (built)
-web/tests/  node --test suite and the balance bot
+tests/      node --test suite and the balance bot (package.json lives here too)
+web/        the site, and nothing else: index.html, app.js, styles.css, engine/, content/tests.json, data/ (built)
 ```
+`web/` is the deployment unit: whatever serves or publishes the game (GitHub Pages, a home server,
+a claude.ai artifact) takes that folder alone. Raw datasets stay on the drive, build scripts in
+`build/`, tests in `tests/`; the Pages workflow fails if any of them turn up under `web/`.
 
 ## Build the data bundles
 Needs the datasets on the drive (`DIAG_DATA_ROOT`, default `/media/pc/ext4TB/diagnosis_data`), numpy and scipy.
@@ -29,7 +32,7 @@ so for GitHub Pages the bundles must be committed or published by a build step.
 
 ## Run locally
 ```bash
-cd game/web && python3 -m http.server 8077     # then open http://127.0.0.1:8077/
+cd game && npm run serve     # python3 -m http.server 8077 -d web; open http://127.0.0.1:8077/
 ```
 
 Do not open `index.html` directly from disk: browsers block ES modules and `fetch` on `file://`
@@ -63,7 +66,7 @@ the whole library is ranked live with the same `fit()` used in play. The list is
 
 ## Test and balance
 ```bash
-cd game/web
+cd game
 npm test            # engine tests (determinism, no leaks, every test resolves, 1000 random runs)
 npm run bot -- 200  # greedy bot, 200 cases per tier: win rate, actions, hours, spent
 ```

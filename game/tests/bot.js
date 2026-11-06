@@ -1,8 +1,8 @@
 // Balance bot: plays cases with a greedy strategy and prints win rate, actions and hours per tier.
 import { loadTestDb } from './helpers.js';
-import { pickDisease, createCase, orderTest, commit, addCandidate, consult, setChips, autoChips } from '../engine/case.js';
-import { rankDifferential, suggest } from '../engine/scoring.js';
-import { makeRng } from '../engine/rng.js';
+import { pickDisease, createCase, orderTest, commit, addCandidate, consult, setChips, autoChips } from '../web/engine/case.js';
+import { rankDifferential, suggest } from '../web/engine/scoring.js';
+import { makeRng } from '../web/engine/rng.js';
 
 const db = loadTestDb();
 const N = Number(process.argv[2] || 300);

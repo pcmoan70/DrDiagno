@@ -1,6 +1,9 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: `game/web/` now holds only the served site. Tests, the balance bot and package.json
+  moved to `game/tests/` and `game/`; `npm test` / `npm run serve` run from `game/`. The Pages
+  workflow fails if tests, build scripts or raw data appear under `game/web/`.
 - Build: drop Mondo synonyms containing U+FFFD (mojibake duplicates of correctly spelled names);
   they blocked publishing the bundles as a claude.ai artifact. Rebuilt, counts unchanged.
 - Dr. Diagno: confidence chips. Ten chips over the differential (auto-placed by fit until moved);

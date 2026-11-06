@@ -1,9 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadTestDb } from './helpers.js';
-import { pickDisease, createCase, orderTest, advance, commit, treat, addCandidate, poolFor, setChips, autoChips, calibration, TUNING } from '../engine/case.js';
-import { fit, rankDifferential } from '../engine/scoring.js';
-import { makeRng } from '../engine/rng.js';
+import { pickDisease, createCase, orderTest, advance, commit, treat, addCandidate, poolFor, setChips, autoChips, calibration, TUNING } from '../web/engine/case.js';
+import { fit, rankDifferential } from '../web/engine/scoring.js';
+import { makeRng } from '../web/engine/rng.js';
 
 const db = loadTestDb();
 const newCase = (tier, seed) => { const id = pickDisease(db, { tier, seed }); return createCase(db, { tier, seed, id }); };

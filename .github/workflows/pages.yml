@@ -2,7 +2,7 @@ name: Deploy Dr. Diagno to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ['game/web/**', '.github/workflows/pages.yml']
+    paths: ['game/web/**', 'game/tests/**', '.github/workflows/pages.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -22,8 +22,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Served folder must hold only the site (no tests, build scripts or raw data)
+        run: test -z "$(find game/web -name '*.py' -o -name '*.test.js' -o -name package.json -o -name 'tests' -type d)"
       - name: Engine tests (needs data bundles in game/web/data)
-        run: cd game/web && test -f data/terms.json && npm test || echo "data bundles not committed; skipping tests"
+        run: cd game && test -f web/data/terms.json && npm test || echo "data bundles not committed; skipping tests"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
