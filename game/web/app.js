@@ -1,6 +1,6 @@
 import { loadDb } from './engine/db.js';
 import { pickDisease, createCase, orderTest, consult, addCandidate, removeCandidate, treat, commit, patientFor, poolFor, CONSULT } from './engine/case.js';
-import { rankDifferential, suggest } from './engine/scoring.js';
+import { rankDifferential, suggest, differentialMap } from './engine/scoring.js';
 import { randomCode } from './engine/rng.js';
 import { searchTerms } from './engine/search.js';
 
@@ -19,7 +19,7 @@ const TIERS = [
 const KIND_NAMES = { history: 'History', exam: 'Examination', lab: 'Laboratory', imaging: 'Imaging', special: 'Specialist studies' };
 const SRC = { presenting: 'presenting', progression: 'developed', drug: 'after treatment' };
 
-let db, state, tier, seed;
+let db, state, tier, seed, mapPrev; // mapPrev: compatible count at the last render, for the 'ruled out' toast
 const openKinds = new Set(['history']); // expanded workup sections, kept across re-renders
 const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage unavailable */ } } };
 
@@ -66,11 +66,29 @@ function startCase(t, s) {
   state.patient = patientFor(db, state);
   $('hud-code').textContent = `${tier}-${seed}`;
   $('dx-search').value = '';
+  mapPrev = null; $('map').hidden = tier === 'house'; $('map').open = tier === 'resident';
   show('screen-play');
   renderAll();
 }
 
-function renderAll() { const y = window.scrollY; renderHud(); renderPatient(); renderDifferential(); renderTests(); window.scrollTo(0, y); if (state.status !== 'open') renderDebrief(); }
+function renderAll() { const y = window.scrollY; renderHud(); renderPatient(); renderDifferential(); renderMap(); renderTests(); window.scrollTo(0, y); if (state.status !== 'open') renderDebrief(); }
+
+function toast(text) { const t = el('div', { class: 'toast', role: 'status' }, text); document.body.append(t); setTimeout(() => t.remove(), 2700); }
+
+function renderMap() {
+  if (tier === 'house') return;
+  const m = differentialMap(db, state, poolFor(db, tier));
+  $('map-count').textContent = `${m.compatible.toLocaleString()} of ${m.total.toLocaleString()} still fit`;
+  if (mapPrev !== null && m.compatible < mapPrev && state.status === 'open') toast(`Ruled out ${(mapPrev - m.compatible).toLocaleString()} ${mapPrev - m.compatible === 1 ? 'disease' : 'diseases'}. ${m.compatible.toLocaleString()} still fit.`);
+  mapPrev = m.compatible;
+  const max = Math.max(1, ...m.systems.map((x) => x.count));
+  const list = $('map-list'); list.replaceChildren();
+  for (const x of m.systems) {
+    const probes = db.tests.filter((t) => t.reveals?.some((r) => db.ancestors(r).has(x.id))).map((t) => t.name);
+    list.append(el('li', { class: x.count ? '' : 'cut', title: probes.length ? `Probed by: ${probes.join(', ')}` : 'No test targets this system directly' },
+      el('span', { class: 'sys' }, x.name), el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * x.count / max)}%` })), el('span', { class: 'n' }, x.count)));
+  }
+}
 
 function renderHud() {
   $('hud-clock').textContent = clockText(state.clock);

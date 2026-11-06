@@ -1,6 +1,9 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: differential map. An anonymised panel shows how many diseases of the tier still fit
+  the evidence, per organ system, with cut systems struck through and a "Ruled out N diseases" toast
+  after each action. On in Resident, collapsed in Attending, off in House. 15 node tests.
 - Dr. Diagno: watch-along mode (`#watch`): type findings as you hear them, mark present/absent,
   and see all 7,086 diseases ranked live; shareable link; HPO term search (`engine/search.js`,
   12 node tests now). Design note for this and the next two features: `tasks/game_ideas_20261106.md`.

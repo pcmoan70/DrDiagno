@@ -42,3 +42,38 @@ export function suggest(db, state, n = 6, pool = null) {
   }
   return out;
 }
+
+// ---- Differential map: anonymised view of how much of the library still fits.
+const PHENO_ROOT = 'HP:0000118';
+let systemRoots = null; // the organ-system level of the HPO: direct children of "Phenotypic abnormality"
+export function organSystems(db) {
+  if (!systemRoots) systemRoots = Object.keys(db.terms).filter((id) => db.terms[id][2].includes(PHENO_ROOT));
+  return systemRoots;
+}
+function systemsOf(db, d) {
+  if (!d._sys) { d._sys = new Set(); const roots = organSystems(db); for (const [t, p] of d.t) if (p >= 0.5) for (const r of roots) if (db.ancestors(t).has(r)) d._sys.add(r); }
+  return d._sys;
+}
+// Hard exclusion: a present finding the disease is annotated as never having, or an absent finding
+// the disease nearly always has.
+export function isCut(db, d, state) {
+  for (const n of d.neg) for (const f of state.findings) if (db.ancestors(f.t).has(n)) return true;
+  for (const n of state.negatives) for (const [ct, p] of d.t) if (p >= 0.9 && db.ancestors(ct).has(n.t)) return true;
+  return false;
+}
+export const MAP_MIN_FIT = 0.5;
+// Diseases in the pool that still fit: not cut, and explaining at least half the weighted evidence.
+// Findings caused by treatment are left out, so the true disease always stays compatible.
+export function differentialMap(db, state, pool) {
+  const s = { findings: state.findings.filter((f) => f.src !== 'drug'), negatives: state.negatives };
+  const counts = new Map(organSystems(db).map((r) => [r, 0]));
+  let compatible = 0;
+  for (const id of pool) {
+    const d = db.disease(id);
+    if (isCut(db, d, s) || (s.findings.length && fit(db, d, s).score < MAP_MIN_FIT)) continue;
+    compatible++;
+    for (const r of systemsOf(db, d)) counts.set(r, counts.get(r) + 1);
+  }
+  const systems = [...counts].map(([id, count]) => ({ id, name: db.name(id).replace(/^Abnormality of (the )?/, ''), count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  return { total: pool.length, compatible, systems };
+}

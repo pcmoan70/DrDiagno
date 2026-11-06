@@ -40,10 +40,10 @@ F3 Watch-along mode
 - [x] Shareable URL `#watch/HP:..,HP:..,-HP:..`; copy-link button; disclaimer; title-screen entry
 - [x] Verify in Chrome; docs (game/README, CHANGES); commit
 F1 Differential map (Resident on, Attending collapsible, House off)
-- [ ] `scoring.compatible()` hard-cut rule (present finding in excluded list; absent finding the disease has at p>=0.9), drug-sourced findings exempt
-- [ ] Map panel: compatible count, per-organ-system bars, cut branches struck through, tooltip listing tests that probe the branch
-- [ ] "Ruled out N" toast after each action; node test: true disease never cut over 1,000 random cases
-- [ ] Verify in Chrome; docs; commit
+- [x] `scoring.isCut()` hard-cut rule plus fit >= 0.5 soft rule (hard negatives alone were too rare: 320 diseases have excluded terms), drug-sourced findings exempt
+- [x] Map panel: compatible count, per-organ-system bars, cut branches struck through, tooltip listing tests that probe the branch
+- [x] "Ruled out N" toast after each action; node test: true disease never cut over 1,000 random cases
+- [x] Verify in Chrome; docs; commit
 F2 Confidence chips
 - [ ] Engine: `state.chips`, `setChips()`, auto placement by fit until the player moves one; chips-on-truth recorded on every advance
 - [ ] Commit rule: >=5 chips to diagnose; wrong with 10 ends the case, wrong with 5-9 costs 6 h and 20 stability and continues

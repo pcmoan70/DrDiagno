@@ -35,6 +35,15 @@ cd game/web && python3 -m http.server 8077     # then open http://127.0.0.1:8077
 Do not open `index.html` directly from disk: browsers block ES modules and `fetch` on `file://`
 URLs, so the page would stay at "Loading… 0%" (it now shows a hint instead). It needs an HTTP server.
 
+## Differential map
+Under the differential (Resident: open, Attending: collapsed, House: off) a panel counts the tier's
+diseases that still fit: not hard-excluded (`isCut()`: a present finding the disease never has, or an
+absent finding it has at >=90%) and explaining at least half the weighted evidence
+(`differentialMap()` in `engine/scoring.js`, findings caused by treatment ignored so the true disease
+is never ruled out, pinned by `tests/map.test.js`). Bars per HPO organ system; struck-through systems
+have no fitting disease left; hovering a bar lists the tests that probe it. A toast reports how many
+diseases each action ruled out.
+
 ## Watch-along mode
 `#watch` on the title screen opens a free diagnosis screen with no patient, clock or score: type
 findings (HPO term or lay name, `engine/search.js`), mark them present or absent by clicking, and
