@@ -59,7 +59,10 @@ Disease and finding knowledge comes from the
 [Orphanet / Orphadata](https://www.orphadata.com/) (CC BY 4.0),
 [Mondo](https://mondo.monarchinitiative.org/) (CC BY 4.0) and
 [PrimeKG](https://github.com/mims-harvard/PrimeKG) (MIT) for drug indications. Exact versions
-are listed in `game/web/data/credits.json` and on the game's title screen.
+are listed in `game/web/data/credits.json` and on the game's title screen. Pictures in balloons and
+disease profiles come from [Wikimedia Commons](https://commons.wikimedia.org/), found through
+Wikidata; each shows its author and licence and links to its file page, and is loaded from
+Wikimedia's servers when shown. Wikipedia links on diseases come from Wikidata too.
 
 ## For developers
 

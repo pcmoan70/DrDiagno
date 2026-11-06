@@ -67,6 +67,7 @@ flowchart LR
     BT[build_terms.py] --> TJ[terms.json + defs.json]
     BD[build_diseases.py] --> DJ[diseases/index.json + 16 shards]
     BR[build_drugs.py] --> RJ[drugs.json]
+    BI[build_images.py] --> IJ[images.json]
     BC[build_credits.py] --> CJ[credits.json]
     V[validate.py] --> REP[data_report.md]
   end
@@ -76,6 +77,7 @@ flowchart LR
     ENG --> DATA[data/*.json]
     ENG --> TESTS[content/tests.json]
   end
+  WD[Wikidata + Commons API] --> BI
   HPO & ORPHA & MONDO & PKG --> build
   TJ & DJ & RJ --> DATA
   web -->|push to main| GH[GitHub Pages workflow]
@@ -95,5 +97,8 @@ flowchart LR
 - `web/data/` is derived but versioned (Pages builds from the repo alone); `web/content/tests.json` is hand-curated.
 - Term balloons: elements with `data-term` get a fixed-position tooltip (lay name, HPO name, definition from
   `data/defs.json`, fetched in the background after boot) via document-level mouseover/focusin delegation.
+- Pictures: `data/images.json` (from `build_images.py`, the only build step that uses the network) maps HPO and
+  Mondo ids to hotlinked Commons thumbnails with credits, and Mondo ids to Wikipedia articles; shown in balloons,
+  the disease profile and the debrief.
 - `game/web/` is the deployment unit and contains only what the browser loads; raw data (drive), build
   scripts (`game/build`) and tests (`game/tests`) live outside it, and the Pages workflow checks that.

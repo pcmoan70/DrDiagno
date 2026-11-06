@@ -6,6 +6,7 @@ from common import OUT
 problems = []
 terms = json.load(open(OUT / "terms.json", encoding="utf-8"))["t"]
 defs = json.load(open(OUT / "defs.json", encoding="utf-8"))
+images = json.load(open(OUT / "images.json", encoding="utf-8"))
 index = json.load(open(OUT / "diseases" / "index.json", encoding="utf-8"))
 tests = json.load(open(OUT.parent / "content" / "tests.json", encoding="utf-8"))
 drugs = json.load(open(OUT / "drugs.json", encoding="utf-8"))
@@ -17,6 +18,9 @@ for p in sorted(OUT.rglob("*.json")):
 for tid in defs:
     if tid not in terms:
         problems.append(f"defs.json: {tid} not a term")
+for k in list(images["img"]) + list(images["wiki"]):
+    if not (k in terms or k.startswith("MONDO:")):
+        problems.append(f"images.json: unknown key {k}")
 for tid, v in terms.items():
     for par in v[2]:
         if par not in terms:
@@ -52,7 +56,7 @@ total_gz = sum(g for _, g in sizes.values())
 tiers = collections.Counter(t for e in index["d"] for t in e["tiers"])
 now = datetime.datetime.now(datetime.timezone.utc)
 lines = [f"# Dr. Diagno data report", f"Generated {now:%Y-%m-%d %H:%M:%S} UTC", "",
-         f"- diseases in pool: {len(ids)} (tiers: {dict(tiers)})", f"- HPO terms: {len(terms)} ({len(defs)} with definitions)",
+         f"- diseases in pool: {len(ids)} (tiers: {dict(tiers)})", f"- HPO terms: {len(terms)} ({len(defs)} with definitions)", f"- Wikimedia images: {len(images['img'])}, Wikipedia links: {len(images['wiki'])}",
          f"- tests: {len(tests)}", f"- drugs: {len(drugs['d'])} for {len(drugs['i'])} diseases",
          f"- total JSON: {sum(r for r, _ in sizes.values())/1e6:.2f} MB raw, {total_gz/1e6:.2f} MB gzipped (budget 8 MB)",
          f"- problems: {len(problems)}", "", "| file | raw KB | gzip KB |", "|---|---:|---:|"]

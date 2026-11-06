@@ -37,7 +37,7 @@ async function boot() {
     $('load-msg').textContent = `Could not load the disease library (${e.message}). The data bundles must be built into web/data/ and the folder served over HTTP.`;
     throw e;
   }
-  loadDefs(); // definitions for the term balloons arrive in the background
+  loadDefs(); loadMedia(); // definitions and image links for balloons and profiles arrive in the background
   renderTitle();
   window.addEventListener('hashchange', route);
   route();
@@ -87,7 +87,9 @@ function showDisease(id, obs) {
   const related = (a, b) => db.ancestors(a).has(b) || db.ancestors(b).has(a);
   const mark = (t) => !obs ? null : obs.findings.some((f) => related(f.t, t)) ? 'present' : obs.negatives.some((n) => related(n.t, t)) ? 'absent' : null;
   $('ds-title').textContent = d.n;
-  $('ds-meta').textContent = [d.prev ? `${d.prev[0]} ${d.prev[1]}` : null, d.oonset?.length ? `Onset: ${d.oonset.join(', ')}` : null, d.inh?.length ? `Inheritance: ${d.inh.map((x) => db.name(x)).join(', ')}` : null, `${d.t.length} findings`].filter(Boolean).join(' · ');
+  const meta = [d.prev ? `${d.prev[0]} ${d.prev[1]}` : null, d.oonset?.length ? `Onset: ${d.oonset.join(', ')}` : null, d.inh?.length ? `Inheritance: ${d.inh.map((x) => db.name(x)).join(', ')}` : null, `${d.t.length} findings`].filter(Boolean).join(' · ');
+  $('ds-meta').replaceChildren(el('span', {}, meta, wikiLink(id) ? [' · ', wikiLink(id)] : null));
+  $('ds-media').replaceChildren(figure(id, true) || '');
   $('ds-def').textContent = d.def || '';
   const rows = d.t.slice().sort((a, b) => b[1] - a[1] || db.name(a[0]).localeCompare(db.name(b[0]))).map(([t, p]) => ({ t, p, cls: freqClass(p) }))
     .concat(d.neg.map((t) => ({ t, p: 0, cls: 'Excluded' })));
@@ -109,6 +111,16 @@ document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') $('disea
 // ---- term balloons: hovering or focusing any element with data-term shows the lay name, the HPO name and definition.
 let defs = null, defsLoading = null;
 function loadDefs() { return defsLoading ||= fetch('data/defs.json').then((r) => r.json()).then((d) => { defs = d; }).catch(() => { defs = {}; }); }
+let media = null, mediaLoading = null; // {img: {id: {u, p, a, l}}, wiki: {MONDO: url}} from Wikidata / Commons
+function loadMedia() { return mediaLoading ||= fetch('data/images.json').then((r) => r.json()).then((d) => { media = d; }).catch(() => { media = { img: {}, wiki: {} }; }); }
+// Commons image for a finding or disease with its credit; the credit links to the file page unless inside a balloon.
+function figure(id, link) {
+  const m = media?.img[id];
+  if (!m) return null;
+  const credit = `${m.a} · ${m.l} · Wikimedia Commons`;
+  return el('figure', { class: 'media' }, el('img', { src: m.u, alt: '', loading: 'lazy' }), el('figcaption', {}, link ? el('a', { href: m.p, target: '_blank', rel: 'noopener' }, credit) : credit));
+}
+const wikiLink = (id, text = 'Wikipedia') => (media?.wiki[id] ? el('a', { href: media.wiki[id], target: '_blank', rel: 'noopener' }, text) : null);
 const term = (t) => el('span', { class: 'term', 'data-term': t }, db.label(t));
 const termList = (ids) => ids.flatMap((t, i) => [i ? ', ' : null, term(t)]);
 function showTip(target) {
@@ -116,7 +128,7 @@ function showTip(target) {
   if (!db.terms[t]) return;
   const tip = $('tip'), lay = db.lay(t), name = db.name(t);
   tip.replaceChildren(el('div', {}, el('strong', {}, lay || name), lay ? el('span', { class: 'syn' }, ` ${name}`) : null,
-    el('p', {}, defs ? defs[t] || 'No definition in the HPO.' : 'Loading definition…'), target.dataset.extra ? el('p', { class: 'syn' }, target.dataset.extra) : null));
+    el('p', {}, defs ? defs[t] || 'No definition in the HPO.' : 'Loading definition…'), target.dataset.extra ? el('p', { class: 'syn' }, target.dataset.extra) : null, figure(t, false)));
   tip.hidden = false; tip._for = target;
   const r = target.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
   tip.style.left = `${Math.min(Math.max(8, r.left), window.innerWidth - w - 8)}px`;
@@ -266,8 +278,10 @@ function renderDebrief() {
   const body = $('db-body'); body.replaceChildren(
     won && state.bonus ? el('p', { class: 'def' }, `Chips bonus +${state.bonus.chips} · calibration bonus +${state.bonus.calibration} (chips on the answer over the whole case)`) : null,
     chipChart(),
+    figure(d.id, true),
     el('p', { class: 'def' }, d.def || ''),
     d.prev ? el('p', { class: 'def' }, `${d.prev[0]}: ${d.prev[1]}.`) : null,
+    wikiLink(d.id) ? el('p', { class: 'def' }, wikiLink(d.id, `Read about ${d.n} on Wikipedia`)) : null,
     el('h3', {}, 'Typical findings (highlighted = found in this patient)'),
     el('ul', { class: 'profile' }, d.t.slice(0, 40).map(([t, p]) => el('li', { class: 'chip' + (found.has(t) ? ' found' : ''), title: `${db.name(t)}, ${Math.round(p * 100)}% of patients` }, db.label(t)))),
     d.mayo ? el('p', { class: 'def' }, d.mayo) : null,

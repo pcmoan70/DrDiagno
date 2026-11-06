@@ -24,6 +24,7 @@ cd game/build
 python3 -I build_terms.py      # terms.json: HPO terms, lay names, parents, IDF; defs.json: HPO definitions
 python3 -I build_diseases.py   # diseases/index.json + 16 shards: profiles, onset, prevalence, decoys
 python3 -I build_drugs.py      # drugs.json: PrimeKG indications, contraindications, side effects
+python3 -I build_images.py     # images.json: Commons images + credits for findings/diseases, Wikipedia links (network; cached on the drive)
 python3 -I build_credits.py    # credits.json
 python3 -I validate.py         # checks + game/data_report.md (dated)
 ```
@@ -82,13 +83,24 @@ and the HPO definition from `data/defs.json` (17,432 definitions, 0.7 MB gzipped
 background after the game starts). Findings carry `data-term`; an optional `data-extra` adds a
 line, used for pertinent negatives, the organ-system map (which studies probe it) and watch-along
 chips. Covered: patient findings, test results, "does not explain" lists, the map, watch-along
-chips and the disease profile table.
+chips and the disease profile table. When Wikidata lists a Commons image for the term, the balloon
+shows it (480 px thumbnail, hotlinked, with author and licence).
+
+## Pictures and Wikipedia links
+`build_images.py` asks Wikidata for every item with an HPO id (P3841) or Mondo id (P5270) and an
+image (P18) or English Wikipedia article, then the Commons `imageinfo` API for thumbnail URLs,
+author and licence. Result: `data/images.json` (884 finding images, 326 disease images, 1,533
+Wikipedia links; 0.5 MB). Findings under the genital system (HP:0000078) and breast (HP:0000769)
+are excluded so explicit photographs never appear in hover balloons. Images are whatever Wikidata
+chose as the item's main picture, so some are diagrams or historical art rather than clinical
+photographs. Raw API responses are cached in `DIAG_DATA_ROOT/_cache/wikimedia/`.
 
 ## Disease profile
 Every disease name (differential, watch-along ranking, debrief) opens a table of the disease's
 annotated findings with their likelihood: the share of patients who show the finding, as a
 percentage, bar and HPO frequency class (Obligate, Very frequent, Frequent, Occasional, Very rare),
-plus any findings the disease is annotated as never having (Excluded). A third column marks which
+plus any findings the disease is annotated as never having (Excluded). The header shows the disease's
+Commons image and a Wikipedia link when Wikidata has them; the debrief shows the same. A third column marks which
 of the patient's findings are present or absent; in play it appears in Resident or after a consult,
 in watch-along it marks the entered findings.
 

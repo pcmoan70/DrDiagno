@@ -1,6 +1,10 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: Wikimedia pictures. `build_images.py` collects Commons images (with author and licence)
+  for 884 findings and 326 diseases and Wikipedia links for 1,533 diseases via Wikidata. Balloons show
+  the finding's picture; the disease profile and debrief show the disease's picture and Wikipedia link.
+  Genital and breast findings are excluded from pictures.
 - Dr. Diagno: term balloons. Hovering or focusing any finding (chart, test results, map, watch-along,
   disease profile, "does not explain" lists) shows its everyday name, HPO name and HPO definition.
   New bundle `data/defs.json` (17,432 definitions) built by build_terms.py, loaded in the background.
