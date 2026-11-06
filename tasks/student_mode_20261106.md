@@ -15,4 +15,4 @@ Plan
 - [x] Engine: horizon, pool mapping, free consult, no sudden death; `scoring.suggestTests()`
 - [x] UI: tier card, route, coach panel, labels; CSS
 - [x] Tests: student rules, suggestTests; docs (README, game/README, ARCHITECTURE, CHANGES)
-- [ ] Verify in Chrome, commit, push, confirm deploy, republish artifact
+- [x] Verify in Chrome, commit, push, confirm deploy, republish artifact (2026-11-06)
