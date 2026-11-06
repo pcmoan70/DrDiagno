@@ -19,4 +19,4 @@ Plan
 - [x] `validate.py`: keys exist, counts in the report
 - [x] UI: image + credit in the term balloon; image, credit link and Wikipedia link in the disease profile and debrief
 - [x] Docs: README credits, game/README build step, ARCHITECTURE, CHANGES
-- [ ] Verify in Chrome, commit, push (Pages), republish artifact
+- [x] Verify in Chrome, commit, push (Pages), republish artifact (2026-11-06, commit 698c7fa)
