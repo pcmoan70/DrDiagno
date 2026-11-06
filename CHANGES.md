@@ -1,6 +1,9 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: larger pictures (800 px thumbnails from the Commons API, clamped to the original size; balloon 460 px wide with a 260 px image, profile figure up to 380 px).
+- Dr. Diagno: match percentage next to each candidate (where fit is visible) and a "Best match" item
+  in the top bar in Student and Resident.
 - Dr. Diagno: Student tier (Resident cases, 96 h, free consults, Coach panel suggesting the studies
   that best split the diseases still fitting, fit bars always on, map open, no sudden death). Ticked
   studies' buttons read "Order batch"; the watch-along Open button is amber. 21 node tests.

@@ -56,6 +56,11 @@ sat on the answer (`calibration()`, recorded by `advance()` in `state.chipTrack`
 debrief). Outside Resident, fit bars appear only after a literature consult, so the chips carry
 the player's own judgement. All numbers are in `TUNING` in `engine/case.js`.
 
+## Match percentage
+In Student and Resident (and after a consult elsewhere) each candidate shows the share of the
+weighted evidence it explains as a percentage next to its name; the consult pane shows it too. In
+Student and Resident the top bar also shows "Best match" with the leading candidate.
+
 ## Differential map
 Under the differential (Resident: open, Attending: collapsed, House: off) a panel counts the tier's
 diseases that still fit: not hard-excluded (`isCut()`: a present finding the disease never has, or an
@@ -85,7 +90,7 @@ background after the game starts). Findings carry `data-term`; an optional `data
 line, used for pertinent negatives, the organ-system map (which studies probe it) and watch-along
 chips. Covered: patient findings, test results, "does not explain" lists, the map, watch-along
 chips and the disease profile table. When Wikidata lists a Commons image for the term, the balloon
-shows it (480 px thumbnail, hotlinked, with author and licence).
+shows it (up to 800 px thumbnail, hotlinked, with author and licence).
 
 ## Pictures and Wikipedia links
 `build_images.py` asks Wikidata for every item with an HPO id (P3841) or Mondo id (P5270) and an

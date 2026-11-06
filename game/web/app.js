@@ -175,8 +175,10 @@ function renderMap() {
   }
 }
 
+const pctBadge = (score) => el('span', { class: 'pct', title: 'Share of the evidence this disease explains' }, `${Math.round(100 * score)}%`);
 function renderHud() {
   $('hud-clock').textContent = clockText(state.clock);
+
   $('hud-spent').textContent = `$${state.spent.toLocaleString()}`;
   const bar = $('hud-stab'); bar.style.width = `${state.stability}%`;
   bar.className = 'stab-bar' + (state.stability < 25 ? ' bad' : state.stability < 50 ? ' warn' : '');
@@ -197,6 +199,9 @@ function renderDifferential() {
   const list = $('dx-list'); list.replaceChildren();
   const ranked = rankDifferential(db, state);
   $('dx-hint').hidden = ranked.length > 0;
+  const top = (tier === 'student' || tier === 'resident') ? ranked[0] : null; // learning tiers show the match openly in the top bar
+  $('hud-match').hidden = !top;
+  if (top) $('hud-match-v').textContent = `${Math.round(100 * top.score)}% ${db.disease(top.id).n}`;
   $('btn-consult').disabled = state.status !== 'open';
   const showFit = fitVisible();
   const placed = Object.values(state.chips).reduce((a, b) => a + b, 0);
@@ -219,7 +224,7 @@ function renderDifferential() {
       Array.from({ length: TUNING.chips }, (_, i) => el('button', { class: 'chip-dot' + (i < c ? ' on' : ''), title: `${i + 1} chip${i ? 's' : ''}`, disabled: state.status !== 'open' ? 'disabled' : null,
         onclick: () => { setChips(state, r.id, i + 1 === c ? i : i + 1); renderDifferential(); } })),
       el('span', { class: 'meta' }, `${c}/${TUNING.chips}`));
-    list.append(el('li', { class: 'dx' }, nameLink(d, showFit ? { ...state, label: 'This patient' } : null), ops, chips,
+    list.append(el('li', { class: 'dx' }, el('span', { class: 'head' }, nameLink(d, showFit ? { ...state, label: 'This patient' } : null), showFit ? pctBadge(r.score) : null), ops, chips,
       showFit ? el('div', { class: 'fit' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.score)}%` })), el('span', {}, `explains ${r.explained} of ${r.total}`)) : null,
       showFit && r.unexplained.length ? el('div', { class: 'why' }, 'Does not explain: ', termList(r.unexplained.slice(0, 4)), r.unexplained.length > 4 ? '…' : null) : null));
   }
@@ -232,7 +237,7 @@ function renderConsult(showFit) {
   for (const r of suggestions) {
     const d = db.disease(r.id);
     const added = state.differential.includes(r.id), out = state.wrong.includes(r.id);
-    list.append(el('li', { class: 'dx' }, nameLink(d, showFit ? { ...state, label: 'This patient' } : null),
+    list.append(el('li', { class: 'dx' }, el('span', { class: 'head' }, nameLink(d, showFit ? { ...state, label: 'This patient' } : null), pctBadge(r.score)),
       el('button', { class: 'btn small', disabled: added || out || state.status !== 'open' ? 'disabled' : null, onclick: () => { addCandidate(state, r.id); autoChips(db, state); renderDifferential(); } }, out ? 'Ruled out' : added ? 'Added' : 'Add'),
       el('div', { class: 'fit' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.score)}%` })), el('span', {}, `explains ${r.explained} of ${r.total}`))));
   }

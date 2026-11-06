@@ -8,7 +8,7 @@ from common import DATA_ROOT, OUT
 UA = "DrDiagno-build/0.1 (https://github.com/pcmoan70/DrDiagno)"
 CACHE = DATA_ROOT / "_cache" / "wikimedia"
 EXCLUDE_ROOTS = {"HP:0000078", "HP:0000769"}  # genital system, breast: no explicit photographs in balloons
-THUMB_W = 480
+THUMB_W = 800
 
 SPARQL = {
     "hpo": "SELECT ?x ?img WHERE { ?item wdt:P3841 ?x ; wdt:P18 ?img . }",
