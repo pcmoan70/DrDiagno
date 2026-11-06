@@ -29,7 +29,7 @@ Plan: `tasks/house_game_plan_20261105.md` (static JavaScript, GitHub Pages)
 - [x] M3 test catalog (55 tests, all HPO ids validated)
 - [x] M4 UI (first version, verified in Chrome 2026-11-06)
 - [~] M5 balance: bot baseline done, per-test cap added; human playtest pending
-- [~] M6 deploy: workflow added; blocked, repo is private (Pages needs public repo or Pro) and data bundles are not pushed
+- [x] M6 deploy: live at https://pcmoan70.github.io/DrDiagno/ (2026-11-06; repo made public, data bundles committed)
 - [x] M7 documentation (game/README.md, root README, ARCHITECTURE, CHANGES)
 - [x] Game ideas written up: `tasks/game_ideas_20261106.md`; user approved the recommended order 2026-11-06
 

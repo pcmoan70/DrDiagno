@@ -1,6 +1,9 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno deployed to GitHub Pages: https://pcmoan70.github.io/DrDiagno/ . The repository was made
+  public (required by the plan) and the built data bundles (`game/web/data`, 15 MB) are now versioned
+  because Pages builds from the repository alone.
 - Dr. Diagno: parallel studies. Tick several lab, imaging or specialist studies and run them
   together: the clock advances by the longest, costs add up (`orderTests()`, 19 node tests).
 - Dr. Diagno: literature consult results now open in a closable pane with Add / Add all buttons

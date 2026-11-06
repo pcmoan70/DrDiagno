@@ -12,6 +12,7 @@ symptom → diagnosis model.
 A static JavaScript diagnostic game built from this data lives in `game/` (see `game/README.md`
 and `tasks/house_game_plan_20261105.md`). Build the bundles with the scripts in `game/build/`,
 run `npm test` in `game/`, serve `game/web/` (the site and nothing else) as a static site.
+  Live at https://pcmoan70.github.io/DrDiagno/ (GitHub Pages, deployed by `.github/workflows/pages.yml`).
 
 ## Quick start
 

@@ -27,8 +27,14 @@ python3 -I build_drugs.py      # drugs.json: PrimeKG indications, contraindicati
 python3 -I build_credits.py    # credits.json
 python3 -I validate.py         # checks + game/data_report.md (dated)
 ```
-`web/data/` is gitignored (derived, ~15 MB raw / 3.5 MB gzipped). The site cannot run without it,
-so for GitHub Pages the bundles must be committed or published by a build step.
+`web/data/` is derived (~15 MB raw / 3.4 MB gzipped) but versioned, because GitHub Pages builds from
+the repository alone. Rebuild and commit it when the sources or build scripts change; the raw datasets
+never enter the repo.
+
+## Play online
+The game is served by GitHub Pages at https://pcmoan70.github.io/DrDiagno/ . Every push to `main`
+that touches `game/web/**` or `game/tests/**` runs the tests and redeploys (`.github/workflows/pages.yml`).
+The repository is public, which the free Pages plan requires.
 
 ## Run locally
 ```bash

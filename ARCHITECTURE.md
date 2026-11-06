@@ -92,6 +92,6 @@ flowchart LR
   state in the URL), debrief modal, disease profile modal (`showDisease()`: findings with likelihood,
   opened from any disease name). Added 2026-11-06.
 - `game/tests/bot.js` plays hundreds of cases with a greedy strategy to measure balance.
-- `web/data/` is derived and gitignored; `web/content/tests.json` is hand-curated and versioned.
+- `web/data/` is derived but versioned (Pages builds from the repo alone); `web/content/tests.json` is hand-curated.
 - `game/web/` is the deployment unit and contains only what the browser loads; raw data (drive), build
   scripts (`game/build`) and tests (`game/tests`) live outside it, and the Pages workflow checks that.
