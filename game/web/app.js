@@ -71,6 +71,37 @@ function startCase(t, s) {
   renderAll();
 }
 
+const fitVisible = () => tier === 'resident' || (state.consults || 0) > 0 || state.status !== 'open'; // the chart's own ranking is earned by a consult outside Resident
+// A disease name that opens the profile table. obs: {findings, negatives} to mark against, or null.
+const nameLink = (d, obs) => el('button', { class: 'name link', title: 'Show findings and how often they occur', onclick: () => showDisease(d.id, obs) }, d.n);
+
+// Frequency label for an annotation probability (HPO frequency classes).
+function freqClass(p) { return p >= 0.995 ? 'Obligate' : p >= 0.8 ? 'Very frequent' : p >= 0.3 ? 'Frequent' : p >= 0.05 ? 'Occasional' : 'Very rare'; }
+// Disease profile: every annotated finding with its likelihood, optionally marked against observed findings.
+function showDisease(id, obs) {
+  const d = db.disease(id);
+  const related = (a, b) => db.ancestors(a).has(b) || db.ancestors(b).has(a);
+  const mark = (t) => !obs ? null : obs.findings.some((f) => related(f.t, t)) ? 'present' : obs.negatives.some((n) => related(n.t, t)) ? 'absent' : null;
+  $('ds-title').textContent = d.n;
+  $('ds-meta').textContent = [d.prev ? `${d.prev[0]} ${d.prev[1]}` : null, d.oonset?.length ? `Onset: ${d.oonset.join(', ')}` : null, d.inh?.length ? `Inheritance: ${d.inh.map((x) => db.name(x)).join(', ')}` : null, `${d.t.length} findings`].filter(Boolean).join(' · ');
+  $('ds-def').textContent = d.def || '';
+  const rows = d.t.slice().sort((a, b) => b[1] - a[1] || db.name(a[0]).localeCompare(db.name(b[0]))).map(([t, p]) => ({ t, p, cls: freqClass(p) }))
+    .concat(d.neg.map((t) => ({ t, p: 0, cls: 'Excluded' })));
+  const tbl = $('ds-table'); tbl.replaceChildren(
+    el('thead', {}, el('tr', {}, el('th', {}, 'Finding'), el('th', {}, 'Likelihood'), obs ? el('th', {}, obs.label) : null)),
+    el('tbody', {}, rows.map((r) => {
+      const m = mark(r.t);
+      return el('tr', { class: r.cls === 'Excluded' ? 'excluded' : '' },
+        el('td', {}, db.label(r.t), db.label(r.t) !== db.name(r.t) ? el('span', { class: 'syn' }, db.name(r.t)) : null),
+        el('td', { class: 'freq' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.p)}%` })), el('span', {}, `${Math.round(100 * r.p)}%`), el('span', { class: 'syn' }, r.cls)),
+        obs ? el('td', { class: 'obs ' + (m || '') }, m === 'present' ? '✓ present' : m === 'absent' ? '✗ absent' : '') : null);
+    })));
+  $('ds-note').textContent = 'Likelihood: share of patients with this disease who show the finding, from HPO annotations (Orphanet, OMIM). Excluded findings argue against the disease.' + (obs ? '' : ' The patient column appears after a literature consult (always in Resident).');
+  $('ds-close').onclick = () => { $('disease').hidden = true; };
+  $('disease').hidden = false;
+}
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') $('disease').hidden = true; });
+
 function renderAll() { const y = window.scrollY; renderHud(); renderPatient(); renderDifferential(); renderMap(); renderTests(); window.scrollTo(0, y); if (state.status !== 'open') renderDebrief(); }
 
 function toast(text) { const t = el('div', { class: 'toast', role: 'status' }, text); document.body.append(t); setTimeout(() => t.remove(), 2700); }
@@ -113,7 +144,7 @@ function renderDifferential() {
   const ranked = rankDifferential(db, state);
   $('dx-hint').hidden = ranked.length > 0;
   $('btn-consult').disabled = state.status !== 'open';
-  const showFit = tier === 'resident' || (state.consults || 0) > 0; // the chart's own ranking is earned by a consult outside Resident
+  const showFit = fitVisible();
   const placed = Object.values(state.chips).reduce((a, b) => a + b, 0);
   $('chips-pool').textContent = ranked.length ? `${TUNING.chips - placed} of ${TUNING.chips} chips unplaced · ${state.chipsManual ? 'your call' : 'following the chart'}` : '';
   $('chips-auto').hidden = !state.chipsManual || !ranked.length;
@@ -133,7 +164,7 @@ function renderDifferential() {
       Array.from({ length: TUNING.chips }, (_, i) => el('button', { class: 'chip-dot' + (i < c ? ' on' : ''), title: `${i + 1} chip${i ? 's' : ''}`, disabled: state.status !== 'open' ? 'disabled' : null,
         onclick: () => { setChips(state, r.id, i + 1 === c ? i : i + 1); renderDifferential(); } })),
       el('span', { class: 'meta' }, `${c}/${TUNING.chips}`));
-    list.append(el('li', { class: 'dx' }, el('span', { class: 'name' }, d.n), ops, chips,
+    list.append(el('li', { class: 'dx' }, nameLink(d, showFit ? { ...state, label: 'This patient' } : null), ops, chips,
       showFit ? el('div', { class: 'fit' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.score)}%` })), el('span', {}, `explains ${r.explained} of ${r.total}`)) : null,
       showFit && r.unexplained.length ? el('div', { class: 'why' }, 'Does not explain: ' + r.unexplained.slice(0, 4).map((t) => db.label(t)).join(', ') + (r.unexplained.length > 4 ? '…' : '')) : null));
   }
@@ -173,7 +204,7 @@ function confirmThen(title, text, fn) {
 function renderDebrief() {
   const d = db.disease(state.id);
   const won = state.status === 'won';
-  $('db-title').textContent = won ? `Correct: ${d.n}` : state.committed ? `Wrong. It was ${d.n}` : `Too late. It was ${d.n}`;
+  $('db-title').replaceChildren(won ? 'Correct: ' : state.committed ? 'Wrong. It was ' : 'Too late. It was ', nameLink(d, { ...state, label: 'This patient' }));
   const sc = $('db-score'); sc.textContent = won ? `${state.score} points · ${clockText(state.clock)} · $${state.spent.toLocaleString()}` : '0 points'; sc.className = 'score ' + (won ? 'won' : 'lost');
   if (won) { const best = store.get('best') || {}; if (!best[tier] || state.score > best[tier]) { best[tier] = state.score; store.set('best', best); } }
   const found = new Set(state.findings.map((f) => f.t));
@@ -263,7 +294,7 @@ function renderWatch() {
   $('w-hint').hidden = ranked.length > 0;
   for (const r of ranked) {
     const d = db.disease(r.id);
-    out.append(el('li', { class: 'dx' }, el('span', { class: 'name' }, d.n), el('span', { class: 'meta' }, d.prev ? d.prev[1] : ''),
+    out.append(el('li', { class: 'dx' }, nameLink(d, { ...watch, label: 'Entered' }), el('span', { class: 'meta' }, d.prev ? d.prev[1] : ''),
       el('div', { class: 'fit' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.score)}%` })), el('span', {}, `explains ${r.explained} of ${r.total}`)),
       r.unexplained.length ? el('div', { class: 'why' }, 'Does not explain: ' + r.unexplained.slice(0, 4).map((t) => db.label(t)).join(', ') + (r.unexplained.length > 4 ? '…' : '')) : null,
       d.def ? el('p', { class: 'def' }, d.def.length > 220 ? d.def.slice(0, 220) + '…' : d.def) : null));

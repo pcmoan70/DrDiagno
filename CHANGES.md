@@ -1,6 +1,9 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: clicking a disease name (differential, watch-along, debrief) opens a findings table
+  with likelihood per finding (percentage, bar, HPO frequency class, excluded findings) and a
+  column marking the patient's present/absent findings (in play: Resident or after a consult).
 - Dr. Diagno: `game/web/` now holds only the served site. Tests, the balance bot and package.json
   moved to `game/tests/` and `game/`; `npm test` / `npm run serve` run from `game/`. The Pages
   workflow fails if tests, build scripts or raw data appear under `game/web/`.

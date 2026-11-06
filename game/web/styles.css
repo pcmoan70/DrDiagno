@@ -79,6 +79,15 @@ input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .dx-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
 .dx { border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; }
 .dx .name { font-weight: 600; }
+.name.link { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; color: inherit; text-align: left; cursor: pointer; text-decoration: underline dotted var(--muted); text-underline-offset: 3px; }
+.name.link:hover { color: var(--accent); }
+.symptoms { width: 100%; border-collapse: collapse; font-size: .85rem; margin: 12px 0 4px; }
+.symptoms th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--rule); }
+.symptoms td { padding: 5px 6px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.symptoms td.freq { white-space: nowrap; } .symptoms td.freq .fit-track { display: inline-block; width: 70px; vertical-align: middle; margin-right: 6px; } .symptoms td.freq .syn { display: inline; margin-left: 6px; }
+.symptoms tr.excluded td { color: var(--muted); } .symptoms tr.excluded .fit-track { background: repeating-linear-gradient(90deg, var(--rule) 0 4px, transparent 4px 8px); }
+.symptoms .obs.present { color: var(--good); font-weight: 600; } .symptoms .obs.absent { color: var(--bad); font-weight: 600; }
+.symptoms .syn { display: block; font-size: .72rem; color: var(--muted); }
 .dx .fit { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; font-size: .78rem; color: var(--muted); }
 .fit-track { height: 8px; background: var(--rule); border-radius: 4px; overflow: hidden; }
 .fit-bar { display: block; height: 100%; background: var(--fit); }

@@ -64,6 +64,14 @@ findings (HPO term or lay name, `engine/search.js`), mark them present or absent
 the whole library is ranked live with the same `fit()` used in play. The list is kept in the URL
 (`#watch/HP:0001250,-HP:0000819`, minus = absent) so a link reopens it.
 
+## Disease profile
+Every disease name (differential, watch-along ranking, debrief) opens a table of the disease's
+annotated findings with their likelihood: the share of patients who show the finding, as a
+percentage, bar and HPO frequency class (Obligate, Very frequent, Frequent, Occasional, Very rare),
+plus any findings the disease is annotated as never having (Excluded). A third column marks which
+of the patient's findings are present or absent; in play it appears in Resident or after a consult,
+in watch-along it marks the entered findings.
+
 ## Test and balance
 ```bash
 cd game

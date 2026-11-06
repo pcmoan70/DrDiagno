@@ -87,7 +87,8 @@ flowchart LR
 - Confidence chips live in `state.chips` (`setChips`, `autoChips`, `calibration` in `case.js`); `commit()` needs
   5 chips and treats a hedged wrong call as a 6 h / 20-stability setback instead of a loss.
 - Screens: title, play (patient / differential with chips and map / workup), watch-along (`#watch/...`,
-  state in the URL), debrief modal. Added 2026-11-06.
+  state in the URL), debrief modal, disease profile modal (`showDisease()`: findings with likelihood,
+  opened from any disease name). Added 2026-11-06.
 - `game/tests/bot.js` plays hundreds of cases with a greedy strategy to measure balance.
 - `web/data/` is derived and gitignored; `web/content/tests.json` is hand-curated and versioned.
 - `game/web/` is the deployment unit and contains only what the browser loads; raw data (drive), build

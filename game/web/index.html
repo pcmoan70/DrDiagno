@@ -77,7 +77,7 @@
     </div>
     <p class="hint chips-pool" id="chips-pool"></p>
     <ul class="dx-list" id="dx-list"></ul>
-    <p class="hint" id="dx-hint">Add candidates by name, or consult the literature. Spread your 10 confidence chips over the candidates: a disease needs 5 to be diagnosed, 10 is all in. Chips on the right answer through the case earn a bonus.</p>
+    <p class="hint" id="dx-hint">Add candidates by name, or consult the literature. Spread your 10 confidence chips over the candidates: a disease needs 5 to be diagnosed, 10 is all in. Chips on the right answer through the case earn a bonus. Click a disease name for its findings and how often they occur.</p>
     <p class="hint" id="dx-fit-note" hidden>Fit bars are shown after a literature consult.</p>
     <details class="map" id="map">
       <summary><h3>Differential map</h3><span class="meta" id="map-count"></span></summary>
@@ -105,7 +105,7 @@
       <button class="btn" id="w-copy" title="Copy a link that reopens this list">Copy link</button>
       <button class="btn" id="w-clear">Clear</button>
     </div>
-    <p class="hint">Entertainment and education only, not medical advice. Rankings reflect how well each disease's published phenotype explains the findings, nothing more.</p>
+    <p class="hint">Entertainment and education only, not medical advice. Rankings reflect how well each disease's published phenotype explains the findings, nothing more. Click a disease name for its full list of findings with likelihoods.</p>
   </section>
   <section class="col">
     <h2>Diseases that fit</h2>
@@ -124,6 +124,17 @@
       <button class="btn" id="btn-copy">Copy case link</button>
       <a class="btn" href="#" id="btn-title">Title screen</a>
     </div>
+  </div>
+</div>
+
+<div id="disease" class="modal" hidden>
+  <div class="modal-card">
+    <h2 id="ds-title"></h2>
+    <p class="def" id="ds-meta"></p>
+    <p class="def" id="ds-def"></p>
+    <table class="symptoms" id="ds-table"></table>
+    <p class="hint" id="ds-note"></p>
+    <div class="actions-row"><button class="btn" id="ds-close">Close</button></div>
   </div>
 </div>
 
