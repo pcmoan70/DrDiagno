@@ -1,6 +1,8 @@
 # CHANGES
 
 ## 2026-11-06
+- Build: drop Mondo synonyms containing U+FFFD (mojibake duplicates of correctly spelled names);
+  they blocked publishing the bundles as a claude.ai artifact. Rebuilt, counts unchanged.
 - Dr. Diagno: confidence chips. Ten chips over the differential (auto-placed by fit until moved);
   5 needed to diagnose; all-in wrong ends the case, hedged wrong costs 6 h and 20 stability and rules
   the disease out; chip and calibration bonuses on a correct call; chips-on-answer chart in the

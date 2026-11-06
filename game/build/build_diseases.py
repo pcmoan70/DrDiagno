@@ -130,7 +130,8 @@ pool = {mid: e for mid, e in dz.items() if len(e["terms"]) >= MIN_TERMS}
 for mid, e in pool.items():
     t = mondo[mid]
     e["name"] = t["name"]
-    syn = [s[0] for s in t["syn"] if s[1] == "EXACT" and s[0].lower() != t["name"].lower()]
+    # Mondo carries a few mojibake duplicates ("Ch\ufffd\ufffddiak") next to the correct spelling; drop them.
+    syn = [s[0] for s in t["syn"] if s[1] == "EXACT" and s[0].lower() != t["name"].lower() and "\ufffd" not in s[0]]
     e["syn"] = list(dict.fromkeys(syn))[:6]
     e["def"] = t["def"] or feat.get(mid, {}).get("orphanet_definition", "")
     e["mayo"] = feat.get(mid, {}).get("mayo_symptoms", "")[:700]
