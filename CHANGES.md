@@ -1,6 +1,9 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: the Workup column now shows each test category (History, Examination, Laboratory,
+  Imaging, Specialist studies) as a collapsible section with a count of ordered tests; History
+  starts expanded and the open/closed state survives re-renders.
 - Dr. Diagno: opening `game/web/index.html` directly from disk left the page at "Loading… 0%"
   forever (browsers block ES modules and `fetch` on `file://`). The page now explains this and how to
   serve the folder; data-load failures are shown instead of swallowed. README notes the requirement.

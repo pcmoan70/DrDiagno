@@ -19,6 +19,7 @@ const KIND_NAMES = { history: 'History', exam: 'Examination', lab: 'Laboratory',
 const SRC = { presenting: 'presenting', progression: 'developed', drug: 'after treatment' };
 
 let db, state, tier, seed;
+const openKinds = new Set(['history']); // expanded workup sections, kept across re-renders
 const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage unavailable */ } } };
 
 function show(id) { for (const s of document.querySelectorAll('main.screen')) s.hidden = s.id !== id; $('hud').hidden = id !== 'screen-play'; }
@@ -120,7 +121,10 @@ function renderTests() {
       }
       ul.append(li);
     }
-    root.append(el('div', { class: 'test-group' }, el('h3', {}, KIND_NAMES[kind] || kind), ul));
+    const done = tests.filter((t) => state.tests[t.id]).length;
+    const sec = el('details', { class: 'test-group', open: openKinds.has(kind) ? '' : null, ontoggle: (ev) => { if (ev.target.open) openKinds.add(kind); else openKinds.delete(kind); } },
+      el('summary', {}, el('h3', {}, KIND_NAMES[kind] || kind), el('span', { class: 'meta' }, done ? `${done} of ${tests.length} ordered` : `${tests.length} tests`)), ul);
+    root.append(sec);
   }
 }
 
