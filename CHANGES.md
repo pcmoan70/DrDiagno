@@ -1,6 +1,9 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: opening `game/web/index.html` directly from disk left the page at "Loading… 0%"
+  forever (browsers block ES modules and `fetch` on `file://`). The page now explains this and how to
+  serve the folder; data-load failures are shown instead of swallowed. README notes the requirement.
 - Dr. Diagno game, first playable version (`game/`): data build scripts (7,086 diseases, 19,894
   HPO terms, 55 tests, 696 drugs; 3.5 MB gzipped), pure-function engine with 10 node tests,
   balance bot, vanilla-JS UI (title, case board, workup, debrief, case codes, local best scores),

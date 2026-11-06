@@ -25,8 +25,13 @@ function show(id) { for (const s of document.querySelectorAll('main.screen')) s.
 function clockText(h) { const day = Math.floor((h + 8) / 24) + 1; const hh = Math.floor((h + 8) % 24); const mm = Math.round(((h + 8) % 1) * 60); return `Day ${day}, ${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`; }
 
 async function boot() {
-  db = await loadDb('.');
-  await db.loadAll((done, total) => { $('load-progress').textContent = `${Math.round(100 * done / total)}%`; });
+  try {
+    db = await loadDb('.');
+    await db.loadAll((done, total) => { $('load-progress').textContent = `${Math.round(100 * done / total)}%`; });
+  } catch (e) {
+    $('load-msg').textContent = `Could not load the disease library (${e.message}). The data bundles must be built into web/data/ and the folder served over HTTP.`;
+    throw e;
+  }
   renderTitle();
   window.addEventListener('hashchange', route);
   route();

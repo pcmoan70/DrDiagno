@@ -20,7 +20,13 @@
 </header>
 
 <main id="screen-loading" class="screen">
-  <p class="loading">Loading the disease library… <span id="load-progress">0%</span></p>
+  <p class="loading" id="load-msg">Loading the disease library… <span id="load-progress">0%</span></p>
+  <script>
+    if (location.protocol === 'file:') document.getElementById('load-msg').innerHTML =
+      'This page cannot run when opened as a file: the browser blocks its scripts and data.<br>' +
+      'Serve the folder instead, e.g. <code>cd game/web &amp;&amp; python3 -m http.server 8077</code> and open ' +
+      '<code>http://127.0.0.1:8077/</code>.';
+  </script>
 </main>
 
 <main id="screen-title" class="screen" hidden>

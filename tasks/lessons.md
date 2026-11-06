@@ -15,3 +15,7 @@
 - A bot that is handed the true disease in its differential measures nothing; the honest bot must
   build its differential from findings (consult) and the win rate halves.
 - Hand-curated content (`content/tests.json`) must not live in a gitignored derived-data folder.
+- 2026-11-06: A static ES-module site silently does nothing when opened via `file://` (CORS blocks
+  module scripts and fetch). Always state the HTTP-server requirement in the run docs and make the
+  page itself detect `location.protocol === 'file:'` and say so; never leave a loader that can
+  stall without an error path.

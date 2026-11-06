@@ -32,6 +32,9 @@ so for GitHub Pages the bundles must be committed or published by a build step.
 cd game/web && python3 -m http.server 8077     # then open http://127.0.0.1:8077/
 ```
 
+Do not open `index.html` directly from disk: browsers block ES modules and `fetch` on `file://`
+URLs, so the page would stay at "Loading… 0%" (it now shows a hint instead). It needs an HTTP server.
+
 ## Test and balance
 ```bash
 cd game/web
