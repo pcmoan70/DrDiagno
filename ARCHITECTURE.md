@@ -101,7 +101,8 @@ flowchart LR
 - Progress: finished cases are appended to `localStorage.history` by the debrief; `engine/progress.js` (pure,
   tested) computes per-tier stats, weakest organ systems and unsolved diseases for the `#progress` screen.
 - Student tier: `poolFor` maps it to the Resident pool; `consult` skips the clock, `commit` never ends the case on a
-  wrong call, and `scoring.suggestTests()` (over `compatibleIds()`) feeds the Coach panel.
+  wrong call, `scoring.suggestTests()` (over `compatibleIds()`) feeds the Coach panel, and `scoring.vennSets()`
+  (per finding, a bitmask of the top-3 candidates that explain it, via `explainStrength()`) feeds the Venn panel.
 - Pictures: `data/images.json` (from `build_images.py`, the only build step that uses the network) maps HPO and
   Mondo ids to hotlinked Commons thumbnails with credits, and Mondo ids to Wikipedia articles; shown in balloons,
   the disease profile and the debrief.

@@ -13,8 +13,8 @@ Entertainment and education only. Nothing in the game is medical advice.
 ## How to play
 
 **Pick a tier.** Student is for learning: Resident cases with a 96 hour clock, free literature
-consults, a coach that suggests the most informative next studies, and no sudden death on a wrong
-diagnosis. Resident gives well-described diseases and 72 hours. Attending opens the full
+consults, a coach that suggests the most informative next studies, a Venn diagram of which symptoms
+and test results your three best candidates explain, and no sudden death on a wrong diagnosis. Resident gives well-described diseases and 72 hours. Attending opens the full
 library with decoys that share most of the picture, 60 hours. House is rare diseases, misleading
 openers and 48 hours. Everybody lies.
 

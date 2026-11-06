@@ -85,6 +85,13 @@
     <ul class="dx-list" id="dx-list"></ul>
     <p class="hint" id="dx-hint">Add candidates by name, or consult the literature. Spread your 10 confidence chips over the candidates: a disease needs 5 to be diagnosed, 10 is all in. Chips on the right answer through the case earn a bonus. Click a disease name for its findings and how often they occur.</p>
     <p class="hint" id="dx-fit-note" hidden>Fit bars are shown after a literature consult.</p>
+    <details class="map venn" id="venn" hidden>
+      <summary><h3>Venn: what your best candidates explain</h3><span class="meta" id="venn-count"></span></summary>
+      <p class="hint">Each circle is one of your three best-matching candidates. Every finding sits in the region of the diseases that explain it; the numbers count them, hover one to see which. Filled chips are symptoms (history, examination, course), outlined chips are test results. Findings outside every circle point to another diagnosis, or to a treatment side effect.</p>
+      <div class="venn-wrap" id="venn-svg"></div>
+      <ul class="venn-legend" id="venn-legend"></ul>
+      <ul class="venn-regions" id="venn-regions"></ul>
+    </details>
     <details class="map" id="map">
       <summary><h3>Differential map</h3><span class="meta" id="map-count"></span></summary>
       <p class="hint">Diseases in this tier that still explain at least half the evidence, by organ system. Struck-through systems have no fitting disease left. Hover a bar for the tests that probe it.</p>

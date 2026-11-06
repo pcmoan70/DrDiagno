@@ -146,6 +146,16 @@ Coach panel above the workup lists the three unordered studies that best split t
 fitting (`scoring.suggestTests()`: a study probes a disease when it can reveal one of its findings
 with p >= 0.5; rank by min(probed, not probed), then by duration). Best scores are kept per tier.
 
+### Venn view
+Under the differential a collapsible panel draws the three best-matching candidates as circles A, B
+and C and places every finding in the region of the diseases that explain it (`scoring.vennSets()`,
+using the same rule as the fit score via `explainStrength()`: the disease has the term or a child of
+it, or a parent at 0.6 weight). The SVG shows a count per region with the findings as a tooltip;
+below it a legend (name, match %) and a list per region of the findings as chips: filled for
+symptoms (history, examination, course, treatment), outlined for laboratory, imaging and specialist
+results. Findings explained by none of the three are listed as "None of them" and counted in the
+panel header. Pinned by a test in `tests/map.test.js`.
+
 ## Progress (local storage)
 `renderDebrief()` records each finished case once (`recordCase()`): tier, seed, disease, result
 (won / wrong / timeout), score, hours, spent, tests ordered and the disease's organ systems. The

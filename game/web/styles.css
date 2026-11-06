@@ -120,6 +120,13 @@ input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .map-list .sys { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .map-list li.cut { color: var(--muted); } .map-list li.cut .sys { text-decoration: line-through; }
 .map-list .n { font-family: var(--mono); text-align: right; color: var(--muted); }
+.venn-svg { display: block; width: 100%; max-width: 320px; height: auto; margin: 4px auto; }
+.venn-svg circle { fill-opacity: .16; stroke-width: 1.5; } .venn-svg .letter { font-weight: 700; font-size: 15px; text-anchor: middle; } .venn-svg .count { font-family: var(--mono); font-size: 14px; font-weight: 700; text-anchor: middle; fill: var(--fg); }
+.venn .c0 { fill: var(--fit); stroke: var(--fit); background: var(--fit); } .venn .c1 { fill: var(--accent); stroke: var(--accent); background: var(--accent); } .venn .c2 { fill: var(--good); stroke: var(--good); background: var(--good); }
+.venn-legend, .venn-regions { list-style: none; padding: 0; margin: 6px 0 0; font-size: .85rem; }
+.venn-legend li { display: flex; align-items: center; gap: 8px; margin: 3px 0; } .venn-legend .swatch { width: 20px; height: 20px; border-radius: 50%; color: #fff; font-size: .75rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.venn-regions li { margin: 6px 0; } .venn-regions strong { display: block; font-size: .78rem; color: var(--muted); margin-bottom: 2px; } .venn-regions li.none strong { color: var(--warn); }
+.venn-regions .findings { display: flex; flex-wrap: wrap; gap: 4px; } .venn .chip.lab { background: transparent; border: 1px solid var(--fit); color: var(--fg); }
 .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-size: .9rem; z-index: 30; box-shadow: 0 8px 24px rgba(0,0,0,.25); animation: toast 2.6s forwards; pointer-events: none; }
 @keyframes toast { 0% { opacity: 0; transform: translate(-50%, 8px); } 10%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
 .test-group { border-bottom: 1px solid var(--rule); }

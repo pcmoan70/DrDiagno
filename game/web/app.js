@@ -1,6 +1,6 @@
 import { loadDb } from './engine/db.js';
 import { pickDisease, createCase, orderTest, orderTests, consult, addCandidate, removeCandidate, treat, commit, patientFor, poolFor, CONSULT, setChips, autoChips, TUNING } from './engine/case.js';
-import { rankDifferential, suggest, differentialMap, fit, suggestTests, systemsOf } from './engine/scoring.js';
+import { rankDifferential, suggest, differentialMap, fit, suggestTests, systemsOf, vennSets } from './engine/scoring.js';
 import { addEntry, tierStats, topicStats, missedDiseases } from './engine/progress.js';
 import { randomCode } from './engine/rng.js';
 import { searchTerms } from './engine/search.js';
@@ -122,7 +122,7 @@ function startCase(t, s) {
   $('hud-code').textContent = `${tier}-${seed}`;
   $('dx-search').value = ''; selected.clear(); suggestions = null;
   mapPrev = null; $('map').hidden = tier === 'house'; $('map').open = tier === 'resident' || tier === 'student';
-  $('coach').hidden = tier !== 'student';
+  $('coach').hidden = tier !== 'student'; $('venn').open = true;
   $('btn-consult').textContent = tier === 'student' ? 'Consult the literature (free)' : 'Consult the literature (3 h)';
   show('screen-play');
   renderAll();
@@ -278,6 +278,35 @@ function renderDifferential() {
       showFit ? el('div', { class: 'fit' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.score)}%` })), el('span', {}, `explains ${r.explained} of ${r.total}`)) : null,
       showFit && r.unexplained.length ? el('div', { class: 'why' }, 'Does not explain: ', termList(r.unexplained.slice(0, 4)), r.unexplained.length > 4 ? '…' : null) : null));
   }
+  renderVenn(ranked);
+}
+
+// Student tier: Venn diagram of the findings across the three best-matching candidates.
+const VENN_C = { 1: [[150, 110]], 2: [[108, 110], [192, 110]], 3: [[110, 95], [190, 95], [150, 165]] }; // circle centres, r = 78
+const VENN_POS = { 1: { 1: [150, 110] }, 2: { 1: [74, 110], 2: [226, 110], 3: [150, 110] }, 3: { 1: [76, 80], 2: [224, 80], 4: [150, 204], 3: [150, 70], 5: [108, 144], 6: [192, 144], 7: [150, 118] } }; // region count positions by mask
+const VENN_LETTER = { 1: [[150, 22]], 2: [[44, 40], [256, 40]], 3: [[44, 40], [256, 40], [150, 260]] };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const isResult = (f) => PARALLEL.has(db.testById.get(f.src)?.kind); // laboratory, imaging or specialist result rather than a symptom
+function renderVenn(ranked) {
+  const top = tier === 'student' ? ranked.slice(0, 3) : [];
+  $('venn').hidden = !top.length;
+  if (!top.length) return;
+  const n = top.length, letters = ['A', 'B', 'C'];
+  const regions = vennSets(db, state, top.map((r) => r.id));
+  const none = regions.get(0)?.length || 0;
+  $('venn-count').textContent = none ? `${none} unexplained` : 'all explained';
+  const names = (mask) => letters.filter((_, i) => mask & (1 << i));
+  const label = (mask) => { const ls = names(mask); return ls.length === n && n > 1 ? `${ls.slice(0, -1).join(', ')} and ${ls[ls.length - 1]}` : ls.length > 1 ? `${ls.slice(0, -1).join(', ')} and ${ls[ls.length - 1]} only` : `Only ${ls[0]}`; };
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 300 270'); svg.setAttribute('class', 'venn-svg'); svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', 'Findings explained by the top candidates');
+  svg.innerHTML = VENN_C[n].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="78" class="c${i}"/>`).join('') +
+    VENN_LETTER[n].map(([x, y], i) => `<text x="${x}" y="${y}" class="letter c${i}">${letters[i]}</text>`).join('') +
+    Object.entries(VENN_POS[n]).map(([mask, [x, y]]) => { const fs = regions.get(+mask) || []; return fs.length ? `<text x="${x}" y="${y}" class="count"><title>${esc(label(+mask) + ': ' + fs.map((f) => db.label(f.t)).join(', '))}</title>${fs.length}</text>` : ''; }).join('');
+  $('venn-svg').replaceChildren(svg);
+  $('venn-legend').replaceChildren(...top.map((r, i) => el('li', {}, el('span', { class: `swatch c${i}` }, letters[i]), nameLink(db.disease(r.id), { ...state, label: 'This patient' }), pctBadge(r.score))));
+  const chip = (f) => el('span', { class: 'chip' + (isResult(f) ? ' lab' : ''), 'data-term': f.t }, db.label(f.t), el('span', { class: 'src' }, SRC[f.src] || db.testById.get(f.src)?.name || f.src));
+  const order = [...regions.keys()].sort((a, b) => (b ? names(b).length : -1) - (a ? names(a).length : -1) || a - b);
+  $('venn-regions').replaceChildren(...order.map((mask) => el('li', { class: mask ? '' : 'none' }, el('strong', {}, mask ? label(mask) : 'None of them'), el('span', { class: 'findings' }, regions.get(mask).map(chip)))));
 }
 
 function renderConsult(showFit) {

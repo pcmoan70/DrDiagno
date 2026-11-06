@@ -1,6 +1,10 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: Venn view in Student mode. A collapsible panel under the differential draws the three
+  best-matching candidates as circles and places every symptom (filled chip) and test result
+  (outlined chip) in the region of the diseases that explain it; unexplained findings are listed
+  apart. `scoring.vennSets()` / `explainStrength()` (extracted from `fit()`), 1 new node test (25).
 - Dr. Diagno: progress tracking in local storage. Finished cases are recorded; a "Your progress" page
   shows per-tier played/solved/best/trend, a score chart, the weakest organ systems, unsolved diseases
   with Retry links and recent cases, plus Clear history. `engine/progress.js`, 3 new node tests (24).
