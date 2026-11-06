@@ -25,7 +25,9 @@ No accounts are needed for anything the script downloads.
 
 **Data overview** (what each file contains, columns, row counts, and how the
 datasets link through shared identifiers): [`DATA_OVERVIEW.md`](DATA_OVERVIEW.md).
-- Structure diagram: `figures/dataset_structure.svg` (Graphviz source `.dot`, rebuild with `dot -Tsvg -o figures/dataset_structure.svg figures/dataset_structure.dot`); viewable page with coverage and size panels: `figures/diagnosis_data_map.html`.
+- Structure diagram below ([SVG](figures/dataset_structure.svg), Graphviz source [`dataset_structure.dot`](figures/dataset_structure.dot), rebuild with `dot -Tsvg -o figures/dataset_structure.svg figures/dataset_structure.dot`); a viewable page with coverage and size panels is [`figures/diagnosis_data_map.html`](figures/diagnosis_data_map.html).
+
+![Structure of the dataset collection: layers, datasets and identifier joins](figures/dataset_structure.png)
 
 ## What is collected and why
 
