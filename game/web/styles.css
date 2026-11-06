@@ -168,3 +168,12 @@ input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .pct { font-family: var(--mono); font-size: .8rem; font-weight: 700; color: var(--fit); }
 #hud-match strong { color: var(--fit); font-weight: 700; max-width: 28ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; vertical-align: bottom; }
 @media (max-width: 900px) { .modal-card .media { float: none; max-width: 100%; margin: 0 0 10px; } .tip { max-width: calc(100vw - 16px); } }
+.progress { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; }
+.pg-table { width: 100%; border-collapse: collapse; font-size: .88rem; margin: 8px 0 16px; }
+.pg-table th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--rule); font-weight: 600; }
+.pg-table td { padding: 5px 6px; border-bottom: 1px solid var(--rule); } .pg-table tbody th { font-size: .88rem; text-transform: none; letter-spacing: 0; color: var(--fg); }
+.pg-table .up { color: var(--good); font-weight: 600; } .pg-table .down { color: var(--bad); font-weight: 600; }
+#pg-topics li.weak .sys { color: var(--bad); font-weight: 600; }
+.chip-chart .dot { fill: var(--fit); } .chip-chart .dot.lost { fill: var(--bad); } .chip-chart polyline.line { fill: none; }
+#progress-link { display: flex; align-items: center; gap: 10px; }
+@media (max-width: 900px) { .progress { grid-template-columns: 1fr; } }

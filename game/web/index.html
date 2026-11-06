@@ -50,6 +50,7 @@
       <button type="submit" class="btn">Open</button>
     </form>
     <div id="best" class="best"></div>
+    <p class="best" id="progress-link"><a class="btn" href="#progress">Your progress</a> <span id="progress-brief"></span></p>
   </section>
   <footer class="credits">
     <p>Data: <a href="https://hpo.jax.org/" target="_blank" rel="noopener">Human Phenotype Ontology</a>, <a href="https://www.orphadata.com/" target="_blank" rel="noopener">Orphanet / Orphadata</a> (CC BY 4.0), <a href="https://mondo.monarchinitiative.org/" target="_blank" rel="noopener">Mondo</a> (CC BY 4.0), <a href="https://github.com/mims-harvard/PrimeKG" target="_blank" rel="noopener">PrimeKG</a> (MIT). Versions in <a href="data/credits.json" target="_blank" rel="noopener">credits.json</a>.</p>
@@ -106,6 +107,31 @@
       <button class="btn small" id="batch-clear">Clear</button>
     </div>
     <div id="tests"></div>
+  </section>
+</main>
+
+<main id="screen-progress" class="screen progress" hidden>
+  <section class="col">
+    <h2>Your progress</h2>
+    <p class="hint">Kept only in this browser (local storage). Nothing is sent anywhere. Replaying a case code replaces its earlier result.</p>
+    <table class="pg-table" id="pg-tiers"></table>
+    <h3>Score trend</h3>
+    <p class="hint" id="pg-chart-hint">Score of each finished case, oldest to newest; lost cases count as 0.</p>
+    <div id="pg-chart"></div>
+    <h3>Recent cases</h3>
+    <table class="pg-table" id="pg-recent"></table>
+    <div class="actions-row">
+      <a class="btn" href="#">Title screen</a>
+      <button class="btn" id="pg-clear">Clear history</button>
+    </div>
+  </section>
+  <section class="col">
+    <h3>Challenging topics</h3>
+    <p class="hint">Organ systems of the diseases you faced, weakest first. A disease counts for every system it affects.</p>
+    <ul class="map-list" id="pg-topics"></ul>
+    <h3>Diseases you missed</h3>
+    <p class="hint">Not yet solved. Click a name for its findings, or retry the same case.</p>
+    <ul class="dx-list" id="pg-missed"></ul>
   </section>
 </main>
 

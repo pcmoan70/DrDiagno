@@ -146,6 +146,15 @@ Coach panel above the workup lists the three unordered studies that best split t
 fitting (`scoring.suggestTests()`: a study probes a disease when it can reveal one of its findings
 with p >= 0.5; rank by min(probed, not probed), then by duration). Best scores are kept per tier.
 
+## Progress (local storage)
+`renderDebrief()` records each finished case once (`recordCase()`): tier, seed, disease, result
+(won / wrong / timeout), score, hours, spent, tests ordered and the disease's organ systems. The
+history (up to 500 entries, key `history`) lives in localStorage next to the per-tier best scores.
+`engine/progress.js` aggregates it with pure, node-tested functions: `tierStats` (played, solved,
+best, last-5 average, trend against the previous 5), `topicStats` (organ systems, weakest first),
+`missedDiseases` (unsolved diseases with the last case code; a later win removes them). The
+`#progress` screen renders these plus a score chart and recent cases, with a Clear button.
+
 ## Adding a test
 Edit `web/content/tests.json`: `id`, `kind`, `name`, `hours`, `cost`, `reveals` (HPO ids whose
 subtrees the test can detect). `special` is one of `onset`, `inh`, `genetic`. Run `validate.py`.

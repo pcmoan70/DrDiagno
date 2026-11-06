@@ -73,7 +73,8 @@ flowchart LR
   end
   subgraph web[game/web, static ES modules = the deployed folder]
     IDX[index.html + styles.css] --> APP[app.js]
-    APP --> ENG[engine: rng, db, case, scoring, search]
+    APP --> ENG[engine: rng, db, case, scoring, search, progress]
+    APP --> LS[(localStorage: history, best)]
     ENG --> DATA[data/*.json]
     ENG --> TESTS[content/tests.json]
   end
@@ -97,6 +98,8 @@ flowchart LR
 - `web/data/` is derived but versioned (Pages builds from the repo alone); `web/content/tests.json` is hand-curated.
 - Term balloons: elements with `data-term` get a fixed-position tooltip (lay name, HPO name, definition from
   `data/defs.json`, fetched in the background after boot) via document-level mouseover/focusin delegation.
+- Progress: finished cases are appended to `localStorage.history` by the debrief; `engine/progress.js` (pure,
+  tested) computes per-tier stats, weakest organ systems and unsolved diseases for the `#progress` screen.
 - Student tier: `poolFor` maps it to the Resident pool; `consult` skips the clock, `commit` never ends the case on a
   wrong call, and `scoring.suggestTests()` (over `compatibleIds()`) feeds the Coach panel.
 - Pictures: `data/images.json` (from `build_images.py`, the only build step that uses the network) maps HPO and

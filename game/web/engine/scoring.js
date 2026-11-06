@@ -50,7 +50,7 @@ export function organSystems(db) {
   if (!systemRoots) systemRoots = Object.keys(db.terms).filter((id) => db.terms[id][2].includes(PHENO_ROOT));
   return systemRoots;
 }
-function systemsOf(db, d) {
+export function systemsOf(db, d) {
   if (!d._sys) { d._sys = new Set(); const roots = organSystems(db); for (const [t, p] of d.t) if (p >= 0.5) for (const r of roots) if (db.ancestors(t).has(r)) d._sys.add(r); }
   return d._sys;
 }

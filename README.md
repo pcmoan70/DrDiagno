@@ -52,7 +52,16 @@ list lives in the link, so it can be shared.
 
 A correct diagnosis scores up to 1,000 points, scaled by time left, minus a share of what you
 spent, plus a bonus for a stable patient, 20 points per chip above five, and up to 150 points
-for calibration. Best scores per tier are kept in your browser.
+for calibration.
+
+## Your progress
+
+Every finished case is kept in your browser's local storage, nothing leaves your device. The
+**Your progress** page on the title screen shows, per tier, how many cases you played and solved,
+your best score, the average of your last five and whether you are trending up or down; a score
+chart of recent cases; the organ systems you struggle with most, weakest first; the diseases you
+have not yet solved, each with a Retry link to the same case; and your recent cases. Replaying a
+case code replaces its earlier result, and solving a disease removes it from the missed list.
 
 ## Data and credits
 

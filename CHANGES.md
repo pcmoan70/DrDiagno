@@ -1,6 +1,9 @@
 # CHANGES
 
 ## 2026-11-06
+- Dr. Diagno: progress tracking in local storage. Finished cases are recorded; a "Your progress" page
+  shows per-tier played/solved/best/trend, a score chart, the weakest organ systems, unsolved diseases
+  with Retry links and recent cases, plus Clear history. `engine/progress.js`, 3 new node tests (24).
 - Dr. Diagno: larger pictures (800 px thumbnails from the Commons API, clamped to the original size; balloon 460 px wide with a 260 px image, profile figure up to 380 px).
 - Dr. Diagno: match percentage next to each candidate (where fit is visible) and a "Best match" item
   in the top bar in Student and Resident.

@@ -1,6 +1,7 @@
 import { loadDb } from './engine/db.js';
 import { pickDisease, createCase, orderTest, orderTests, consult, addCandidate, removeCandidate, treat, commit, patientFor, poolFor, CONSULT, setChips, autoChips, TUNING } from './engine/case.js';
-import { rankDifferential, suggest, differentialMap, fit, suggestTests } from './engine/scoring.js';
+import { rankDifferential, suggest, differentialMap, fit, suggestTests, systemsOf } from './engine/scoring.js';
+import { addEntry, tierStats, topicStats, missedDiseases } from './engine/progress.js';
 import { randomCode } from './engine/rng.js';
 import { searchTerms } from './engine/search.js';
 
@@ -39,7 +40,6 @@ async function boot() {
     throw e;
   }
   loadDefs(); loadMedia(); // definitions and image links for balloons and profiles arrive in the background
-  renderTitle();
   window.addEventListener('hashchange', route);
   route();
 }
@@ -48,7 +48,8 @@ function route() {
   const m = location.hash.match(/^#(student|resident|attending|house)-([a-z0-9]+)$/);
   if (m) startCase(m[1], m[2]);
   else if (location.hash.startsWith('#watch')) startWatch(location.hash.slice(7));
-  else show('screen-title');
+  else if (location.hash === '#progress') { renderProgress(); show('screen-progress'); }
+  else { renderTitle(); show('screen-title'); }
 }
 
 function renderTitle() {
@@ -61,7 +62,56 @@ function renderTitle() {
   $('code-form').onsubmit = (ev) => { ev.preventDefault(); const v = $('code-input').value.trim().toLowerCase().replace(/^#/, ''); if (/^(student|resident|attending|house)-[a-z0-9]+$/.test(v)) location.hash = '#' + v; };
   const best = store.get('best') || {};
   $('best').textContent = Object.keys(best).length ? 'Best scores: ' + TIERS.filter((t) => best[t.id]).map((t) => `${t.name} ${best[t.id]}`).join(' · ') : '';
-  show('screen-title');
+  const h = history();
+  const won = h.filter((e) => e.status === 'won').length;
+  $('progress-brief').textContent = h.length ? `${h.length} ${h.length === 1 ? 'case' : 'cases'} played, ${Math.round(100 * won / h.length)}% solved` : 'Finished cases are kept in this browser.';
+}
+
+// ---- progress: finished cases live in localStorage; aggregation is in engine/progress.js
+const history = () => store.get('history') || [];
+function recordCase() {
+  if (state.recorded) return;
+  state.recorded = true;
+  const d = db.disease(state.id);
+  const systems = [...systemsOf(db, d)].map((id) => db.name(id).replace(/^Abnormality of (the )?/, ''));
+  store.set('history', addEntry(history(), { at: Date.now(), tier, seed, id: d.id, name: d.n, status: state.status === 'won' ? 'won' : state.committed ? 'wrong' : 'timeout',
+    score: state.score || 0, hours: Math.round(state.clock * 10) / 10, spent: state.spent, tests: Object.keys(state.tests).length, systems }));
+}
+const tierName = (id) => TIERS.find((t) => t.id === id)?.name || id;
+const dateText = (ms) => new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+function renderProgress() {
+  const h = history();
+  const row = (...cells) => el('tr', {}, cells.map((c, i) => el(i ? 'td' : 'th', { scope: i ? null : 'row' }, c)));
+  const head = (...cells) => el('thead', {}, el('tr', {}, cells.map((c) => el('th', {}, c))));
+  $('pg-tiers').replaceChildren(head('Tier', 'Played', 'Solved', 'Best', 'Last 5 avg', 'Trend'),
+    el('tbody', {}, TIERS.map((t) => tierStats(h, t.id)).filter((x) => x.played).map((x) => row(tierName(x.tier), x.played, `${x.won} (${Math.round(100 * x.winRate)}%)`, x.best || '–', x.recentAvg,
+      x.trend === null ? '–' : el('span', { class: x.trend > 0 ? 'up' : x.trend < 0 ? 'down' : '' }, x.trend > 0 ? `▲ ${x.trend}` : x.trend < 0 ? `▼ ${-x.trend}` : '=')))));
+  $('pg-tiers').hidden = !h.length;
+  $('pg-chart').replaceChildren(scoreChart(h) || el('p', { class: 'hint' }, 'Finish two or more cases to see a trend.'));
+  $('pg-chart-hint').hidden = h.length < 2;
+  const topics = topicStats(h); const max = Math.max(1, ...topics.map((x) => x.played));
+  $('pg-topics').replaceChildren(...topics.slice(0, 12).map((x) => el('li', { class: x.winRate < 0.5 && x.played >= 2 ? 'weak' : '', title: `${x.won} of ${x.played} solved` },
+    el('span', { class: 'sys' }, x.system), el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * x.played / max)}%` })), el('span', { class: 'n' }, `${Math.round(100 * x.winRate)}%`))));
+  if (!topics.length) $('pg-topics').replaceChildren(el('li', { class: 'hint' }, 'Nothing yet.'));
+  const missed = missedDiseases(h);
+  $('pg-missed').replaceChildren(...missed.slice(0, 20).map((m) => el('li', { class: 'dx' }, el('span', { class: 'head' }, nameLink(db.disease(m.id), null), el('span', { class: 'meta' }, `${m.misses} ${m.misses === 1 ? 'miss' : 'misses'} · ${tierName(m.tier)}`)),
+    el('a', { class: 'btn small', href: `#${m.tier}-${m.seed}` }, 'Retry'))));
+  if (!missed.length) $('pg-missed').replaceChildren(el('li', { class: 'hint' }, h.length ? 'None outstanding. Every disease you met has been solved.' : 'Nothing yet.'));
+  $('pg-recent').replaceChildren(head('When', 'Tier', 'Disease', 'Result', 'Score', 'Case'),
+    el('tbody', {}, h.slice(-15).reverse().map((e) => row(dateText(e.at), tierName(e.tier), nameLink(db.disease(e.id), null), e.status === 'won' ? 'Solved' : e.status === 'wrong' ? 'Wrong' : 'Too late', e.status === 'won' ? e.score : 0, el('a', { href: `#${e.tier}-${e.seed}` }, `${e.tier}-${e.seed}`)))));
+  $('pg-recent').hidden = !h.length;
+  $('pg-clear').onclick = () => confirmThen('Clear history', 'Delete every recorded case from this browser? Best scores stay.', () => { store.set('history', []); renderProgress(); });
+}
+function scoreChart(h) {
+  const pts = h.slice(-40).map((e) => (e.status === 'won' ? e.score : 0));
+  if (pts.length < 2) return null;
+  const W = 480, Hh = 90, pad = 6, max = Math.max(1000, ...pts);
+  const x = (i) => pad + ((W - 2 * pad) * i) / (pts.length - 1), y = (v) => Hh - pad - ((Hh - 2 * pad) * v) / max;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${Hh}`); svg.setAttribute('class', 'chip-chart'); svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', 'Scores of recent cases');
+  svg.innerHTML = `<line x1="${pad}" y1="${y(0)}" x2="${W - pad}" y2="${y(0)}" class="axis"/><line x1="${pad}" y1="${y(max)}" x2="${W - pad}" y2="${y(max)}" class="axis faint"/>` +
+    `<polyline points="${pts.map((v, i) => `${x(i)},${y(v)}`).join(' ')}" class="line"/>` + pts.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="2.5" class="${v ? 'dot' : 'dot lost'}"/>`).join('');
+  return el('div', { class: 'chart-wrap' }, svg);
 }
 
 function startCase(t, s) {
@@ -295,6 +345,7 @@ function confirmThen(title, text, fn) {
 function renderDebrief() {
   const d = db.disease(state.id);
   const won = state.status === 'won';
+  recordCase();
   $('db-title').replaceChildren(won ? 'Correct: ' : state.committed ? 'Wrong. It was ' : 'Too late. It was ', nameLink(d, { ...state, label: 'This patient' }));
   const sc = $('db-score'); sc.textContent = won ? `${state.score} points · ${clockText(state.clock)} · $${state.spent.toLocaleString()}` : '0 points'; sc.className = 'score ' + (won ? 'won' : 'lost');
   if (won) { const best = store.get('best') || {}; if (!best[tier] || state.score > best[tier]) { best[tier] = state.score; store.set('best', best); } }
