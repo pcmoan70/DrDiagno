@@ -1,6 +1,11 @@
 # CHANGES
 
 ## 2026-11-07
+- Dr. Diagno: logo and icon. A flat detective silhouette inspired by House and Holmes: profile bust in
+  a deerstalker, magnifying glass with a cross in the lens; two dark shapes, one amber, one red
+  (`game/web/logo.svg`, hand-written, theme palette, pale edge so it reads on dark tab bars). Used as favicon,
+  apple-touch-icon (`icon-180.png`, plus `icon-512.png`, rendered with ImageMagick), header brand
+  and hero title.
 - Dr. Diagno: fuzzy search in both boxes (typos, word order, phrases; `engine/search.js`, shared by
   findings and diseases) and three new studies (Ask about pain, Pregnancy and birth history, ENT
   exam) plus wider reveal roots on skin and chest exams, EMG and MRI brain, so voice, pain,

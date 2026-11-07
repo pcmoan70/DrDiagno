@@ -37,3 +37,8 @@
   `catalog/datasets.yaml` (no licence, copyright unclear). The game is public, so it could not be used.
 - Rule: for anything that ends up in `game/web/data`, check the catalog licence first and name it in
   the proposal; only CC0 / CC BY / MIT-style sources qualify.
+
+## 2026-11-07: logo iterations
+- For visual assets, start with the simplest silhouette and show it before adding detail. Three
+  rounds were spent removing elements (cane, band, stethoscope, collar, ECG trace) the user never
+  asked for. Render variants side by side at target size (24 px) and let the user choose.

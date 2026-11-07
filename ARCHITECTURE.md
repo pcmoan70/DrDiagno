@@ -73,7 +73,7 @@ flowchart LR
     V[validate.py] --> REP[data_report.md]
   end
   subgraph web[game/web, static ES modules = the deployed folder]
-    IDX[index.html + styles.css] --> APP[app.js]
+    IDX[index.html + styles.css + logo.svg] --> APP[app.js]
     APP --> ENG[engine: rng, db, case, scoring, search (fuzzy), progress]
     APP --> LS[(localStorage: history, best)]
     ENG --> DATA[data/*.json]

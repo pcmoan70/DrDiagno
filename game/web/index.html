@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dr. Diagno</title>
 <meta name="description" content="A diagnostic puzzle game: a patient with puzzling symptoms, a ticking clock, and thousands of real diseases to tell apart.">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="apple-touch-icon" href="icon-180.png">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header class="top">
-  <a class="brand" href="#" id="brand">Dr. Diagno</a>
+  <a class="brand" href="#" id="brand"><img src="logo.svg" alt="" width="28" height="28">Dr. Diagno</a>
   <div class="hud" id="hud" hidden>
     <span class="hud-item"><span class="hud-label">Case</span> <code id="hud-code"></code></span>
     <span class="hud-item"><span class="hud-label">Clock</span> <strong id="hud-clock"></strong></span>
@@ -32,7 +34,7 @@
 
 <main id="screen-title" class="screen" hidden>
   <section class="hero">
-    <h1>Dr. Diagno</h1>
+    <h1><img class="hero-logo" src="logo.svg" alt="" width="72" height="72">Dr. Diagno</h1>
     <p class="lede">A patient walks in with symptoms that don't add up. The clock is running. Build a differential, order the right tests, and name the disease before it's too late.</p>
     <p class="lede small">Every case is generated from real medical knowledge: 8,000 diseases, from the common cold to the rarest syndromes, and 20,000 clinical findings from the Human Phenotype Ontology, Orphanet, Mondo and the medical literature. Entertainment and education only, not medical advice.</p>
   </section>

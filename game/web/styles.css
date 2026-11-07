@@ -21,7 +21,8 @@ code { font-family: var(--mono); font-size: .9em; }
 [hidden] { display: none !important; }
 
 .top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 12px 0; border-bottom: 1px solid var(--rule); position: sticky; top: 0; background: var(--bg); z-index: 5; }
-.brand { font-weight: 700; text-decoration: none; font-size: 1.1rem; letter-spacing: .02em; }
+.brand { font-weight: 700; text-decoration: none; font-size: 1.1rem; letter-spacing: .02em; display: inline-flex; align-items: center; gap: 8px; }
+.brand img { width: 28px; height: 28px; }
 .hud { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; font-size: .9rem; }
 .hud-label { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; margin-right: 4px; }
 .stab { display: flex; align-items: center; gap: 8px; min-width: 180px; }
@@ -32,7 +33,8 @@ code { font-family: var(--mono); font-size: .9em; }
 .screen { max-width: 1280px; margin: 0 auto; padding-top: 20px; }
 .loading { color: var(--muted); }
 .hero { max-width: 68ch; }
-.hero h1 { font-size: 2.4rem; }
+.hero h1 { font-size: 2.4rem; display: flex; align-items: center; gap: 14px; }
+.hero-logo { width: 72px; height: 72px; flex: none; }
 .lede { font-size: 1.05rem; } .lede.small { font-size: .9rem; color: var(--muted); }
 .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 24px 0; }
 .tier { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }

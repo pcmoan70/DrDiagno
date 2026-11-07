@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Dr. Diagno">
+  <title>Dr. Diagno</title>
+  <!-- detective silhouette: profile bust facing right, deerstalker cap; pale edge so it reads on dark tab bars -->
+  <g fill="#1c2230" stroke="#f4f5f7" stroke-width="1" stroke-linejoin="round" paint-order="stroke">
+    <path d="M20 24 C20 12 40 12 40 24 L45 30 L39 34 L38 42 C50 44 56 50 56 64 L8 64 C8 50 14 44 26 42 L26 36 C22 33 20 29 20 24 Z"/>
+    <path d="M3 22 C8 17 15 18 19 20 C21 9 41 9 43 20 C47 18 54 17 59 22 C54 24 48 24 43 23 L19.5 23 C14 24 8 24 3 22 Z"/>
+  </g>
+  <!-- magnifying glass with a cross in the lens -->
+  <path d="M52 50 L56 61" stroke="#b7791f" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="50" cy="41" r="10" fill="#f4f5f7" stroke="#b7791f" stroke-width="3.5"/>
+  <path d="M50 36 V46 M45 41 H55" stroke="#c53030" stroke-width="3" stroke-linecap="round"/>
+</svg>
