@@ -1,6 +1,11 @@
 # CHANGES
 
 ## 2026-11-07
+- Dr. Diagno: fuzzy search in both boxes (typos, word order, phrases; `engine/search.js`, shared by
+  findings and diseases) and three new studies (Ask about pain, Pregnancy and birth history, ENT
+  exam) plus wider reveal roots on skin and chest exams, EMG and MRI brain, so voice, pain,
+  prenatal, sweating, breast, neuropathy and CNS-morphology findings can be found in play (58
+  studies; 99% of disease findings revealable). 29 node tests.
 - Dr. Diagno: common diseases. The library now holds 8,277 diseases: 1,191 common ones (common cold,
   influenza, appendicitis, myocardial infarction, asthma...) join the 7,086 HPO-annotated rare
   diseases. Measured symptom frequencies from DDXPlus (CC BY 4.0, 33 acute conditions) and

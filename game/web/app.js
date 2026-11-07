@@ -3,7 +3,7 @@ import { pickDisease, createCase, orderTest, orderTests, consult, addCandidate, 
 import { rankDifferential, suggest, differentialMap, fit, suggestTests, systemsOf, vennSets } from './engine/scoring.js';
 import { addEntry, tierStats, topicStats, missedDiseases } from './engine/progress.js';
 import { randomCode } from './engine/rng.js';
-import { searchTerms } from './engine/search.js';
+import { searchTerms, searchDiseases } from './engine/search.js';
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, attrs = {}, ...kids) => {
@@ -433,15 +433,11 @@ function wireSearch(inputId, boxId, find, pick) {
 document.addEventListener('click', (ev) => { if (!ev.target.closest('.search')) for (const b of document.querySelectorAll('.suggest')) b.hidden = true; });
 
 wireSearch('dx-search', 'dx-suggest', (q) => {
-  const out = [];
-  if (q.length < 2) return out;
-  for (const e of db.index) {
-    if (state.differential.includes(e.i)) continue;
-    const syn = e.s.find((x) => x.toLowerCase().includes(q));
-    if (e.n.toLowerCase().includes(q) || syn) out.push({ key: e.i, node: [e.n, syn && !e.n.toLowerCase().includes(q) ? el('span', { class: 'syn' }, ` (${syn})`) : null] });
-    if (out.length >= 8) break;
-  }
-  return out;
+  const stem = q.split(/\s+/)[0].slice(0, 4); // show the synonym that carried the match when the name itself does not
+  return searchDiseases(db, q, 8, new Set(state.differential)).map((e) => {
+    const syn = !e.n.toLowerCase().includes(stem) ? e.s.find((x) => x.toLowerCase().includes(stem)) : null;
+    return { key: e.i, node: [e.n, syn ? el('span', { class: 'syn' }, ` (${syn})`) : null] };
+  });
 }, (id) => { addCandidate(state, id); autoChips(db, state); renderDifferential(); });
 
 // ---- watch-along mode: free findings, no patient, no clock. State lives in the URL hash.

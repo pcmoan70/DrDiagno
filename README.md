@@ -45,7 +45,8 @@ wrong one may harm them or add side effects. Diagnose when you are sure. Near-id
 count as correct.
 
 **Watch-along mode** has no patient and no clock. Type findings as you hear them, say while
-watching a medical drama, mark them present or absent, and see which of 8,277 diseases fit. The
+watching a medical drama, mark them present or absent, and see which of 8,277 diseases fit. Both search
+boxes forgive typos and word order ("hedache", "pain chest"). The
 list lives in the link, so it can be shared.
 
 ## Scoring

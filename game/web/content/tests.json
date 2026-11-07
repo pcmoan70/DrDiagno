@@ -1,60 +1,631 @@
 [
- {"id":"hx_onset","kind":"history","name":"Ask about onset and course","hours":0.25,"cost":0,"special":"onset","reveals":[]},
- {"id":"hx_family","kind":"history","name":"Family history","hours":0.25,"cost":0,"special":"inh","reveals":[]},
- {"id":"hx_growth","kind":"history","name":"Growth history and charts","hours":0.25,"cost":0,"reveals":["HP:0001507"]},
- {"id":"hx_develop","kind":"history","name":"Developmental history","hours":0.25,"cost":0,"reveals":["HP:0012758"]},
- {"id":"hx_constitutional","kind":"history","name":"Constitutional symptoms","hours":0.25,"cost":0,"reveals":["HP:0025142"]},
- {"id":"hx_gi","kind":"history","name":"GI review of systems","hours":0.25,"cost":0,"reveals":["HP:0025031"]},
- {"id":"hx_resp","kind":"history","name":"Respiratory review of systems","hours":0.25,"cost":0,"reveals":["HP:0002086"]},
- {"id":"hx_gu","kind":"history","name":"Genitourinary review of systems","hours":0.25,"cost":0,"reveals":["HP:0000119"]},
- {"id":"hx_psych","kind":"history","name":"Behaviour and mood","hours":0.25,"cost":0,"reveals":["HP:0000708"]},
- {"id":"hx_sleep","kind":"history","name":"Sleep history","hours":0.25,"cost":0,"reveals":["HP:0002360"]},
- {"id":"hx_infections","kind":"history","name":"Infection history","hours":0.25,"cost":0,"reveals":["HP:0002719"]},
-
- {"id":"ex_vitals","kind":"exam","name":"Vital signs","hours":0.1,"cost":0,"reveals":["HP:0001945","HP:0000822","HP:0002615","HP:0001649","HP:0001662","HP:0002094","HP:0004370"]},
- {"id":"ex_head","kind":"exam","name":"Head and face exam","hours":0.25,"cost":0,"reveals":["HP:0000234","HP:0000271","HP:0000152"]},
- {"id":"ex_eyes","kind":"exam","name":"Eye exam (bedside)","hours":0.25,"cost":0,"reveals":["HP:0012373","HP:0000478"]},
- {"id":"ex_ears","kind":"exam","name":"Ear and hearing check","hours":0.25,"cost":0,"reveals":["HP:0000598","HP:0000364"]},
- {"id":"ex_skin","kind":"exam","name":"Skin, hair and nails","hours":0.25,"cost":0,"reveals":["HP:0000951","HP:0001595","HP:0001597"]},
- {"id":"ex_cardio","kind":"exam","name":"Cardiovascular exam","hours":0.25,"cost":0,"reveals":["HP:0011025","HP:0030680"]},
- {"id":"ex_chest","kind":"exam","name":"Chest exam","hours":0.25,"cost":0,"reveals":["HP:0002795","HP:0000765"]},
- {"id":"ex_abdomen","kind":"exam","name":"Abdominal exam","hours":0.25,"cost":0,"reveals":["HP:0001438","HP:0002240","HP:0001744","HP:0002716"]},
- {"id":"ex_neuro","kind":"exam","name":"Neurological exam","hours":0.5,"cost":0,"reveals":["HP:0012638"]},
- {"id":"ex_msk","kind":"exam","name":"Musculoskeletal exam","hours":0.25,"cost":0,"reveals":["HP:0033127","HP:0040064"]},
- {"id":"ex_genital","kind":"exam","name":"Genital exam","hours":0.25,"cost":0,"reveals":["HP:0000078"]},
- {"id":"ex_cognitive","kind":"exam","name":"Cognitive assessment","hours":1,"cost":50,"reveals":["HP:0011446"]},
-
- {"id":"lab_cbc","kind":"lab","name":"Complete blood count","hours":1,"cost":30,"reveals":["HP:0001871"]},
- {"id":"lab_chem","kind":"lab","name":"Chemistry panel (electrolytes, glucose, lipids)","hours":1,"cost":40,"reveals":["HP:0003111","HP:0011014","HP:0003119","HP:0004364"]},
- {"id":"lab_renal","kind":"lab","name":"Renal function and urinalysis","hours":1,"cost":40,"reveals":["HP:0012211","HP:0003110","HP:0000093","HP:0000790"]},
- {"id":"lab_liver","kind":"lab","name":"Liver panel","hours":1,"cost":40,"reveals":["HP:0001392"]},
- {"id":"lab_inflam","kind":"lab","name":"CRP and ESR","hours":1,"cost":25,"reveals":["HP:0011227","HP:0003565"]},
- {"id":"lab_coag","kind":"lab","name":"Coagulation studies","hours":2,"cost":60,"reveals":["HP:0001928"]},
- {"id":"lab_ck","kind":"lab","name":"Creatine kinase","hours":1,"cost":25,"reveals":["HP:0003236"]},
- {"id":"lab_lactate","kind":"lab","name":"Lactate and ammonia","hours":1,"cost":40,"reveals":["HP:0002151","HP:0001987"]},
- {"id":"lab_thyroid","kind":"lab","name":"Thyroid function","hours":4,"cost":60,"reveals":["HP:0000820"]},
- {"id":"lab_endocrine","kind":"lab","name":"Endocrine panel (hormones)","hours":24,"cost":250,"reveals":["HP:0000818"]},
- {"id":"lab_immune","kind":"lab","name":"Immunology (immunoglobulins, autoantibodies)","hours":48,"cost":300,"reveals":["HP:0002715"]},
- {"id":"lab_metabolic","kind":"lab","name":"Metabolic screen (amino acids, acylcarnitines, organic acids)","hours":72,"cost":600,"reveals":["HP:0001939"]},
- {"id":"lab_csf","kind":"lab","name":"Lumbar puncture and CSF analysis","hours":6,"cost":400,"reveals":["HP:0002921"]},
- {"id":"lab_cultures","kind":"lab","name":"Blood and urine cultures","hours":48,"cost":120,"reveals":["HP:0002719","HP:0001945"]},
- {"id":"lab_genetic","kind":"lab","name":"Genetic panel / exome","hours":336,"cost":3000,"special":"genetic","reveals":[]},
-
- {"id":"img_xray","kind":"imaging","name":"Skeletal survey (X-rays)","hours":2,"cost":150,"reveals":["HP:0000924"]},
- {"id":"img_chest","kind":"imaging","name":"Chest X-ray","hours":1,"cost":100,"reveals":["HP:0002088","HP:0001627","HP:0000765"]},
- {"id":"img_echo","kind":"imaging","name":"Echocardiogram","hours":4,"cost":500,"reveals":["HP:0001627","HP:0030680"]},
- {"id":"img_ecg","kind":"imaging","name":"ECG","hours":0.5,"cost":60,"reveals":["HP:0011675","HP:0001695"]},
- {"id":"img_mri_brain","kind":"imaging","name":"MRI brain","hours":8,"cost":1200,"reveals":["HP:0012443"]},
- {"id":"img_mri_spine","kind":"imaging","name":"MRI spine","hours":8,"cost":1200,"reveals":["HP:0002143","HP:0003468"]},
- {"id":"img_abd_us","kind":"imaging","name":"Abdominal ultrasound","hours":2,"cost":250,"reveals":["HP:0001438","HP:0000077","HP:0001392","HP:0001743"]},
- {"id":"img_ct","kind":"imaging","name":"CT chest / abdomen / pelvis","hours":4,"cost":900,"reveals":["HP:0002088","HP:0001438","HP:0002664","HP:0000077"]},
- {"id":"img_eeg","kind":"special","name":"EEG","hours":6,"cost":400,"reveals":["HP:0002353"]},
- {"id":"img_emg","kind":"special","name":"EMG and nerve conduction","hours":8,"cost":500,"reveals":["HP:0003457","HP:0040129"]},
- {"id":"sp_ophtho","kind":"special","name":"Ophthalmology consult (fundus, slit lamp)","hours":12,"cost":300,"reveals":["HP:0012372","HP:0012373"]},
- {"id":"sp_audio","kind":"special","name":"Audiometry","hours":12,"cost":200,"reveals":["HP:0000364"]},
- {"id":"sp_pft","kind":"special","name":"Pulmonary function tests","hours":6,"cost":250,"reveals":["HP:0002795"]},
- {"id":"sp_endoscopy","kind":"special","name":"Endoscopy","hours":24,"cost":1500,"reveals":["HP:0011024"]},
- {"id":"sp_marrow","kind":"special","name":"Bone marrow biopsy","hours":48,"cost":2000,"reveals":["HP:0005561"]},
- {"id":"sp_muscle","kind":"special","name":"Muscle biopsy","hours":72,"cost":2500,"reveals":["HP:0004303","HP:0003198"]},
- {"id":"sp_swallow","kind":"special","name":"Swallow study","hours":6,"cost":300,"reveals":["HP:0002015"]}
+ {
+  "id": "hx_onset",
+  "kind": "history",
+  "name": "Ask about onset and course",
+  "hours": 0.25,
+  "cost": 0,
+  "special": "onset",
+  "reveals": []
+ },
+ {
+  "id": "hx_family",
+  "kind": "history",
+  "name": "Family history",
+  "hours": 0.25,
+  "cost": 0,
+  "special": "inh",
+  "reveals": []
+ },
+ {
+  "id": "hx_growth",
+  "kind": "history",
+  "name": "Growth history and charts",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0001507"
+  ]
+ },
+ {
+  "id": "hx_develop",
+  "kind": "history",
+  "name": "Developmental history",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0012758"
+  ]
+ },
+ {
+  "id": "hx_constitutional",
+  "kind": "history",
+  "name": "Constitutional symptoms",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0025142"
+  ]
+ },
+ {
+  "id": "hx_gi",
+  "kind": "history",
+  "name": "GI review of systems",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0025031"
+  ]
+ },
+ {
+  "id": "hx_resp",
+  "kind": "history",
+  "name": "Respiratory review of systems",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0002086"
+  ]
+ },
+ {
+  "id": "hx_gu",
+  "kind": "history",
+  "name": "Genitourinary review of systems",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0000119"
+  ]
+ },
+ {
+  "id": "hx_psych",
+  "kind": "history",
+  "name": "Behaviour and mood",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0000708"
+  ]
+ },
+ {
+  "id": "hx_sleep",
+  "kind": "history",
+  "name": "Sleep history",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0002360"
+  ]
+ },
+ {
+  "id": "hx_infections",
+  "kind": "history",
+  "name": "Infection history",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0002719"
+  ]
+ },
+ {
+  "id": "hx_pain",
+  "kind": "history",
+  "name": "Ask about pain",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0012531",
+   "HP:0002315"
+  ]
+ },
+ {
+  "id": "hx_pregnancy",
+  "kind": "history",
+  "name": "Pregnancy and birth history",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0001197",
+   "HP:0002686"
+  ]
+ },
+ {
+  "id": "ex_vitals",
+  "kind": "exam",
+  "name": "Vital signs",
+  "hours": 0.1,
+  "cost": 0,
+  "reveals": [
+   "HP:0001945",
+   "HP:0000822",
+   "HP:0002615",
+   "HP:0001649",
+   "HP:0001662",
+   "HP:0002094",
+   "HP:0004370"
+  ]
+ },
+ {
+  "id": "ex_head",
+  "kind": "exam",
+  "name": "Head and face exam",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0000234",
+   "HP:0000271",
+   "HP:0000152"
+  ]
+ },
+ {
+  "id": "ex_eyes",
+  "kind": "exam",
+  "name": "Eye exam (bedside)",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0012373",
+   "HP:0000478"
+  ]
+ },
+ {
+  "id": "ex_ears",
+  "kind": "exam",
+  "name": "Ear and hearing check",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0000598",
+   "HP:0000364"
+  ]
+ },
+ {
+  "id": "ex_skin",
+  "kind": "exam",
+  "name": "Skin, hair and nails",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0000951",
+   "HP:0001595",
+   "HP:0001597",
+   "HP:0025276"
+  ]
+ },
+ {
+  "id": "ex_cardio",
+  "kind": "exam",
+  "name": "Cardiovascular exam",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0011025",
+   "HP:0030680"
+  ]
+ },
+ {
+  "id": "ex_chest",
+  "kind": "exam",
+  "name": "Chest exam",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0002795",
+   "HP:0000765",
+   "HP:0000769"
+  ]
+ },
+ {
+  "id": "ex_abdomen",
+  "kind": "exam",
+  "name": "Abdominal exam",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0001438",
+   "HP:0002240",
+   "HP:0001744",
+   "HP:0002716"
+  ]
+ },
+ {
+  "id": "ex_neuro",
+  "kind": "exam",
+  "name": "Neurological exam",
+  "hours": 0.5,
+  "cost": 0,
+  "reveals": [
+   "HP:0012638"
+  ]
+ },
+ {
+  "id": "ex_msk",
+  "kind": "exam",
+  "name": "Musculoskeletal exam",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0033127",
+   "HP:0040064"
+  ]
+ },
+ {
+  "id": "ex_genital",
+  "kind": "exam",
+  "name": "Genital exam",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0000078"
+  ]
+ },
+ {
+  "id": "ex_cognitive",
+  "kind": "exam",
+  "name": "Cognitive assessment",
+  "hours": 1,
+  "cost": 50,
+  "reveals": [
+   "HP:0011446"
+  ]
+ },
+ {
+  "id": "ex_ent",
+  "kind": "exam",
+  "name": "Ear, nose and throat exam",
+  "hours": 0.25,
+  "cost": 0,
+  "reveals": [
+   "HP:0000598",
+   "HP:0000366",
+   "HP:0000600",
+   "HP:0000153",
+   "HP:0001608"
+  ]
+ },
+ {
+  "id": "lab_cbc",
+  "kind": "lab",
+  "name": "Complete blood count",
+  "hours": 1,
+  "cost": 30,
+  "reveals": [
+   "HP:0001871"
+  ]
+ },
+ {
+  "id": "lab_chem",
+  "kind": "lab",
+  "name": "Chemistry panel (electrolytes, glucose, lipids)",
+  "hours": 1,
+  "cost": 40,
+  "reveals": [
+   "HP:0003111",
+   "HP:0011014",
+   "HP:0003119",
+   "HP:0004364"
+  ]
+ },
+ {
+  "id": "lab_renal",
+  "kind": "lab",
+  "name": "Renal function and urinalysis",
+  "hours": 1,
+  "cost": 40,
+  "reveals": [
+   "HP:0012211",
+   "HP:0003110",
+   "HP:0000093",
+   "HP:0000790"
+  ]
+ },
+ {
+  "id": "lab_liver",
+  "kind": "lab",
+  "name": "Liver panel",
+  "hours": 1,
+  "cost": 40,
+  "reveals": [
+   "HP:0001392"
+  ]
+ },
+ {
+  "id": "lab_inflam",
+  "kind": "lab",
+  "name": "CRP and ESR",
+  "hours": 1,
+  "cost": 25,
+  "reveals": [
+   "HP:0011227",
+   "HP:0003565"
+  ]
+ },
+ {
+  "id": "lab_coag",
+  "kind": "lab",
+  "name": "Coagulation studies",
+  "hours": 2,
+  "cost": 60,
+  "reveals": [
+   "HP:0001928"
+  ]
+ },
+ {
+  "id": "lab_ck",
+  "kind": "lab",
+  "name": "Creatine kinase",
+  "hours": 1,
+  "cost": 25,
+  "reveals": [
+   "HP:0003236"
+  ]
+ },
+ {
+  "id": "lab_lactate",
+  "kind": "lab",
+  "name": "Lactate and ammonia",
+  "hours": 1,
+  "cost": 40,
+  "reveals": [
+   "HP:0002151",
+   "HP:0001987"
+  ]
+ },
+ {
+  "id": "lab_thyroid",
+  "kind": "lab",
+  "name": "Thyroid function",
+  "hours": 4,
+  "cost": 60,
+  "reveals": [
+   "HP:0000820"
+  ]
+ },
+ {
+  "id": "lab_endocrine",
+  "kind": "lab",
+  "name": "Endocrine panel (hormones)",
+  "hours": 24,
+  "cost": 250,
+  "reveals": [
+   "HP:0000818"
+  ]
+ },
+ {
+  "id": "lab_immune",
+  "kind": "lab",
+  "name": "Immunology (immunoglobulins, autoantibodies)",
+  "hours": 48,
+  "cost": 300,
+  "reveals": [
+   "HP:0002715"
+  ]
+ },
+ {
+  "id": "lab_metabolic",
+  "kind": "lab",
+  "name": "Metabolic screen (amino acids, acylcarnitines, organic acids)",
+  "hours": 72,
+  "cost": 600,
+  "reveals": [
+   "HP:0001939"
+  ]
+ },
+ {
+  "id": "lab_csf",
+  "kind": "lab",
+  "name": "Lumbar puncture and CSF analysis",
+  "hours": 6,
+  "cost": 400,
+  "reveals": [
+   "HP:0002921"
+  ]
+ },
+ {
+  "id": "lab_cultures",
+  "kind": "lab",
+  "name": "Blood and urine cultures",
+  "hours": 48,
+  "cost": 120,
+  "reveals": [
+   "HP:0002719",
+   "HP:0001945"
+  ]
+ },
+ {
+  "id": "lab_genetic",
+  "kind": "lab",
+  "name": "Genetic panel / exome",
+  "hours": 336,
+  "cost": 3000,
+  "special": "genetic",
+  "reveals": []
+ },
+ {
+  "id": "img_xray",
+  "kind": "imaging",
+  "name": "Skeletal survey (X-rays)",
+  "hours": 2,
+  "cost": 150,
+  "reveals": [
+   "HP:0000924"
+  ]
+ },
+ {
+  "id": "img_chest",
+  "kind": "imaging",
+  "name": "Chest X-ray",
+  "hours": 1,
+  "cost": 100,
+  "reveals": [
+   "HP:0002088",
+   "HP:0001627",
+   "HP:0000765"
+  ]
+ },
+ {
+  "id": "img_echo",
+  "kind": "imaging",
+  "name": "Echocardiogram",
+  "hours": 4,
+  "cost": 500,
+  "reveals": [
+   "HP:0001627",
+   "HP:0030680"
+  ]
+ },
+ {
+  "id": "img_ecg",
+  "kind": "imaging",
+  "name": "ECG",
+  "hours": 0.5,
+  "cost": 60,
+  "reveals": [
+   "HP:0011675",
+   "HP:0001695"
+  ]
+ },
+ {
+  "id": "img_mri_brain",
+  "kind": "imaging",
+  "name": "MRI brain",
+  "hours": 8,
+  "cost": 1200,
+  "reveals": [
+   "HP:0012443",
+   "HP:0002011",
+   "HP:0012447"
+  ]
+ },
+ {
+  "id": "img_mri_spine",
+  "kind": "imaging",
+  "name": "MRI spine",
+  "hours": 8,
+  "cost": 1200,
+  "reveals": [
+   "HP:0002143",
+   "HP:0003468"
+  ]
+ },
+ {
+  "id": "img_abd_us",
+  "kind": "imaging",
+  "name": "Abdominal ultrasound",
+  "hours": 2,
+  "cost": 250,
+  "reveals": [
+   "HP:0001438",
+   "HP:0000077",
+   "HP:0001392",
+   "HP:0001743"
+  ]
+ },
+ {
+  "id": "img_ct",
+  "kind": "imaging",
+  "name": "CT chest / abdomen / pelvis",
+  "hours": 4,
+  "cost": 900,
+  "reveals": [
+   "HP:0002088",
+   "HP:0001438",
+   "HP:0002664",
+   "HP:0000077"
+  ]
+ },
+ {
+  "id": "img_eeg",
+  "kind": "special",
+  "name": "EEG",
+  "hours": 6,
+  "cost": 400,
+  "reveals": [
+   "HP:0002353"
+  ]
+ },
+ {
+  "id": "img_emg",
+  "kind": "special",
+  "name": "EMG and nerve conduction",
+  "hours": 8,
+  "cost": 500,
+  "reveals": [
+   "HP:0003457",
+   "HP:0040129",
+   "HP:0410008"
+  ]
+ },
+ {
+  "id": "sp_ophtho",
+  "kind": "special",
+  "name": "Ophthalmology consult (fundus, slit lamp)",
+  "hours": 12,
+  "cost": 300,
+  "reveals": [
+   "HP:0012372",
+   "HP:0012373"
+  ]
+ },
+ {
+  "id": "sp_audio",
+  "kind": "special",
+  "name": "Audiometry",
+  "hours": 12,
+  "cost": 200,
+  "reveals": [
+   "HP:0000364"
+  ]
+ },
+ {
+  "id": "sp_pft",
+  "kind": "special",
+  "name": "Pulmonary function tests",
+  "hours": 6,
+  "cost": 250,
+  "reveals": [
+   "HP:0002795"
+  ]
+ },
+ {
+  "id": "sp_endoscopy",
+  "kind": "special",
+  "name": "Endoscopy",
+  "hours": 24,
+  "cost": 1500,
+  "reveals": [
+   "HP:0011024"
+  ]
+ },
+ {
+  "id": "sp_marrow",
+  "kind": "special",
+  "name": "Bone marrow biopsy",
+  "hours": 48,
+  "cost": 2000,
+  "reveals": [
+   "HP:0005561"
+  ]
+ },
+ {
+  "id": "sp_muscle",
+  "kind": "special",
+  "name": "Muscle biopsy",
+  "hours": 72,
+  "cost": 2500,
+  "reveals": [
+   "HP:0004303",
+   "HP:0003198"
+  ]
+ },
+ {
+  "id": "sp_swallow",
+  "kind": "special",
+  "name": "Swallow study",
+  "hours": 6,
+  "cost": 300,
+  "reveals": [
+   "HP:0002015"
+  ]
+ }
 ]

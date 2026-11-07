@@ -74,7 +74,7 @@ flowchart LR
   end
   subgraph web[game/web, static ES modules = the deployed folder]
     IDX[index.html + styles.css] --> APP[app.js]
-    APP --> ENG[engine: rng, db, case, scoring, search, progress]
+    APP --> ENG[engine: rng, db, case, scoring, search (fuzzy), progress]
     APP --> LS[(localStorage: history, best)]
     ENG --> DATA[data/*.json]
     ENG --> TESTS[content/tests.json]

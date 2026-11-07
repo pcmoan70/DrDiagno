@@ -70,6 +70,14 @@ is never ruled out, pinned by `tests/map.test.js`). Bars per HPO organ system; s
 have no fitting disease left; hovering a bar lists the tests that probe it. A toast reports how many
 diseases each action ruled out.
 
+## Search
+`engine/search.js` is one fuzzy matcher for both boxes (findings in the watch-along, diseases in
+the differential): every query token must match one of the entry's words as a prefix (cost 0),
+substring (0.5) or within an edit distance (1 edit from 5 letters, 2 from 8, 1 per edit); the whole
+query as a phrase in the text wins outright; word order is free. Ties go to prefix matches, shorter
+names and, for findings, commoner terms. `searchTerms()` covers HPO phenotypic abnormalities by name
+and everyday name, `searchDiseases()` the index by name and synonyms. Pinned by `tests/search.test.js`.
+
 ## Watch-along mode
 `#watch` on the title screen opens a free diagnosis screen with no patient, clock or score: type
 findings (HPO term or lay name, `engine/search.js`), mark them present or absent by clicking, and
@@ -183,5 +191,7 @@ best, last-5 average, trend against the previous 5), `topicStats` (organ systems
 `#progress` screen renders these plus a score chart and recent cases, with a Clear button.
 
 ## Adding a test
-Edit `web/content/tests.json`: `id`, `kind`, `name`, `hours`, `cost`, `reveals` (HPO ids whose
-subtrees the test can detect). `special` is one of `onset`, `inh`, `genetic`. Run `validate.py`.
+Edit `web/content/tests.json` (58 studies): `id`, `kind`, `name`, `hours`, `cost`, `reveals` (HPO ids whose
+subtrees the test can detect). `special` is one of `onset`, `inh`, `genetic`. Run `validate.py`. A quick
+coverage audit (which annotated findings no study can reveal) is in `tasks/search_tests_20261107.md`;
+after it, 99% of disease findings are revealable, the rest being histology or vague root terms.
