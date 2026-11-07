@@ -2,7 +2,7 @@
 
 ## 2026-11-07
 - Dr. Diagno: logo and icon. A flat detective silhouette inspired by House and Holmes: profile bust in
-  a deerstalker (low crown, visor front and back, ear flaps tied on top), magnifying glass with a cross in the lens; two dark shapes, one amber, one red
+  a deerstalker (round crown, cap visor front and back, ear flap tied up against the crown, bow on top), magnifying glass with a cross in the lens; two dark shapes, one amber, one red
   (`game/web/logo.svg`, hand-written, theme palette, pale edge so it reads on dark tab bars). Used as favicon,
   apple-touch-icon (`icon-180.png`, plus `icon-512.png`, rendered with ImageMagick), header brand
   and hero title.
