@@ -5,13 +5,13 @@ and the player builds a differential, orders tests, treats, and commits to a dia
 Every case is generated in the browser from real disease knowledge (HPO, Orphanet, Mondo,
 PrimeKG). Pure static site: HTML + ES modules, no server, no model at play time.
 
-Updated 2026-11-07. Plan: `../tasks/house_game_plan_20261105.md`.
+Updated 2026-11-06. Plan: `../tasks/house_game_plan_20261105.md`.
 
 ## Layout
 ```
 build/      Python scripts that compile the drive data into JSON bundles (run with python3 -I)
 tests/      node --test suite and the balance bot (package.json lives here too)
-web/        the site, and nothing else: index.html, app.js, styles.css, logo.svg (+ icon-180/512.png), engine/, content/tests.json, data/ (built)
+web/        the site, and nothing else: index.html, app.js, styles.css, engine/, content/tests.json, data/ (built)
 ```
 `web/` is the deployment unit: whatever serves or publishes the game (GitHub Pages, a home server,
 a claude.ai artifact) takes that folder alone. Raw datasets stay on the drive, build scripts in

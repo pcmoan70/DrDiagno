@@ -1,7 +1,5 @@
 # Dr. Diagno
 
-<img src="game/web/logo.svg" alt="" width="96" align="right">
-
 **Play it: https://pcmoan70.github.io/DrDiagno/**
 
 A House-style diagnostic puzzle game in the browser. A patient arrives with symptoms that do not
@@ -11,10 +9,6 @@ disease before the patient runs out of time. Every case is generated from real m
 PrimeKG. No two cases are alike, and every case has a code you can share and replay.
 
 Entertainment and education only. Nothing in the game is medical advice.
-
-The mark is a flat detective silhouette in a deerstalker holding a magnifying glass with a cross
-in the lens, a nod to the two detectives the game owes its idea to. Hand-drawn SVG in `game/web/logo.svg`,
-also the favicon.
 
 ## How to play
 

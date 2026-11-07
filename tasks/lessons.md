@@ -42,3 +42,5 @@
 - For visual assets, start with the simplest silhouette and show it before adding detail. Three
   rounds were spent removing elements (cane, band, stethoscope, collar, ECG trace) the user never
   asked for. Render variants side by side at target size (24 px) and let the user choose.
+- The logo was dropped after five rounds. When a visual asset misses twice, offer to stop or ask for
+  a reference image instead of iterating on guesses.
