@@ -1,6 +1,6 @@
 # Architecture
 
-Last updated: 2026-11-06
+Last updated: 2026-11-07
 
 A deliberately small system: one declarative catalog, one idempotent fetch
 script, data on an external exFAT drive.
@@ -66,6 +66,7 @@ flowchart LR
   subgraph build[game/build, python3 -I]
     BT[build_terms.py] --> TJ[terms.json + defs.json]
     BD[build_diseases.py] --> DJ[diseases/index.json + 16 shards]
+    HS[hsdn.py / ddxplus.py: common diseases] --> BD
     BR[build_drugs.py] --> RJ[drugs.json]
     BI[build_images.py] --> IJ[images.json]
     BC[build_credits.py] --> CJ[credits.json]

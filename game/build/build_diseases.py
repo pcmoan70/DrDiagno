@@ -1,15 +1,20 @@
 """diseases/*.json + diseases/index.json: one profile per Mondo disease with >= MIN_TERMS HPO
 annotations, built from phenotype.hpoa (OMIM/ORPHA/DECIPHER) mapped to Mondo via mondo.obo
 xrefs, enriched with Orphanet onset/prevalence, Mondo/Orphanet definitions, Mayo symptom text
-(PrimeKG disease_features) and precomputed decoys (cosine similarity over IDF-weighted terms)."""
+(PrimeKG disease_features) and precomputed decoys (cosine similarity over IDF-weighted terms).
+Common diseases that the HPO does not annotate (common cold, influenza, appendicitis...) come from
+DDXPlus (measured symptom frequencies, 49 conditions) and the Human Symptoms-Disease Network
+(literature co-mention, ~1,400 diseases): see ddxplus.py and hsdn.py. HPO-annotated profiles win."""
 import json, csv, re, hashlib, collections
 import xml.etree.ElementTree as ET
 import numpy as np
 from scipy import sparse
 import sys, os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import HPO_DIR, MONDO_OBO, ORPHA_DIR, PRIMEKG_DIR, OUT, parse_obo, mondo_id
+import hsdn, ddxplus
 
 MIN_TERMS, RESIDENT_TERMS, SHARDS, N_DECOYS = 10, 20, 16, 8
+COMMON_MIN_TERMS, COMMON_RESIDENT_TERMS = 5, 12  # common-disease profiles are shorter than HPO annotations
 FREQ = {"HP:0040280": 1.0, "HP:0040281": 0.9, "HP:0040282": 0.55, "HP:0040283": 0.17, "HP:0040284": 0.03, "HP:0040285": 0.0}
 RARE_CLASSES = {"<1 / 1 000 000", "1-9 / 1 000 000", "1-9 / 100 000"}
 PREV_ORDER = [">1 / 1000", "6-9 / 10 000", "1-5 / 10 000", "1-9 / 100 000", "1-9 / 1 000 000", "<1 / 1 000 000"]
@@ -127,6 +132,27 @@ for sid, d in src.items():
         e["prev"] = e["prev"] or prev_by_orpha.get(sid)
 
 pool = {mid: e for mid, e in dz.items() if len(e["terms"]) >= MIN_TERMS}
+
+# ---- 5b. common diseases: HSDN breadth, DDXPlus frequencies on top; never over an HPO-annotated profile ----
+hp = parse_obo(HPO_DIR / "hp.obo")
+common = {}
+for mid, c in hsdn.common_diseases(mondo, hp)[0].items():
+    common[mid] = {"src": [c["src"]], "terms": dict(c["terms"])}
+ddx, measurable = ddxplus.common_diseases(mondo, hp)
+for mid, c in ddx.items():
+    e = common.setdefault(mid, {"src": [], "terms": {}})
+    e["src"].insert(0, c["src"])
+    # measured frequency replaces literature prominence; a literature finding that DDXPlus could measure
+    # but found in < 5% of patients (diarrhea for the common cold) is dropped
+    e["terms"] = {t: p for t, p in e["terms"].items() if t not in measurable} | c["terms"]
+n_common = 0
+for mid, c in common.items():
+    if mid in pool or mid not in mondo or mondo[mid]["obsolete"] or len(c["terms"]) < COMMON_MIN_TERMS:
+        continue
+    pool[mid] = {"id": mid, "src": c["src"], "terms": c["terms"], "neg": set(), "onset": set(), "course": set(), "inh": set(), "orpha_onset": [], "prev": None, "common": True}
+    n_common += 1
+print(f"common diseases added: {n_common} (DDXPlus-backed: {sum(1 for e in pool.values() if e.get('common') and e['src'][0].startswith('DDXPLUS:'))})")
+
 for mid, e in pool.items():
     t = mondo[mid]
     e["name"] = t["name"]
@@ -137,7 +163,10 @@ for mid, e in pool.items():
     e["mayo"] = feat.get(mid, {}).get("mayo_symptoms", "")[:700]
     rare = e["prev"] is not None and (e["prev"][1] in RARE_CLASSES or e["prev"][1] == "case reports only")
     tiers = ["attending"]
-    if len(e["terms"]) >= RESIDENT_TERMS and e["mayo"]:
+    if e.get("common"):
+        if len(e["terms"]) >= COMMON_RESIDENT_TERMS and (e["mayo"] or e["src"][0].startswith("DDXPLUS:")):
+            tiers.append("resident")
+    elif len(e["terms"]) >= RESIDENT_TERMS and e["mayo"]:
         tiers.append("resident")
     if rare and (e["orpha_onset"] or e["onset"]):
         tiers.append("house")

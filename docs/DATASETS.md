@@ -1,6 +1,6 @@
 # Open diagnosis dataset collection
 
-Last updated: 2026-11-06. This is the data side of the repository; the game that is built from it is described in the top-level [README](../README.md) and in [`game/README.md`](../game/README.md).
+Last updated: 2026-11-07. This is the data side of the repository (the game uses HPO, Mondo, Orphanet, PrimeKG, HSDN and DDXPlus; see `game/README.md`); the game that is built from it is described in the top-level [README](../README.md) and in [`game/README.md`](../game/README.md).
 
 Scripts and a catalog for downloading open-licence datasets covering **diseases,
 symptoms and the links between them**, stored on the external 4 TB drive at

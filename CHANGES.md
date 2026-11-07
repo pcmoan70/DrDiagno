@@ -1,5 +1,14 @@
 # CHANGES
 
+## 2026-11-07
+- Dr. Diagno: common diseases. The library now holds 8,277 diseases: 1,191 common ones (common cold,
+  influenza, appendicitis, myocardial infarction, asthma...) join the 7,086 HPO-annotated rare
+  diseases. Measured symptom frequencies from DDXPlus (CC BY 4.0, 33 acute conditions) and
+  literature co-mention from the Human Symptoms–Disease Network (CC BY 4.0) mapped to Mondo and HPO
+  (`game/build/ddxplus.py`, `hsdn.py`, merged in `build_diseases.py`). 385 common diseases enter the
+  Student/Resident pools. Disease profiles state which kind of likelihood they show; credits updated;
+  2 new node tests (28). SymCat was not used: no licence.
+
 ## 2026-11-06
 - Dr. Diagno: fix watch-along findings vanishing as soon as they were added (and their × not
   removing them): the progress feature's `history()` helper shadowed `window.history`, so the URL

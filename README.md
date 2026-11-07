@@ -5,7 +5,7 @@
 A House-style diagnostic puzzle game in the browser. A patient arrives with symptoms that do not
 add up. The clock is running. You build a differential, order tests, try treatments and name the
 disease before the patient runs out of time. Every case is generated from real medical knowledge:
-7,086 diseases and 19,894 clinical findings from the Human Phenotype Ontology, Orphanet, Mondo and
+8,277 diseases and 19,894 clinical findings from the Human Phenotype Ontology, Orphanet, Mondo and
 PrimeKG. No two cases are alike, and every case has a code you can share and replay.
 
 Entertainment and education only. Nothing in the game is medical advice.
@@ -45,7 +45,7 @@ wrong one may harm them or add side effects. Diagnose when you are sure. Near-id
 count as correct.
 
 **Watch-along mode** has no patient and no clock. Type findings as you hear them, say while
-watching a medical drama, mark them present or absent, and see which of 7,086 diseases fit. The
+watching a medical drama, mark them present or absent, and see which of 8,277 diseases fit. The
 list lives in the link, so it can be shared.
 
 ## Scoring
@@ -69,7 +69,11 @@ Disease and finding knowledge comes from the
 [Human Phenotype Ontology](https://hpo.jax.org/) and its disease annotations,
 [Orphanet / Orphadata](https://www.orphadata.com/) (CC BY 4.0),
 [Mondo](https://mondo.monarchinitiative.org/) (CC BY 4.0) and
-[PrimeKG](https://github.com/mims-harvard/PrimeKG) (MIT) for drug indications. Exact versions
+[PrimeKG](https://github.com/mims-harvard/PrimeKG) (MIT) for drug indications. Common diseases, which the
+HPO does not annotate, come from the [Human Symptoms–Disease Network](https://www.nature.com/articles/ncomms5212)
+(Zhou et al. 2014, CC BY 4.0; likelihoods there reflect how often the literature mentions a finding
+with the disease) and [DDXPlus](https://huggingface.co/datasets/aai530-group6/ddxplus) (CC BY 4.0;
+measured symptom frequencies for 49 acute conditions). Exact versions
 are listed in `game/web/data/credits.json` and on the game's title screen. Pictures in balloons and
 disease profiles come from [Wikimedia Commons](https://commons.wikimedia.org/), found through
 Wikidata; each shows its author and licence and links to its file page, and is loaded from

@@ -31,3 +31,9 @@
   `name`, `status`, `event`, `open`, `close`, ...). `tests/globals.test.js` enforces a list. After a
   change to shared UI code, click through every mode once (play, watch-along, progress), not only the
   mode the change was made for.
+
+## 2026-11-07: check the licence before proposing a data source
+- Mistake: proposed SymCat for common diseases without reading its `license:` line in
+  `catalog/datasets.yaml` (no licence, copyright unclear). The game is public, so it could not be used.
+- Rule: for anything that ends up in `game/web/data`, check the catalog licence first and name it in
+  the proposal; only CC0 / CC BY / MIT-style sources qualify.

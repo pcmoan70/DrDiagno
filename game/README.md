@@ -22,13 +22,13 @@ Needs the datasets on the drive (`DIAG_DATA_ROOT`, default `/media/pc/ext4TB/dia
 ```bash
 cd game/build
 python3 -I build_terms.py      # terms.json: HPO terms, lay names, parents, IDF; defs.json: HPO definitions
-python3 -I build_diseases.py   # diseases/index.json + 16 shards: profiles, onset, prevalence, decoys
+python3 -I build_diseases.py   # diseases/index.json + 16 shards: profiles, onset, prevalence, decoys; merges the common diseases (hsdn.py, ddxplus.py)
 python3 -I build_drugs.py      # drugs.json: PrimeKG indications, contraindications, side effects
 python3 -I build_images.py     # images.json: Commons images + credits for findings/diseases, Wikipedia links (network; cached on the drive)
 python3 -I build_credits.py    # credits.json
 python3 -I validate.py         # checks + game/data_report.md (dated)
 ```
-`web/data/` is derived (~15 MB raw / 3.4 MB gzipped) but versioned, because GitHub Pages builds from
+`web/data/` is derived (~20 MB raw / 4.8 MB gzipped) but versioned, because GitHub Pages builds from
 the repository alone. Rebuild and commit it when the sources or build scripts change; the raw datasets
 never enter the repo.
 
@@ -95,7 +95,7 @@ shows it (up to 800 px thumbnail, hotlinked, with author and licence).
 ## Pictures and Wikipedia links
 `build_images.py` asks Wikidata for every item with an HPO id (P3841) or Mondo id (P5270) and an
 image (P18) or English Wikipedia article, then the Commons `imageinfo` API for thumbnail URLs,
-author and licence. Result: `data/images.json` (884 finding images, 326 disease images, 1,533
+author and licence. Result: `data/images.json` (884 finding images, 543 disease images, 2,154
 Wikipedia links; 0.5 MB). Findings under the genital system (HP:0000078) and breast (HP:0000769)
 are excluded so explicit photographs never appear in hover balloons. Images are whatever Wikidata
 chose as the item's main picture, so some are diagrams or historical art rather than clinical
@@ -134,9 +134,26 @@ npm run bot -- 200  # greedy bot, 200 cases per tier: win rate, actions, hours, 
 | Tier | Pool | Clock |
 |---|---|---|
 | Student | the Resident pool, with help (below) | 96 h |
-| Resident | ≥ 20 findings and a Mayo Clinic symptom text | 72 h |
-| Attending | all 7,086 diseases with ≥ 10 findings | 60 h |
+| Resident | ≥ 20 findings and a Mayo Clinic symptom text; common diseases with ≥ 12 findings | 72 h |
+| Attending | all 8,277 diseases (≥ 10 HPO findings, or a common disease with ≥ 5) | 60 h |
 | House | 2,444 Orphanet rare diseases with onset data | 48 h |
+
+## Common diseases
+The HPO annotates rare, mostly genetic diseases, so the common cold, influenza, appendicitis or a
+heart attack had no profile. `build_diseases.py` therefore merges two more sources (step 5b),
+never over an HPO-annotated disease:
+- `ddxplus.py`: DDXPlus (CC BY 4.0), 49 acute conditions. Findings and their frequencies are
+  measured over the 132k patients of its validation split; evidences are mapped to HPO by hand
+  (`EVIDENCES`, pain locations grouped in `PAIN`), antecedents such as smoking are not findings.
+  40 conditions map to Mondo; 33 enter the pool (the rest already have HPO profiles).
+- `hsdn.py`: Human Symptoms–Disease Network (Zhou et al. 2014, CC BY 4.0), PubMed co-mention of 322
+  MeSH symptoms with 4,219 MeSH diseases. Diseases map to Mondo through MeSH ids, symptoms to HPO by
+  name (259 of 322, `SYMPTOM_OVERRIDES` for the rest). A symptom is kept when it is mentioned with
+  the disease at least as often as with diseases in general (lift ≥ 1); the likelihood is the
+  co-mention count scaled to the disease's top symptom, so it is literature prominence, not a share
+  of patients. The disease profile says which kind of likelihood it shows.
+Result: 1,191 common diseases (shards carry `src` `DDXPLUS:…` / `HSDN:MESH:…`), 385 of them in the
+Resident and Student pools. Pinned by `tests/common.test.js`.
 
 ## Student mode
 `#student-<code>` plays Resident cases with help: literature consults cost no time, fit bars and

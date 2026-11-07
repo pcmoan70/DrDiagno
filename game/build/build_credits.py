@@ -2,7 +2,8 @@
 import json, sys, os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import DATA_ROOT, OUT
 
-used = ["01_ontologies_terminologies/hpo", "01_ontologies_terminologies/mondo", "01_ontologies_terminologies/orphanet_orphadata", "02_disease_symptom_knowledge/primekg"]
+used = ["01_ontologies_terminologies/hpo", "01_ontologies_terminologies/mondo", "01_ontologies_terminologies/orphanet_orphadata", "02_disease_symptom_knowledge/primekg",
+        "02_disease_symptom_knowledge/hsdn_zhou2014", "03_symptom_disease_tabular/ddxplus"]
 out = []
 for rel in used:
     m = json.load(open(DATA_ROOT / rel / "_meta.json", encoding="utf-8"))

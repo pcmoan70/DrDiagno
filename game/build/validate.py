@@ -32,7 +32,8 @@ for sh in range(index["shards"]):
         n_dz += 1
         if mid not in ids:
             problems.append(f"{mid} in shard but not index")
-        if len(e["t"]) < 10:
+        common = any(x.startswith(("HSDN:", "DDXPLUS:")) for x in e["src"])
+        if len(e["t"]) < (5 if common else 10):
             problems.append(f"{mid} has {len(e['t'])} terms")
         for t, p in e["t"]:
             if t not in terms:
@@ -54,9 +55,10 @@ for m, (i, c) in drugs["i"].items():
             problems.append(f"{m} drug {d} missing")
 total_gz = sum(g for _, g in sizes.values())
 tiers = collections.Counter(t for e in index["d"] for t in e["tiers"])
+n_common = sum(1 for sh in range(index["shards"]) for e in json.load(open(OUT / "diseases" / f"shard-{sh:02d}.json", encoding="utf-8")).values() if any(x.startswith(("HSDN:", "DDXPLUS:")) for x in e["src"]))
 now = datetime.datetime.now(datetime.timezone.utc)
 lines = [f"# Dr. Diagno data report", f"Generated {now:%Y-%m-%d %H:%M:%S} UTC", "",
-         f"- diseases in pool: {len(ids)} (tiers: {dict(tiers)})", f"- HPO terms: {len(terms)} ({len(defs)} with definitions)", f"- Wikimedia images: {len(images['img'])}, Wikipedia links: {len(images['wiki'])}",
+         f"- diseases in pool: {len(ids)} (tiers: {dict(tiers)}; common diseases from HSDN/DDXPlus: {n_common})", f"- HPO terms: {len(terms)} ({len(defs)} with definitions)", f"- Wikimedia images: {len(images['img'])}, Wikipedia links: {len(images['wiki'])}",
          f"- tests: {len(tests)}", f"- drugs: {len(drugs['d'])} for {len(drugs['i'])} diseases",
          f"- total JSON: {sum(r for r, _ in sizes.values())/1e6:.2f} MB raw, {total_gz/1e6:.2f} MB gzipped (budget 8 MB)",
          f"- problems: {len(problems)}", "", "| file | raw KB | gzip KB |", "|---|---:|---:|"]

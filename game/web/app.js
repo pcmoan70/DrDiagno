@@ -155,7 +155,10 @@ function showDisease(id, obs) {
         el('td', { class: 'freq' }, el('span', { class: 'fit-track' }, el('span', { class: 'fit-bar', style: `width:${Math.round(100 * r.p)}%` })), el('span', {}, `${Math.round(100 * r.p)}%`), el('span', { class: 'syn' }, r.cls)),
         obs ? el('td', { class: 'obs ' + (m || '') }, m === 'present' ? '✓ present' : m === 'absent' ? '✗ absent' : '') : null);
     })));
-  $('ds-note').textContent = 'Likelihood: share of patients with this disease who show the finding, from HPO annotations (Orphanet, OMIM). Excluded findings argue against the disease.' + (obs ? '' : ' The patient column appears after a literature consult (always in Resident).');
+  const src = d.src[0] || '';
+  $('ds-note').textContent = (src.startsWith('DDXPLUS:') ? 'Likelihood: share of patients with this disease who report the finding, measured over the DDXPlus patient data' + (d.src.length > 1 ? '; further findings weighted by how often the medical literature mentions them with the disease (Human Symptoms–Disease Network)' : '') + '.'
+    : src.startsWith('HSDN:') ? 'Likelihood: how prominently the medical literature mentions the finding together with this disease (Human Symptoms–Disease Network), scaled to the most-mentioned one. This is literature prominence, not a measured share of patients.'
+    : 'Likelihood: share of patients with this disease who show the finding, from HPO annotations (Orphanet, OMIM). Excluded findings argue against the disease.') + (obs ? '' : ' The patient column appears after a literature consult (always in Resident).');
   $('ds-close').onclick = () => { $('disease').hidden = true; };
   $('disease').hidden = false;
 }

@@ -22,5 +22,17 @@
   "homepage": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM",
   "license": "CC0 1.0",
   "downloaded": "2026-11-05 19:46:53 UTC"
+ },
+ {
+  "name": "Human Symptoms\u2013Disease Network (Zhou, Menche, Barab\u00e1si, Sharma 2014) supplementary data",
+  "homepage": "https://www.nature.com/articles/ncomms5212",
+  "license": "CC BY 4.0 (Nature Communications open access)",
+  "downloaded": "2026-11-05 19:47:24 UTC"
+ },
+ {
+  "name": "DDXPlus (Fansi Tchango et al. 2022)",
+  "homepage": "https://huggingface.co/datasets/aai530-group6/ddxplus",
+  "license": "CC BY 4.0",
+  "downloaded": "2026-11-05 19:34:47 UTC"
  }
 ]
